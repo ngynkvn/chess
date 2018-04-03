@@ -10,6 +10,7 @@ class Board
 {
     public:
         Board();
+        Board(Piece** newBoard);
         Piece** getBoard();
         Piece getPiece(Coord c);
         Board makeMove(Move m);
@@ -62,6 +63,11 @@ Board::Board()
 
 }
 
+Board::Board(Piece** newBoard)
+{
+    this->board = newBoard;
+}
+
 /*returns the 2Darray of pieces that represents the board*/
 Piece** Board::getBoard()
 {
@@ -76,20 +82,28 @@ Piece Board::getPiece(Coord c)
 
 /*sets the piece at the from-coordinates to the index of the board 2Darray
 corresponding to the to-coordinates
--then returns the board 2Darray*/
-Piece** Board::makeMove(Move m)
+-then returns a Board object with these changes
+-the actual Board has not been affected
+-^^will in the future handle taking opponent pieces*/
+Board Board::makeMove(Move m)
 {
-    this->board[m.getTo().y][m.getTo().x] = this->getPiece(m.getFrom());
-    return this->board;
+    Board testerGame = new Board(this->board);
+    Piece** gameBoard = testerGame.getBoard();
+    gameBoard[m.getTo().y][m.getTo().x] = testerGame.getPiece(m.getFrom());
+    return testerGame;
 }
 
 /*sets the piece at the to-coordinates to the index of the board 2Darray
 corresponding to the from-coordinates
--then returns the board 2Darray*/
-Piece** Board::unmakeMove(Move m)
+-then returns a Board object with these changes
+-the actual Board has not been affected
+-^^will in the future handle returning opponent pieces*/
+Board Board::unmakeMove(Move m)
 {
-    this->board[m.getFrom().y][m.getFrom().x] = this->getPiece(m.getTo());
-    return this->board;
+    Board testerGame = new Board(this->board);
+    Piece** gameBoard = testerGame.getBoard();
+    gameBoard[m.getFrom().y][m.getFrom().x] = testerGame.getPiece(m.getTo());
+    return testerGame;
 }
 
 #endif // BOARD_H
