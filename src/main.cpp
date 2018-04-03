@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Piece.h"
-int main() {
+#include "Move.h"
 
+int main() {
+    Move m(1,2,3,4);
 }

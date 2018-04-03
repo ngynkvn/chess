@@ -4,11 +4,19 @@ ODIR = bin
 SRC = src
 TESTDIR = test
 INCLUDE = -I include
-main: 
-	$(CC) $(FLAGS) $(INCLUDE) $(SRC)/main.cpp -o $(ODIR)/a.exe  
+OBJS = Move.o Piece.o
 
-test:
-	$(CC) $(FLAGS) $(INCLUDE) $(TESTDIR)/test.cpp -o $(TESTDIR)/test.exe
+%.o: $(SRC)/%.cpp
+	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(ODIR)/$@
+
+main: $(OBJS)
+	$(CC) $(FLAGS) $(INCLUDE) $(SRC)/main.cpp $(patsubst %.o,bin/%.o,$^) -o $(ODIR)/a.out  
+
+buildtest: $(OBJS)
+	$(CC) $(FLAGS) $(INCLUDE) $(TESTDIR)/test.cpp $(patsubst %.o,bin/%.o,$^) -o $(TESTDIR)/test.out
+
+test: buildtest
+	./test/test.out
 
 clean:
 	@echo "\tCleaning..";
