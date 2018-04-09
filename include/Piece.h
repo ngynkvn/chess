@@ -4,7 +4,7 @@
 
 enum ePieceType
 {
-    no_type, // empty
+    no_type = -1, // empty
     wPawn,
     bPawn,
     knight,
@@ -41,10 +41,9 @@ private:
     ePieceCode pieceCode;
 public:
     Piece(ePieceCode);
+    Piece();
     int getColor();
     int getPiece();
-    // implement getters and constructor.
-    // please make and use Piece as an IMMUTABLE data type (no modification allowed.)
 };
 
 #endif
