@@ -1,6 +1,11 @@
 # Prerequisites
 *.d
 
+#Project related
+cmake-build-debug
+.vscode
+runtest
+
 # Compiled Object files
 *.slo
 *.lo

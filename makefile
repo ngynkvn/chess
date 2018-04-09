@@ -1,27 +1,32 @@
 CC = g++
 FLAGS = -std=c++11 -Wall
-ODIR = bin
+
 SRC = src
+OUTDIR = bin
 TESTDIR = test
+
 INCLUDE = -I include
+
 OBJS = Move.o Piece.o
 
 %.o: $(SRC)/%.cpp
-	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $(ODIR)/$@
+	@mkdir -p bin
+	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ $(INCLUDE)
 
 main: $(OBJS)
-	$(CC) $(FLAGS) $(INCLUDE) $(SRC)/main.cpp $(patsubst %.o,bin/%.o,$^) -o $(ODIR)/a.out  
+	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/a.out $(INCLUDE)
 
-buildtest: $(OBJS)
-	$(CC) $(FLAGS) $(INCLUDE) $(TESTDIR)/test.cpp $(patsubst %.o,bin/%.o,$^) -o $(TESTDIR)/test.out
+catch: 
+	$(CC) $(FLAGS) -c $(TESTDIR)/test-main.cpp -o $(TESTDIR)/catch.o
 
-test: buildtest
-	./test/test.out
+test: $(OBJS)
+	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest $(INCLUDE)
+	@./$(TESTDIR)/runtest
 
 clean:
 	@echo "\tCleaning..";
-	rm -f $(ODIR)/*.o $(ODIR)/*.exe
-	rm -f $(TESTDIR)/test.exe
+	rm -rf $(OUTDIR)
+	rm -f $(addprefix $(TESTDIR)/,*.out *.exe, runtest)
 
 
 .PHONY: clean test
