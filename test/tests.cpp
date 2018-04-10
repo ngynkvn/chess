@@ -1,8 +1,14 @@
 #include "catch.hpp"
 #include "Move.h"
 #include "Piece.h"
+#include "Board.h"
 
 TEST_CASE( "Piece data-type works correctly", "[piece]" ) {
+}
+
+TEST_CASE( "Board data-type works correctly", "[board]" ) {
+    Board start;
+    REQUIRE(start.getPiece(Coord(0, 1)).getPieceCode() == epcWpawn);
 }
 
 TEST_CASE("Move data-type works correctly", "[move]") {

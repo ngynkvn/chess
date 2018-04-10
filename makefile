@@ -7,7 +7,7 @@ TESTDIR = test
 
 INCLUDE = -I include
 
-OBJS = Move.o Piece.o
+OBJS = Move.o Piece.o Board.o
 
 %.o: $(SRC)/%.cpp
 	@mkdir -p bin
