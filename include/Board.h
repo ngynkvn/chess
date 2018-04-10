@@ -10,17 +10,17 @@ using namespace std;
 
 class Board
 {
-    public:
-        Board();
-        Board(Piece** newBoard);
-        Piece** getBoard();
-        Piece getPiece(Coord c) const;
-        Board makeMove(Move m) const;
-        Board unmakeMove(Move m) const;
-        friend ostream &operator<<(ostream&, const Board&);
-      private:
-        Piece** board = 0;
+public:
+  Board();
+  Board(Piece **newBoard);
+  Piece **getBoard();
+  Piece getPiece(Coord c) const;
+  Board makeMove(Move m) const;
+  Board unmakeMove(Move m) const;
+  friend ostream &operator<<(ostream &, const Board &);
 
+private:
+  Piece **board = 0;
 };
 
 #endif // BOARD_H

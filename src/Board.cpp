@@ -33,8 +33,8 @@ Board::Board()
     /*setting major pieces*/
     this->board[0] = new Piece[8];
     this->board[7] = new Piece[8];
-    ePieceCode majorPiecesW[8] = {epcWrook, epcWknight, epcWbishop, epcWking, epcWqueen, epcWbishop, epcWknight, epcWrook};
-    ePieceCode majorPiecesB[8] = {epcBrook, epcBknight, epcBbishop, epcBking, epcBqueen, epcBbishop, epcBknight, epcBrook};
+    ePieceCode majorPiecesW[8] = {epcWrook, epcWknight, epcWbishop, epcWqueen, epcWking, epcWbishop, epcWknight, epcWrook};
+    ePieceCode majorPiecesB[8] = {epcBrook, epcBknight, epcBbishop, epcWking, epcBking, epcBbishop, epcBknight, epcBrook};
     for (int i = 0; i < 8; i++)
     {
         startPiece = Piece(majorPiecesW[i]); //white pieces

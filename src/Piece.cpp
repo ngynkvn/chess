@@ -1,17 +1,23 @@
 #include "Piece.h"
 
-Piece::Piece(ePieceCode code) : pieceCode(code)
-{
-}
+Piece::Piece(ePieceCode code) : pieceCode(code) {}
 
 Piece::Piece() : pieceCode(epcEmpty) {}
 
-int Piece::getColor()
+bool Piece::empty() {
+    return pieceCode == epcEmpty;
+}
+
+ePieceCode Piece::getColor()
 {
+    if(empty())
+    {
+        return epcEmpty;
+    }
     return pieceCode > black ? ePieceCode::black : ePieceCode::white;
 }
 
-int Piece::getPiece()
+ePieceCode Piece::getPieceCode()
 {
     return pieceCode;
 }

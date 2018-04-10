@@ -4,7 +4,7 @@ FLAGS = -std=c++11 -Wall
 SRC = src
 OUTDIR = bin
 TESTDIR = test
-
+OUTNAME = a.out
 INCLUDE = -I include
 
 OBJS = Move.o Piece.o Board.o
@@ -14,7 +14,10 @@ OBJS = Move.o Piece.o Board.o
 	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ $(INCLUDE)
 
 main: $(OBJS)
-	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/a.out $(INCLUDE)
+	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) $(INCLUDE)
+
+run: main
+	./$(OUTDIR)/$(OUTNAME)
 
 catch: 
 	$(CC) $(FLAGS) -c $(TESTDIR)/test-main.cpp -o $(TESTDIR)/catch.o
