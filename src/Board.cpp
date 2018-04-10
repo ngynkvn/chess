@@ -50,7 +50,7 @@ Board::Board(Piece **newBoard)
 }
 
 /*returns the 2Darray of pieces that represents the board*/
-Piece **Board::getBoard()
+Piece **Board::getBoard() const
 {
     return this->board;
 }

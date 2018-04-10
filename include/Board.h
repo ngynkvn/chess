@@ -13,7 +13,7 @@ class Board
 public:
   Board();
   Board(Piece **newBoard);
-  Piece **getBoard();
+  Piece **getBoard() const;
   Piece getPiece(Coord c) const;
   Board makeMove(Move m) const;
   Board unmakeMove(Move m) const;
