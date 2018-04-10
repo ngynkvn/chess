@@ -12,8 +12,8 @@ class Move
     public:
       Move(int, int, int, int);
       Move(Coord, Coord);
-      Coord getFrom();
-      Coord getTo();
+      Coord from();
+      Coord to();
     private:
     int fromX;
     int fromY;

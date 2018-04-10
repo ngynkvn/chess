@@ -32,16 +32,16 @@ TEST_CASE("Board data-type works correctly", "[board]")
         Move wPawnPush(Coord(1, 1), Coord(1, 2));
         Board postMortem = start.makeMove(wPawnPush);
         
-        Piece pieceFrom = start.getPiece(wPawnPush.getFrom());
-        Piece pieceTo = start.getPiece(wPawnPush.getTo());
+        Piece pieceFrom = start.getPiece(wPawnPush.from());
+        Piece pieceTo = start.getPiece(wPawnPush.to());
 
         CHECK(pieceFrom.getPieceCode() != epcEmpty);
         CHECK(pieceTo.getPieceCode() != epcWpawn);
         CHECK(pieceFrom.getPieceCode() == epcWpawn);
         CHECK(pieceTo.getPieceCode() == epcEmpty);
 
-        pieceFrom = postMortem.getPiece(wPawnPush.getFrom());
-        pieceTo = postMortem.getPiece(wPawnPush.getTo());
+        pieceFrom = postMortem.getPiece(wPawnPush.from());
+        pieceTo = postMortem.getPiece(wPawnPush.to());
 
         CHECK(pieceFrom.getPieceCode() != epcWpawn);
         CHECK(pieceFrom.getPieceCode() == epcEmpty);
@@ -58,18 +58,18 @@ TEST_CASE("Move data-type works correctly", "[move]")
     SECTION("Move can be created from 4 int parameters.")
     {
         Move m(1, 2, 3, 4);
-        REQUIRE(m.getFrom().x == 1);
-        REQUIRE(m.getFrom().y == 2);
-        REQUIRE(m.getTo().x == 3);
-        REQUIRE(m.getTo().y == 4);
+        REQUIRE(m.from().x == 1);
+        REQUIRE(m.from().y == 2);
+        REQUIRE(m.to().x == 3);
+        REQUIRE(m.to().y == 4);
     }
 
     SECTION("Move can be created from 2 coord parameters.")
     {
         Move m(Coord(5, 6), Coord(6, 7));
-        REQUIRE(m.getFrom().x == 5);
-        REQUIRE(m.getFrom().y == 6);
-        REQUIRE(m.getTo().x == 6);
-        REQUIRE(m.getTo().y == 7);
+        REQUIRE(m.from().x == 5);
+        REQUIRE(m.from().y == 6);
+        REQUIRE(m.to().x == 6);
+        REQUIRE(m.to().y == 7);
     }
 }

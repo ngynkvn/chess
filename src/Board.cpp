@@ -70,7 +70,7 @@ Board Board::makeMove(Move m) const
 {
     Board testerGame = Board(this->board);
     Piece **gameBoard = testerGame.getBoard();
-    gameBoard[m.getTo().y][m.getTo().x] = testerGame.getPiece(m.getFrom());
+    gameBoard[m.to().y][m.to().x] = testerGame.getPiece(m.from());
     return testerGame;
 }
 
@@ -83,7 +83,7 @@ Board Board::unmakeMove(Move m) const
 {
     Board testerGame = Board(this->board);
     Piece **gameBoard = testerGame.getBoard();
-    gameBoard[m.getFrom().y][m.getFrom().x] = testerGame.getPiece(m.getTo());
+    gameBoard[m.from().y][m.from().x] = testerGame.getPiece(m.to());
     return testerGame;
 }
 
