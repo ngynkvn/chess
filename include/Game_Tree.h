@@ -21,7 +21,6 @@ public:
     bool is_terminal_node();
     Board get_state();
     void add_child(Board game_state);
-
 };
 
 // To fix
@@ -34,19 +33,19 @@ public:
     Tree(Board game_state);
 
     // Depth first search tree which implements alpha-beta pruning
-    int mini_max(Node* curr_node, int depth, int alpha, int beta);
+    int mini_max(Node curr_node, int alpha, int beta, bool is_max_player);
 
     // evaluates the current board state
     int evaluate(Node curr_node);
+
+    // gets the value of a piece at a give location
+    int get_piece_value(Piece p, int x, int y);
 };
 
 
-
-
-// flip table
-int** flip_table(int** white_table) {
-
-}
+// board evaluation tables
+// flips table
+int** flip_table(int** white_table);
 
 // Pawn evaluation tables
 const int white_pawn_table[][] = {{0,   0,  0,  0,  0,  0,  0,  0},
@@ -114,29 +113,17 @@ const int black_queen_table[][] = flip_table(white_queen_table);
 
 
 // Mid game king evaluation table
-const int white_king_middle_table[][] = {{-30,-40,-40,-50,-50,-40,-40,-30},
-                                         {-30,-40,-40,-50,-50,-40,-40,-30},
-                                         {-30,-40,-40,-50,-50,-40,-40,-30},
-                                         {-30,-40,-40,-50,-50,-40,-40,-30},
-                                         {-20,-30,-30,-40,-40,-30,-30,-20},
-                                         {-10,-20,-20,-20,-20,-20,-20,-10},
-                                         {20,  20,  0,  0,  0,  0, 20, 20},
-                                         {20, 30, 10,  0,  0, 10, 30, 20}};
+const int white_king_table[][] = {{-30,-40,-40,-50,-50,-40,-40,-30},
+                                  {-30,-40,-40,-50,-50,-40,-40,-30},
+                                  {-30,-40,-40,-50,-50,-40,-40,-30},
+                                  {-30,-40,-40,-50,-50,-40,-40,-30},
+                                  {-20,-30,-30,-40,-40,-30,-30,-20},
+                                  {-10,-20,-20,-20,-20,-20,-20,-10},
+                                  {20,  20,  0,  0,  0,  0, 20, 20},
+                                  {20, 30, 10,  0,  0, 10, 30, 20}};
 
-const int black_king_middle_table[][] = flip_table(white_king_middle_table);
+const int black_king_table[][] = flip_table(white_king_table);
 
-
-// End game king evaluation table
-const int white_king_end_table[][] = {{-50,-40,-30,-20,-20,-30,-40,-50},
-                                      {-30,-20,-10,  0,  0,-10,-20,-30},
-                                      {-30,-10, 20, 30, 30, 20,-10,-30},
-                                      {-30,-10, 30, 40, 40, 30,-10,-30},
-                                      {-30,-10, 30, 40, 40, 30,-10,-30},
-                                      {-30,-10, 20, 30, 30, 20,-10,-30},
-                                      {-30,-30,  0,  0,  0,  0,-30,-30},
-                                      {-50,-30,-30,-30,-30,-30,-30,-50}};
-
-const int black_king_end_table[][] = flip_table(white_king_end_table);
 
 
 #endif //CHESS_GAME_TREE_H
