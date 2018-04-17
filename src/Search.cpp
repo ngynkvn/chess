@@ -2,31 +2,47 @@
 #include <iostream>
 namespace Search
 {
-void pawnMoves(std::vector<Move> &v, const Board &b)
+
+std::vector<Coord> findPieces(const Board &b, ePieceCode piece)
 {
-    //loop through and find pawn pieces
-    Piece pawns[8];
-    int i = 0;
-    Piece **arr = b.getBoard();
-    for (int row = 0; row < 8; row++)
+    Piece **board = b.getBoard();
+    std::vector<Coord> pieces;
+    for (int i = 0; i < 8; i++)
     {
-        for (int col = 0; col < 8; col++)
+        for (int j = 0; j < 8; j++)
         {
-            Piece p = arr[row][col];
-            if (p.getPieceCode() == epcWpawn) //found a white pawn
+            if(board[i][j].getPieceCode() == piece)
             {
-                pawns[i++] = arr[row][col];
+                pieces.push_back(Coord(j, i));
             }
         }
     }
-    for (i = 0; i < pawns.length; i++){
+    return pieces;
+}
+
+//Dumbly adds all possible moves for King without considering castling and whether the move will place him in check.
+void kingMoves(std::vector<Move> &v, const Board &b)
+{
+    std::vector<Coord> pieceV = findPieces(b, epcWking);
+    
+    if (pieceV.size() == 1)
+    {
+        Coord piece = pieceV[0];
+        for (int i = 0; i < 8; i++)
+        {
+            Coord possibleMove = piece + dirKing[i];
+            if (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()))
+            {
+                v.push_back(Move(piece, possibleMove));
+            }
+        }
     }
 }
 
 std::vector<Move> generateMoveList(const Board &b)
 {
     std::vector<Move> v;
-    pawnMoves(v, b);
+    kingMoves(v, b);
     return v;
 }
 
