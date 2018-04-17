@@ -97,13 +97,18 @@ Board Board::unmakeMove(Move m) const
     return testerGame;
 }
 
+bool Board::inside(Coord c) const
+{
+    return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8;
+}
+
 ostream &operator<<(ostream &os, const Board &board)
 {
     // char outChars[] = {' ', 'p', 'k','b','r','q','W',
     //                    ' ', 'P', 'K','B','R','Q','B'};
     std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
-    for (int j = 0; j < 8; j++)
+    for (int j = 7; j > -1; j--)
     {
         for (int i = 0; i < 8; i++)
         {

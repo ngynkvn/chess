@@ -14,9 +14,10 @@ public:
   Board();
   Board(Piece **newBoard);
   Piece **getBoard() const;
-  Piece getPiece(Coord c) const;
-  Board makeMove(Move m) const;
-  Board unmakeMove(Move m) const;
+  Piece getPiece(Coord) const;
+  Board makeMove(Move) const;
+  Board unmakeMove(Move) const;
+  bool inside(Coord) const;
   friend ostream &operator<<(ostream &, const Board &);
 
 private:
