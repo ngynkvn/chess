@@ -23,7 +23,7 @@ catch:
 	$(CC) $(FLAGS) -c $(TESTDIR)/test-main.cpp -o $(TESTDIR)/catch.o
 
 test: $(OBJS)
-	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest $(INCLUDE)
+	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest $(INCLUDE)
 	@./$(TESTDIR)/runtest
 
 clean:

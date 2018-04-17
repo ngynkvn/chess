@@ -3,8 +3,16 @@
 #include "Piece.h"
 #include "Board.h"
 
+unsigned long long perft(Board, int);
+
 TEST_CASE("Piece data-type works correctly", "[piece]")
 {
+}
+
+TEST_CASE("Move generation is correct.","[perft]")
+{
+    Board start;
+    CHECK(perft(start, 1) == 20);
 }
 
 TEST_CASE("Board data-type works correctly", "[board]")

@@ -7,12 +7,14 @@ typedef unsigned long long u64;
 u64 perft(Board b, int depth)
 {
     if(depth == 1)
-        return Search::generateMoveList().size();
+        return Search::generateMoveList(b).size();
 
-    std::vector<Move> moves = Search::generateMoveList();
-    for (auto i = moves.begin(); i != moves.end; i++)
+    u64 nodes = 0;
+    std::vector<Move> moves = Search::generateMoveList(b);
+    for (auto i = moves.begin(); i != moves.end(); i++)
     {
         Board next = b.makeMove(*i);
-        perft(next, depth - 1);
+        nodes += perft(next, depth - 1);
     }
+    return nodes;
 }
