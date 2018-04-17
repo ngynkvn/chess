@@ -3,34 +3,35 @@
 
 enum ePieceCode
 {
-    epcEmpty = -1,
-    white,
-    epcWpawn,
-    epcWknight,
-    epcWbishop,
-    epcWrook,
-    epcWqueen,
-    epcWking,
-    black = 7,
-    epcBpawn,
-    epcBknight,
-    epcBbishop,
-    epcBrook,
-    epcBqueen,
-    epcBking
+  epcEmpty = -1,
+  white,
+  epcWpawn,
+  epcWknight,
+  epcWbishop,
+  epcWrook,
+  epcWqueen,
+  epcWking,
+  black = 7,
+  epcBpawn,
+  epcBknight,
+  epcBbishop,
+  epcBrook,
+  epcBqueen,
+  epcBking
 };
 
 class Piece
 {
-  private:
-    ePieceCode pieceCode;
+private:
+  ePieceCode pieceCode;
 
-  public:
-    Piece(ePieceCode);
-    Piece();
-    bool empty();
-    ePieceCode getColor();
-    ePieceCode getPieceCode();
+public:
+  Piece(ePieceCode);
+  Piece();
+  bool empty();
+  ePieceCode getColor();
+  ePieceCode getPieceCode() const;
+  bool operator==(const Piece &);
 };
 
 #endif

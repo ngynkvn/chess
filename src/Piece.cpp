@@ -8,6 +8,11 @@ bool Piece::empty() {
     return pieceCode == epcEmpty;
 }
 
+bool Piece::operator==(const Piece& right)
+{
+    return pieceCode == right.getPieceCode();
+}
+
 ePieceCode Piece::getColor()
 {
     if(empty())
@@ -17,7 +22,7 @@ ePieceCode Piece::getColor()
     return pieceCode > black ? ePieceCode::black : ePieceCode::white;
 }
 
-ePieceCode Piece::getPieceCode()
+ePieceCode Piece::getPieceCode() const
 {
     return pieceCode;
 }
