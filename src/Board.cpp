@@ -33,8 +33,8 @@ Board::Board()
     /*setting major pieces*/
     this->board[0] = new Piece[8];
     this->board[7] = new Piece[8];
-    ePieceCode majorPiecesW[8] = {epcWrook, epcWknight, epcWbishop, epcWqueen, epcWking, epcWbishop, epcWknight, epcWrook};
-    ePieceCode majorPiecesB[8] = {epcBrook, epcBknight, epcBbishop, epcWking, epcBking, epcBbishop, epcBknight, epcBrook};
+    ePieceCode majorPiecesW[8] = {epcWrook, epcWknight, epcWbishop, epcWking, epcWqueen, epcWbishop, epcWknight, epcWrook};
+    ePieceCode majorPiecesB[8] = {epcBrook, epcBknight, epcBbishop, epcBking, epcBqueen, epcBbishop, epcBknight, epcBrook};
     for (int i = 0; i < 8; i++)
     {
         startPiece = Piece(majorPiecesW[i]); //white pieces
@@ -47,6 +47,15 @@ Board::Board()
 Board::Board(Piece **newBoard)
 {
     this->board = newBoard;
+    this->board = new Piece *[8];
+    for (int row = 0; row < 8; row++)
+    {
+        this->board[row] = new Piece[8];
+        for (int col = 0; col < 8; col++)
+        {
+            this->board[row][col] = newBoard[row][col];
+        }
+    }
 }
 
 /*returns the 2Darray of pieces that represents the board*/
@@ -71,6 +80,7 @@ Board Board::makeMove(Move m) const
     Board testerGame = Board(this->board);
     Piece **gameBoard = testerGame.getBoard();
     gameBoard[m.to().y][m.to().x] = testerGame.getPiece(m.from());
+    gameBoard[m.from().y][m.from().x] = Piece(epcEmpty);
     return testerGame;
 }
 
