@@ -1,0 +1,18 @@
+C:\MYSTUFF\College\Programming\COP 3503\chess\src\Search.cpp:6:21: error: variable or field 'pawnMoves' declared void
+ void pawnMoves(std::vector<Move> &v, const Board &b)
+                     ^~~~~~
+C:\MYSTUFF\College\Programming\COP 3503\chess\src\Search.cpp:6:16: error: 'vector' is not a member of 'std'
+ void pawnMoves(std::vector<Move> &v, const Board &b)
+                ^~~
+C:\MYSTUFF\College\Programming\COP 3503\chess\src\Search.cpp:6:28: error: 'Move' was not declared in this scope
+ void pawnMoves(std::vector<Move> &v, const Board &b)
+                            ^~~~
+C:\MYSTUFF\College\Programming\COP 3503\chess\src\Search.cpp:6:35: error: 'v' was not declared in this scope
+ void pawnMoves(std::vector<Move> &v, const Board &b)
+                                   ^
+C:\MYSTUFF\College\Programming\COP 3503\chess\src\Search.cpp:6:38: error: expected primary-expression before 'const'
+ void pawnMoves(std::vector<Move> &v, const Board &b)
+                                      ^~~~~
+C:\MYSTUFF\College\Programming\COP 3503\chess\src\Search.cpp:36:1: error: expected '}' at end of input
+ }
+ ^

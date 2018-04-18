@@ -58,6 +58,13 @@ Board::Board(Piece **newBoard)
     }
 }
 
+Board Board::copy()
+{
+    Board b(this->board);
+    b.setTurn(whiteTurn);
+    return b;
+}
+
 /*returns the 2Darray of pieces that represents the board*/
 Piece **Board::getBoard() const
 {
@@ -77,7 +84,7 @@ corresponding to the to-coordinates
 -^^will in the future handle taking opponent pieces*/
 Board Board::makeMove(Move m) const
 {
-    Board testerGame = Board(this->board);
+    Board testerGame(this->board);
     Piece **gameBoard = testerGame.getBoard();
     gameBoard[m.to().y][m.to().x] = testerGame.getPiece(m.from());
     gameBoard[m.from().y][m.from().x] = Piece(epcEmpty);
@@ -97,13 +104,19 @@ Board Board::unmakeMove(Move m) const
     return testerGame;
 }
 
+bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8; }
+
+bool Board::isWhite() { return whiteTurn; }
+void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
+ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
+
 ostream &operator<<(ostream &os, const Board &board)
 {
     // char outChars[] = {' ', 'p', 'k','b','r','q','W',
     //                    ' ', 'P', 'K','B','R','Q','B'};
     std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
-    for (int j = 0; j < 8; j++)
+    for (int j = 7; j > -1; j--)
     {
         for (int i = 0; i < 8; i++)
         {

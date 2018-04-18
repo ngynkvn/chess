@@ -8,6 +8,6 @@ int main() {
     Board b;
     cout << b;
     Search::generateMoveList(b);
-    // b.makeMove(m);
-    // cout << b;
+    b = b.makeMove(m);
+    cout << b;
 }

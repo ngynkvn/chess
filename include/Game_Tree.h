@@ -124,6 +124,4 @@ const int white_king_table[][] = {{-30,-40,-40,-50,-50,-40,-40,-30},
 
 const int black_king_table[][] = flip_table(white_king_table);
 
-
-
 #endif //CHESS_GAME_TREE_H
