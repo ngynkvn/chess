@@ -58,7 +58,7 @@ Board::Board(Piece **newBoard)
     }
 }
 
-Board Board::copy() 
+Board Board::copy()
 {
     Board b(this->board);
     b.setTurn(whiteTurn);
@@ -104,10 +104,11 @@ Board Board::unmakeMove(Move m) const
     return testerGame;
 }
 
-bool Board::inside(Coord c) const
-{
-    return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8;
-}
+bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8; }
+
+bool Board::isWhite() { return whiteTurn; }
+void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
+ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
 
 ostream &operator<<(ostream &os, const Board &board)
 {

@@ -12,16 +12,16 @@ class Board
 {
 public:
   Board();
-  Board(Piece**);
+  Board(Piece **);
   Board copy();
   Piece **getBoard() const;
   Piece getPiece(Coord) const;
   Board makeMove(Move) const;
   Board unmakeMove(Move) const;
   bool inside(Coord) const;
-  bool isWhite() { return whiteTurn; };
-  void setTurn(bool isWhite) { whiteTurn = isWhite; };
-  ePieceCode opposite() const { return whiteTurn ? black : white; };
+  bool isWhite();
+  void setTurn(bool);
+  ePieceCode opposite() const;
   friend ostream &operator<<(ostream &, const Board &);
 
 private:

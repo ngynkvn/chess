@@ -3,6 +3,15 @@
 namespace Search
 {
 
+Coord dirKing[] = {Coord(-1, -1),
+                   Coord(-1, 0),
+                   Coord(-1, 1),
+                   Coord(0, 1),
+                   Coord(0, -1),
+                   Coord(1, -1),
+                   Coord(1, 0),
+                   Coord(1, 1)};
+                   
 std::vector<Coord> findPieces(const Board &b, ePieceCode piece)
 {
     Piece **board = b.getBoard();
@@ -11,7 +20,7 @@ std::vector<Coord> findPieces(const Board &b, ePieceCode piece)
     {
         for (int j = 0; j < 8; j++)
         {
-            if(board[i][j].getPieceCode() == piece)
+            if (board[i][j].getPieceCode() == piece)
             {
                 pieces.push_back(Coord(j, i));
             }
@@ -24,7 +33,7 @@ std::vector<Coord> findPieces(const Board &b, ePieceCode piece)
 void kingMoves(std::vector<Move> &v, const Board &b)
 {
     std::vector<Coord> pieceV = findPieces(b, epcWking);
-    
+
     if (pieceV.size() == 1)
     {
         Coord piece = pieceV[0];
@@ -45,5 +54,4 @@ std::vector<Move> generateMoveList(const Board &b)
     kingMoves(v, b);
     return v;
 }
-
 }
