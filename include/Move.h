@@ -1,6 +1,8 @@
 #ifndef MOVE_H
 #define MOVE_H
 
+#include <ostream>
+
 struct Coord
 {
     int x;
@@ -8,6 +10,7 @@ struct Coord
     Coord() : x(-1),y(-1){};
     Coord(int x, int y) : x(x), y(y){};
     Coord operator+(const Coord &other) { return Coord(x + other.x, y + other.y); };
+    friend std::ostream &operator<<(std::ostream &, const Coord &);
 };
 
 class Move

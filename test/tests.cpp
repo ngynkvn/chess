@@ -12,7 +12,9 @@ TEST_CASE("Piece data-type works correctly", "[piece]")
 TEST_CASE("Move generation is correct.","[perft]")
 {
     Board start;
-    CHECK(perft(start, 1) == 20);
+    CHECK(perft(start,1) == 20);
+    CHECK(perft(start, 2) == 400);
+    CHECK(perft(start, 3) == 8902);
 }
 
 TEST_CASE("Board data-type works correctly", "[board]")
@@ -39,7 +41,7 @@ TEST_CASE("Board data-type works correctly", "[board]")
     {
         Move wPawnPush(Coord(1, 1), Coord(1, 2));
         Board postMortem = start.makeMove(wPawnPush);
-        
+
         Piece pieceFrom = start.getPiece(wPawnPush.from());
         Piece pieceTo = start.getPiece(wPawnPush.to());
 

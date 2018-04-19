@@ -6,9 +6,11 @@
 int main() {
     Move m(3,1,3,3);
     Board b;
-    cout << evaluate(b) << endl;
-    Search::generateMoveList(b);
-    b = b.makeMove(m);
-    cout << b;
-    cout << evaluate(b);
+    std::vector<Move> list = Search::generateMoveList(b);
+    b = b.makeMove(list[0]);
+    list = Search::generateMoveList(b);
+    for(auto i = list.begin(); i != list.end(); i++)
+    {
+        cout << b.makeMove(*i) << endl;
+    }
 }
