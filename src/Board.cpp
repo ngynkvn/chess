@@ -118,7 +118,7 @@ ostream &operator<<(ostream &os, const Board &board)
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
     for (int j = 7; j > -1; j--)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 7; i > -1; i--)
         {
             Piece p = board.getPiece(Coord(i, j));
             if (p.empty())
