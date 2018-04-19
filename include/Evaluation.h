@@ -17,6 +17,7 @@ int evaluate(Board currBoard);
 // gets the value of a piece at a give location
 int get_piece_value(Piece p, int x, int y);
 
+//calls generateMoveList, makes each move and appends to vector to be processed later.
 std::vector<Board> get_states(Board curr);
 
 // board evaluation tables

@@ -6,6 +6,7 @@
 int main() {
     Move m(3,1,3,3);
     Board b;
+    cout << b << endl;
     cout << evaluate(b) << endl;
     Search::generateMoveList(b);
     b = b.makeMove(m);

@@ -6,6 +6,7 @@ cmake-build-debug
 .vscode
 .idea
 runtest
+snippets
 
 # Compiled Object files
 *.slo
