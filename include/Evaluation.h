@@ -1,19 +1,23 @@
 #ifndef EVALUATION_H
 #define EVALUATION_H
 
-using namespace std;
-
+#include "Board.h"
+#include "Move.h"
+#include "Search.h"
+#include<vector>
 // pair for minimax algorithm
-typedef pair<Board game_state, int eval> eval_pair;
+typedef std::pair<Board, int> eval_pair;
 
 // Depth first search tree which implements alpha-beta pruning
-eval_pair mini_max(Node curr_node, int alpha, int beta, bool is_max_player);
+eval_pair mini_max(Board currBoard, int alpha, int beta, bool is_max_player);
 
 // evaluates the current board state
-int evaluate(Node curr_node);
+int evaluate(Board currBoard);
 
 // gets the value of a piece at a give location
 int get_piece_value(Piece p, int x, int y);
+
+std::vector<Board> get_states(Board curr);
 
 // board evaluation tables
 // Pawn evaluation tables
@@ -106,7 +110,14 @@ const double white_queen_eval[8][8] = {{ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.
                                        { -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0},
                                        { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}};
 
-const double black_queen_eval[8][8] = white_queen_table[8][8];
+const double black_queen_eval[8][8] = {{ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
+                                       { -1.0,  0.0,  0.0,  0.0,  0.0,  0.5,  0.0, -1.0},
+                                       { -1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.5, -1.0},
+                                       { -0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+                                       {  0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+                                       { -1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+                                       { -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0},
+                                       { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}};
 
 
 // King evaluation tables
