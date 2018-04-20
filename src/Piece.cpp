@@ -12,6 +12,10 @@ bool Piece::operator==(const Piece& right)
 {
     return pieceCode == right.getPieceCode();
 }
+bool Piece::operator!=(const Piece& right)
+{
+    return !(pieceCode == right.getPieceCode());
+}
 
 ePieceCode Piece::getColor()
 {

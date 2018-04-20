@@ -1,9 +1,10 @@
 #include "Board.h"
+#include "Search.h"
 
 using namespace std;
 /*constructor sets up the board for a new game*/
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
-Board::Board()
+Board::Board() : whiteTurn(true)
 {
     this->board = new Piece *[8];
 
@@ -58,13 +59,6 @@ Board::Board(Piece **newBoard)
     }
 }
 
-Board Board::copy()
-{
-    Board b(this->board);
-    b.setTurn(whiteTurn);
-    return b;
-}
-
 /*returns the 2Darray of pieces that represents the board*/
 Piece **Board::getBoard() const
 {
@@ -86,6 +80,8 @@ Board Board::makeMove(Move m) const
 {
     Board testerGame(this->board);
     Piece **gameBoard = testerGame.getBoard();
+    testerGame.setTurn(!whiteTurn);
+    testerGame.setPrevMove(m); // board.h and add in methods there and make public
     gameBoard[m.to().y][m.to().x] = testerGame.getPiece(m.from());
     gameBoard[m.from().y][m.from().x] = Piece(epcEmpty);
     return testerGame;
@@ -106,9 +102,12 @@ Board Board::unmakeMove(Move m) const
 
 bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8; }
 
-bool Board::isWhite() { return whiteTurn; }
+bool Board::isWhite() const { return whiteTurn; }
 void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
+Move Board::getPrevMove() const{ return prevMove; }
+void Board::setPrevMove(Move m) {prevMove = m;}
 ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
+ePieceCode Board::same() const { return whiteTurn ? white : black; }
 
 ostream &operator<<(ostream &os, const Board &board)
 {
@@ -132,5 +131,8 @@ ostream &operator<<(ostream &os, const Board &board)
         }
         os << endl;
     }
+    os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
+    os << "They played " << "f: "<< board.getPrevMove().from() << " t: " << board.getPrevMove().to() << endl;
+    os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
     return os;
 }

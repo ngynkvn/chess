@@ -14,3 +14,9 @@ Coord Move::to()
     Coord c(toX, toY);
     return c;
 }
+
+std::ostream &operator<<(std::ostream &os, const Coord &coord)
+{
+    os << "(" << coord.x << "," << coord.y << ")";
+    return os;
+}
