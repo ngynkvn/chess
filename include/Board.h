@@ -13,7 +13,6 @@ class Board
 public:
   Board();
   Board(const Board&);
-  // Board(Piece **);
   ~Board();
   Piece **getBoard() const;
   Piece getPiece(Coord) const;
@@ -27,7 +26,7 @@ public:
   ePieceCode same() const;
   Move getPrevMove() const;
   void setPrevMove(Move) ;
-  Board &operator= (const Board &);
+  Board &operator= (const Board &); //copy assignment constructor.
   friend ostream &operator<<(ostream &, const Board &);
 
 private:

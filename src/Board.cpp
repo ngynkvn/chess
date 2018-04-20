@@ -77,6 +77,8 @@ Board& Board::operator= (const Board& other)
                 board[i][j] = b[i][j];
             }
         } 
+        whiteTurn = other.whiteTurn;
+        prevMove = other.prevMove;
     }
     return *this;
 }
