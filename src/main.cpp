@@ -6,10 +6,25 @@
 int main() {
     Move m(3,1,3,3);
     Board b;
+<<<<<<< HEAD
     cout << b << endl;
     cout << evaluate(b) << endl;
     Search::generateMoveList(b);
+=======
+>>>>>>> mike
     b = b.makeMove(m);
+    b = b.makeMove(Move(7,6,7,5));
+    b = b.makeMove(Move(2,0,7,5));
     cout << b;
-    cout << evaluate(b);
+    std::vector<Move> list = Search::generateMoveList(b);
+    //whites turn
+    for(auto i = list.begin(); i != list.end(); i++)
+    {
+    //     // std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
+    //     //                      " ", "♟", "♞", "♝", "♜", "♛", "♚"};
+    //     // Move move = *i;
+    //     // cout << prettyPrint[b.getPiece(move.from()).getPieceCode()] <<" Moved from:" << move.from() << " to: " << move.to() << endl;
+    //     // cout << Search::generateMoveList(b.makeMove(*i)).size() << endl;
+        cout << (b.makeMove(*i)) << endl;
+    }
 }

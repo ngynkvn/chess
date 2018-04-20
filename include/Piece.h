@@ -32,6 +32,7 @@ public:
   ePieceCode getColor();
   ePieceCode getPieceCode() const;
   bool operator==(const Piece &);
+  bool operator!=(const Piece &);
 };
 
 #endif

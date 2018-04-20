@@ -8,7 +8,7 @@
 
 namespace Search
 {
-extern Coord dirKing[];
+    
 std::vector<Move> generateMoveList(const Board &);
 }
 
