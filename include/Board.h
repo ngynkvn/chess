@@ -23,6 +23,8 @@ public:
   void setTurn(bool);
   ePieceCode opposite() const;
   ePieceCode same() const;
+  Move getPrevMove() const;
+  void setPrevMove(Move) ;
   friend ostream &operator<<(ostream &, const Board &);
 
 private:
