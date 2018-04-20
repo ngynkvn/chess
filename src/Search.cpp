@@ -4,42 +4,42 @@
 namespace Search
 {
 
-std::vector<Coord> dirQueen ={Coord(1,1),
-                            Coord(1,-1),
-                            Coord(-1,-1),
-                            Coord(-1,1),
-                            Coord(0,1),
-                            Coord(0,-1),
-                            Coord(1,0),
-                            Coord(-1,0)};
+std::vector<Coord> dirQueen = {Coord(1, 1),
+                               Coord(1, -1),
+                               Coord(-1, -1),
+                               Coord(-1, 1),
+                               Coord(0, 1),
+                               Coord(0, -1),
+                               Coord(1, 0),
+                               Coord(-1, 0)};
 
-std::vector<Coord> dirBishop  ={Coord(1,1),
-                                Coord(1,-1),
-                                Coord(-1,-1),
-                                Coord(-1,1)};
+std::vector<Coord> dirBishop = {Coord(1, 1),
+                                Coord(1, -1),
+                                Coord(-1, -1),
+                                Coord(-1, 1)};
 
-std::vector<Coord> dirWPawnM = {Coord(0,1)};
-std::vector<Coord> dirWPawnC = {Coord(1,1),
-                                Coord(-1,1)};
-std::vector<Coord> dirWPawnS  = {Coord(0,2)};
-std::vector<Coord> dirBPawnM  = {Coord(0,-1)};
-std::vector<Coord> dirBPawnC  = {Coord(1,-1),
-                                Coord(-1,-1)};
-std::vector<Coord> dirBPawnS  = {Coord(0,-2)};
+std::vector<Coord> dirWPawnM = {Coord(0, 1)};
+std::vector<Coord> dirWPawnC = {Coord(1, 1),
+                                Coord(-1, 1)};
+std::vector<Coord> dirWPawnS = {Coord(0, 2)};
+std::vector<Coord> dirBPawnM = {Coord(0, -1)};
+std::vector<Coord> dirBPawnC = {Coord(1, -1),
+                                Coord(-1, -1)};
+std::vector<Coord> dirBPawnS = {Coord(0, -2)};
 
-std::vector<Coord> dirKnight  = {Coord(1,2),
-                                 Coord(2,1),
-                                 Coord(2,-1),
-                                 Coord(1,-2),
-                                 Coord(-1,2),
-                                 Coord(-2,1),
-                                 Coord(-2,-1),
-                                 Coord(-1,-2)};
+std::vector<Coord> dirKnight = {Coord(1, 2),
+                                Coord(2, 1),
+                                Coord(2, -1),
+                                Coord(1, -2),
+                                Coord(-1, 2),
+                                Coord(-2, 1),
+                                Coord(-2, -1),
+                                Coord(-1, -2)};
 
-std::vector<Coord> dirRook ={Coord(0,1),
-                            Coord(0,-1),
-                            Coord(1,0),
-                            Coord(-1,0)};
+std::vector<Coord> dirRook = {Coord(0, 1),
+                              Coord(0, -1),
+                              Coord(1, 0),
+                              Coord(-1, 0)};
 
 std::vector<Coord> dirKing = {Coord(-1, -1),
                               Coord(-1, 0),
@@ -50,28 +50,27 @@ std::vector<Coord> dirKing = {Coord(-1, -1),
                               Coord(1, 0),
                               Coord(1, 1)};
 
-
-void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> dir )
+void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
 {
     Coord ctr;
 
-    for(unsigned int i=0; i<pieceV.size(); i++)
+    for (unsigned int i = 0; i < pieceV.size(); i++)
     {
         Coord piece = pieceV[i];
-        for(unsigned int j=0; j<dir.size(); j++) // the j< expression is not correct. should be j<dir.size()
+        for (unsigned int j = 0; j < dir.size(); j++) // the j< expression is not correct. should be j<dir.size()
         {
             ctr = dir[j];
             Coord possibleMove = piece + dir[j];
-            while(b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()) && b.getPiece(possibleMove).getColor() != b.same())
+            while (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()) && b.getPiece(possibleMove).getColor() != b.same())
             {
-                if(b.getPiece(possibleMove).getColor() == b.opposite())
+                if (b.getPiece(possibleMove).getColor() == b.opposite())
                 {
-                    v.push_back(Move(piece,possibleMove));
+                    v.push_back(Move(piece, possibleMove));
                     break;
                 }
                 else
                 {
-                    v.push_back(Move(piece,possibleMove));
+                    v.push_back(Move(piece, possibleMove));
                     possibleMove = possibleMove + ctr;
                 }
             }
@@ -79,15 +78,17 @@ void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vec
     }
 }
 
-void singleMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> dir )
+void singleMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
 {
-    for(unsigned int i=0; i<pieceV.size(); i++){
+    for (unsigned int i = 0; i < pieceV.size(); i++)
+    {
         Coord piece = pieceV[i];
-        for(unsigned int j=0; j<8; j++){
+        for (unsigned int j = 0; j < 8; j++)
+        {
             Coord possibleMove = piece + dir[j];
-            if(b.inside(possibleMove)&&(b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()))
+            if (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()))
             {
-                v.push_back(Move(piece,possibleMove));
+                v.push_back(Move(piece, possibleMove));
             }
         }
     }
@@ -133,35 +134,27 @@ std::vector<Coord> findPieces(const Board &b, ePieceCode piece)
 void kingMoves(std::vector<Move> &v, const Board &b)
 {
     std::vector<Coord> pieceV;
-    if(b.isWhite())
+    if (b.isWhite())
         pieceV = findPieces(b, epcWking);
     else
         pieceV = findPieces(b, epcBrook);
     singleMove(v, b, pieceV, dirKing);
-
-
 }
 
-//Tests if a Piece has ever moved in the entire game
-bool hasMoved(Piece p){
-return false; //temporarily set to false for testing reasons
-}
-
-
-void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector <Coord> dir1, std::vector <Coord> dir2, std::vector <Coord> dir3 )
+void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> dir1, std::vector<Coord> dir2, std::vector<Coord> dir3)
 {
-    Piece ** board = b.getBoard();
+    Piece **board = b.getBoard();
     Piece p;
-    for(unsigned int i=0; i<pieceV.size(); i++)
+    for (unsigned int i = 0; i < pieceV.size(); i++)
     {
         Coord piece = pieceV[i];
         p = board[piece.y][piece.x];
-        Coord possibleMove = piece +dir1[0];
-        if(b.inside(possibleMove)&&(b.getPiece(possibleMove).empty()))
+        Coord possibleMove = piece + dir1[0];
+        if (b.inside(possibleMove) && (b.getPiece(possibleMove).empty()))
         {
-            v.push_back(Move(piece,possibleMove));
+            v.push_back(Move(piece, possibleMove));
             possibleMove = piece + dir2[0];
-            if(!hasMoved(p) && b.getPiece(possibleMove).empty())
+            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty())
             {
                 v.push_back(Move(piece, possibleMove));
             }
@@ -175,13 +168,12 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
                 v.push_back(Move(piece,possibleMove));
             }
         }
-
     }
 }
 void pawnMoves(std::vector<Move> &v, Board b)
 {
     std::vector<Coord> pieceV;
-    if(b.isWhite())
+    if (b.isWhite())
     {
         pieceV = findPieces(b, epcWpawn);
         pawnMove(v, b, pieceV, dirWPawnM, dirWPawnS, dirWPawnC);
@@ -193,10 +185,10 @@ void pawnMoves(std::vector<Move> &v, Board b)
     }
 }
 
-
-void knightMoves(std::vector<Move> &v, Board b){
+void knightMoves(std::vector<Move> &v, Board b)
+{
     std::vector<Coord> pieceV;
-    if(b.isWhite())
+    if (b.isWhite())
         pieceV = findPieces(b, epcWknight);
     else
         pieceV = findPieces(b, epcBknight);
@@ -206,7 +198,7 @@ void knightMoves(std::vector<Move> &v, Board b){
 void rookMoves(std::vector<Move> &v, Board b)
 {
     std::vector<Coord> pieceV;
-    if(b.isWhite())
+    if (b.isWhite())
         pieceV = findPieces(b, epcWrook);
     else
         pieceV = findPieces(b, epcBrook);
@@ -216,27 +208,25 @@ void rookMoves(std::vector<Move> &v, Board b)
 void bishopMoves(std::vector<Move> &v, Board b)
 {
     std::vector<Coord> pieceV;
-    if(b.isWhite())
+    if (b.isWhite())
         pieceV = findPieces(b, epcWbishop);
     else
         pieceV = findPieces(b, epcBbishop);
     rayMove(v, b, pieceV, dirBishop);
 }
 
-
 void queenMoves(std::vector<Move> &v, Board b)
 {
     std::vector<Coord> pieceV;
-    if(b.isWhite())
+    if (b.isWhite())
         pieceV = findPieces(b, epcWqueen);
     else
         pieceV = findPieces(b, epcBqueen);
     rayMove(v, b, pieceV, dirQueen);
 }
 
-
-
-std::vector<Move> generateMoveList(const Board &b){
+std::vector<Move> generateMoveList(const Board &b)
+{
     //std::cout << "I MAKE THE GIRLS GO LIKE";
     std::vector<Move> v;
     pawnMoves(v, b);
@@ -244,7 +234,7 @@ std::vector<Move> generateMoveList(const Board &b){
     rookMoves(v, b);
     kingMoves(v, b);
     bishopMoves(v, b);
-    queenMoves(v,b);
+    queenMoves(v, b);
     return v;
 }
 }
