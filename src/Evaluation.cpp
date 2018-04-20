@@ -20,7 +20,7 @@ eval_pair mini_max(Board game_state, int depth, int alpha, int beta, bool is_max
     // maximize and minimize the possible moves
     if (is_max_player) // if it the players turn
     {
-        eval_pair v = eval_pair(NULL, alpha);
+        eval_pair v = eval_pair(game_state, alpha);
         for (Board b : children_states)
         {
             eval_pair v_prime = mini_max(b, depth - 1, v.second, beta, !is_max_player);
@@ -33,7 +33,7 @@ eval_pair mini_max(Board game_state, int depth, int alpha, int beta, bool is_max
     }
     else // if it's the opponents turn
     {
-        eval_pair v = eval_pair(NULL, beta);
+        eval_pair v = eval_pair(game_state, beta);
         for (Board b : children_states)
         {
             eval_pair v_prime = mini_max(b, depth - 1, alpha, v.second, !is_max_player);

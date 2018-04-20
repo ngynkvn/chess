@@ -20,6 +20,11 @@ TEST_CASE("Move generation is correct.","[perft]")
         CHECK(perft(start, 3, captures) == 8902);
         CHECK(captures == 34);
     }
+    SECTION("Depth 4 should show 1576 captures.")
+    {
+        CHECK(perft(start, 4, captures) == 197281);
+        CHECK(captures == 1576);
+    }
 }
 
 TEST_CASE("Board data-type works correctly", "[board]")

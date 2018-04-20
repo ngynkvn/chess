@@ -45,20 +45,64 @@ Board::Board() : whiteTurn(true)
     }
 }
 
-Board::Board(Piece **newBoard)
+Board::Board(const Board& other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
 {
-    this->board = newBoard;
-    this->board = new Piece *[8];
+    board = new Piece *[8];
     for (int row = 0; row < 8; row++)
     {
-        this->board[row] = new Piece[8];
+        board[row] = new Piece[8];
         for (int col = 0; col < 8; col++)
         {
-            this->board[row][col] = newBoard[row][col];
+            board[row][col] = other.board[row][col];
         }
     }
 }
 
+Board& Board::operator= (const Board& other)
+{
+    if (this != &other)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            delete[] board[i];
+        }
+        delete[] board;
+        board = new Piece*[8];
+        Piece ** b = other.getBoard();
+        for(int i = 0; i < 8; i++)
+        {
+            board[i] = new Piece[8];
+            for(int j = 0; j < 8; j++)
+            {
+                board[i][j] = b[i][j];
+            }
+        } 
+    }
+    return *this;
+}
+
+// Board::Board(Piece **newBoard)
+// {
+//     this->board = newBoard;
+//     this->board = new Piece *[8];
+//     for (int row = 0; row < 8; row++)
+//     {
+//         this->board[row] = new Piece[8];
+//         for (int col = 0; col < 8; col++)
+//         {
+//             this->board[row][col] = newBoard[row][col];
+//         }
+//     }
+// }
+
+Board::~Board()
+{
+    for(int i = 0 ; i < 8 ; i++)
+    {
+        delete[] board[i];
+    }
+    delete[] board;
+}
 /*returns the 2Darray of pieces that represents the board*/
 Piece **Board::getBoard() const
 {
@@ -78,7 +122,7 @@ corresponding to the to-coordinates
 -^^will in the future handle taking opponent pieces*/
 Board Board::makeMove(Move m) const
 {
-    Board testerGame(this->board);
+    Board testerGame(*this);
     Piece **gameBoard = testerGame.getBoard();
     testerGame.setTurn(!whiteTurn);
     testerGame.setPrevMove(m); // board.h and add in methods there and make public
@@ -94,7 +138,7 @@ corresponding to the from-coordinates
 -^^will in the future handle returning opponent pieces*/
 Board Board::unmakeMove(Move m) const
 {
-    Board testerGame = Board(this->board);
+    Board testerGame = Board(*this);
     Piece **gameBoard = testerGame.getBoard();
     gameBoard[m.from().y][m.from().x] = testerGame.getPiece(m.to());
     return testerGame;
@@ -133,6 +177,6 @@ ostream &operator<<(ostream &os, const Board &board)
     }
     os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
     os << "They played " << "f: "<< board.getPrevMove().from() << " t: " << board.getPrevMove().to() << endl;
-    os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
+    // os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
     return os;
 }
