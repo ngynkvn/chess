@@ -16,7 +16,6 @@ public:
     void setOption(string);
     void uciNewGame();
     void inputIsGo();
-    void print();
 private:
     string nameOfEngine;
     string Line;
