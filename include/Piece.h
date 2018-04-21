@@ -1,6 +1,9 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+/**
+ * Adapted from https://chessprogramming.wikispaces.com/Pieces
+ * */
 enum ePieceCode
 {
   epcEmpty = -1,

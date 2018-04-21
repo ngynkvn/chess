@@ -3,7 +3,7 @@
 #include "Piece.h"
 #include "Board.h"
 
-unsigned long long perft(Board, int, int&);
+unsigned long long perft(Board, int, int&, int&);
 
 TEST_CASE("Piece data-type works correctly", "[piece]")
 {
@@ -13,16 +13,21 @@ TEST_CASE("Move generation is correct.","[perft]")
 {
     Board start;
     int captures = 0;
-    CHECK(perft(start, 1, captures) == 20);
-    CHECK(perft(start, 2, captures) == 400);
+    int checks = 0;
+    CHECK(perft(start, 1, captures, checks) == 20);
+    CHECK(captures == 0);
+    CHECK(checks == 0);
+    CHECK(perft(start, 2, captures, checks) == 400);
+    CHECK(captures == 0);
+    CHECK(checks == 0);
     SECTION("Depth 3 should show 34 captures.")
     {
-        CHECK(perft(start, 3, captures) == 8902);
+        CHECK(perft(start, 3, captures, checks) == 8902);
         CHECK(captures == 34);
     }
     SECTION("Depth 4 should show 1576 captures.")
     {
-        CHECK(perft(start, 4, captures) == 197281);
+        CHECK(perft(start, 4, captures, checks) == 197281);
         CHECK(captures == 1576);
     }
 }

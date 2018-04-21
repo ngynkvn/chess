@@ -83,20 +83,6 @@ Board& Board::operator= (const Board& other)
     return *this;
 }
 
-// Board::Board(Piece **newBoard)
-// {
-//     this->board = newBoard;
-//     this->board = new Piece *[8];
-//     for (int row = 0; row < 8; row++)
-//     {
-//         this->board[row] = new Piece[8];
-//         for (int col = 0; col < 8; col++)
-//         {
-//             this->board[row][col] = newBoard[row][col];
-//         }
-//     }
-// }
-
 Board::~Board()
 {
     for(int i = 0 ; i < 8 ; i++)
@@ -161,14 +147,16 @@ ostream &operator<<(ostream &os, const Board &board)
     //                    ' ', 'P', 'K','B','R','Q','B'};
     std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
+    std::string files[] = {"1 |","2 |","3 |","4 |","5 |","6 |", "7 |", "8 |"};
     for (int j = 7; j > -1; j--)
     {
+        os << files[j];
         for (int i = 7; i > -1; i--)
         {
             Piece p = board.getPiece(Coord(i, j));
             if (p.empty())
             {
-                os << "..";
+                os << ". ";
             }
             else
             {
@@ -177,8 +165,10 @@ ostream &operator<<(ostream &os, const Board &board)
         }
         os << endl;
     }
+    os << "   ---------------" << endl;
+    os << "   a b c d e f g h" << endl;
     os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
-    os << "They played " << "f: "<< board.getPrevMove().from() << " t: " << board.getPrevMove().to() << endl;
-    // os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
+    os << (board.isWhite() ? "White" : "Black") <<" played " << "f: "<< board.getPrevMove().from() << " t: " << board.getPrevMove().to() << endl;
+    os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
     return os;
 }
