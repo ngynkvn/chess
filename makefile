@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -Wall
+FLAGS = -std=c++11 -Wall -O3
 
 SRC = src
 OUTDIR = bin
@@ -14,7 +14,7 @@ OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
 	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ $(INCLUDE)
 
 main: $(OBJS)
-	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) $(INCLUDE) -g
+	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) $(INCLUDE)
 
 run: main
 	./$(OUTDIR)/$(OUTNAME)

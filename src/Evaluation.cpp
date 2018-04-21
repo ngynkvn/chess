@@ -25,7 +25,6 @@ Move mini_max(const Board& game_state)
 // pass parameters minimax(current Board, 4, -10000, 10000, true);
 int mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_player)
 {
-
     // is the depth zero
     if (depth == 0)
         return evaluate(game_state);
