@@ -2,6 +2,7 @@
 
 Move::Move(int fromX, int fromY, int toX, int toY) : fromX(fromX), fromY(fromY), toX(toX), toY(toY) {}
 Move::Move(Coord from, Coord to) : fromX(from.x), fromY(from.y), toX(to.x), toY(to.y) {}
+// Move::Move(std::string input);
 
 Coord Move::from()
 {

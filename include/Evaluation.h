@@ -6,10 +6,11 @@
 #include "Search.h"
 #include<vector>
 // pair for minimax algorithm
-typedef std::pair<Board, int> eval_pair;
+typedef std::pair<Move, int> eval_pair;
 
+Move mini_max(const Board &);
 // Depth first search tree which implements alpha-beta pruning
-eval_pair mini_max(Board currBoard, int alpha, int beta, bool is_max_player);
+int mini_max(Board currBoard, int depth,int alpha, int beta, bool is_max_player);
 
 // evaluates the current board state
 int evaluate(Board currBoard);

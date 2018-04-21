@@ -3,50 +3,68 @@
 //
 
 #include "Evaluation.h"
+#include <iostream>
+
+Move mini_max(const Board& game_state)
+{
+    std::vector<Move> moves = Search::generateMoveList(game_state);
+    int bestScore = evaluate(game_state.makeMove(moves[0]));
+    Move bestMove = moves[0];
+    for (auto i = moves.begin(); i != moves.end(); i++)
+    {
+        int currScore = mini_max(game_state.makeMove(*i), 4, -10000, 10000, true);
+        if (currScore > bestScore)
+        {
+            bestScore = currScore;
+            bestMove = *i;
+        }
+    }
+    return bestMove;
+}
 
 // pass parameters minimax(current Board, 4, -10000, 10000, true);
-eval_pair mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_player)
+int mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_player)
 {
 
     // is the depth zero
     if (depth == 0)
-        return eval_pair(game_state, evaluate(game_state));
+        return evaluate(game_state);
 
     // are there no more possible game states
     std::vector<Board> children_states = get_states(game_state);
     if (children_states.size() == 0)
-        return eval_pair(game_state, evaluate(game_state));
+        return evaluate(game_state);
 
     // maximize and minimize the possible moves
     if (is_max_player) // if it the players turn
     {
-        eval_pair v = eval_pair(game_state, alpha);
+        int v = alpha;
         for (Board b : children_states)
         {
-            eval_pair v_prime = mini_max(b, depth - 1, v.second, beta, !is_max_player);
-            if (v_prime.second > v.second)
+            int v_prime = mini_max(b, depth - 1, v, beta, !is_max_player);
+            if (v_prime > v)
                 v = v_prime;
-            if (v.second > beta)
-                return eval_pair(b, beta);
+            if (v > beta)
+                return beta;
         }
         return v;
     }
     else // if it's the opponents turn
     {
-        eval_pair v = eval_pair(game_state, beta);
+        int v = beta;
         for (Board b : children_states)
         {
-            eval_pair v_prime = mini_max(b, depth - 1, alpha, v.second, !is_max_player);
-            if (v_prime.second < v.second)
+            int v_prime = mini_max(b, depth - 1, alpha, v, !is_max_player);
+            if (v_prime < v)
                 v = v_prime;
-            if (v.second < alpha)
-                return eval_pair(b, alpha);
+            if (v < alpha)
+                return alpha;
         }
         return v;
     }
 }
 
-std::vector<Board> get_states(Board curr) 
+std::vector<Board> get_states(Board curr)
 {
     std::vector<Board> v;
     std::vector<Move> moves = Search::generateMoveList(curr);

@@ -77,7 +77,7 @@ bool inCheck(Board b)
     }
     for (int i = 0; i < 4; i++) //check rook rays
     {
-        
+
     }
         return false;
 }
@@ -96,7 +96,7 @@ void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vec
             //Examines each square in the direction dir[j]
             //while the square is empty or opposite (color)
             //Note: When the possibleMove is occupied by same color piece. break while loop (do not examine rest of the squares in that direction)
-            while (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()) && inCheck(b))
+            while (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite())) //&& inCheck(b))
             {
                 //if square is occupied by enemy, option to occupy square. break while loop
                 if (b.getPiece(possibleMove).getColor() == b.opposite())

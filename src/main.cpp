@@ -1,14 +1,18 @@
-#include <iostream>
+#include <iostream> 
 #include "Move.h"
 #include "Board.h"
 #include "Search.h"
 #include "Evaluation.h"
 int main() {
-    Move m(3,1,3,3);
+    // Move m(3,1,3,3);
     Board b;
-    b = b.makeMove(m);
-    b = b.makeMove(Move(7,6,7,5));
-    b = b.makeMove(Move(2,0,7,5));
+    b = b.makeMove(mini_max(b));
+    // b = b.makeMove(mini_max(b,4, -10000, 10000, true).first);
+    // b = b.makeMove(mini_max(b,4, -10000, 10000, true).first);
+    // b = b.makeMove(mini_max(b,4, -10000, 10000, true).first);
+    // b = b.makeMove(Move(7,6,7,5));
+    // b = b.makeMove(Move(2,0,7,5));
+    // b = b.makeMove(Move(2, 6, 2, 4));
     cout << b;
     // std::vector<Move> list = Search::generateMoveList(b);
     //whites turn
