@@ -8,8 +8,10 @@
 
 namespace Search
 {
-extern Coord dirKing[];
+    
 std::vector<Move> generateMoveList(const Board &);
+std::vector<Coord> findPieces(Board, ePieceCode);
+bool inCheck(Board);
 }
 
 #endif

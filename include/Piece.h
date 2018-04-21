@@ -1,6 +1,9 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+/**
+ * Adapted from https://chessprogramming.wikispaces.com/Pieces
+ * */
 enum ePieceCode
 {
   epcEmpty = -1,
@@ -32,6 +35,7 @@ public:
   ePieceCode getColor();
   ePieceCode getPieceCode() const;
   bool operator==(const Piece &);
+  bool operator!=(const Piece &);
 };
 
 #endif

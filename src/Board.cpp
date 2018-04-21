@@ -1,9 +1,10 @@
 #include "Board.h"
+#include "Search.h"
 
 using namespace std;
 /*constructor sets up the board for a new game*/
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
-Board::Board()
+Board::Board() : whiteTurn(true)
 {
     this->board = new Piece *[8];
 
@@ -44,27 +45,52 @@ Board::Board()
     }
 }
 
-Board::Board(Piece **newBoard)
+Board::Board(const Board& other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
 {
-    this->board = newBoard;
-    this->board = new Piece *[8];
+    board = new Piece *[8];
     for (int row = 0; row < 8; row++)
     {
-        this->board[row] = new Piece[8];
+        board[row] = new Piece[8];
         for (int col = 0; col < 8; col++)
         {
-            this->board[row][col] = newBoard[row][col];
+            board[row][col] = other.board[row][col];
         }
     }
 }
 
-Board Board::copy()
+Board& Board::operator= (const Board& other)
 {
-    Board b(this->board);
-    b.setTurn(whiteTurn);
-    return b;
+    if (this != &other)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            delete[] board[i];
+        }
+        delete[] board;
+        board = new Piece*[8];
+        Piece ** b = other.getBoard();
+        for(int i = 0; i < 8; i++)
+        {
+            board[i] = new Piece[8];
+            for(int j = 0; j < 8; j++)
+            {
+                board[i][j] = b[i][j];
+            }
+        } 
+        whiteTurn = other.whiteTurn;
+        prevMove = other.prevMove;
+    }
+    return *this;
 }
 
+Board::~Board()
+{
+    for(int i = 0 ; i < 8 ; i++)
+    {
+        delete[] board[i];
+    }
+    delete[] board;
+}
 /*returns the 2Darray of pieces that represents the board*/
 Piece **Board::getBoard() const
 {
@@ -84,8 +110,10 @@ corresponding to the to-coordinates
 -^^will in the future handle taking opponent pieces*/
 Board Board::makeMove(Move m) const
 {
-    Board testerGame(this->board);
+    Board testerGame(*this);
     Piece **gameBoard = testerGame.getBoard();
+    testerGame.setTurn(!whiteTurn);
+    testerGame.setPrevMove(m); // board.h and add in methods there and make public
     gameBoard[m.to().y][m.to().x] = testerGame.getPiece(m.from());
     gameBoard[m.from().y][m.from().x] = Piece(epcEmpty);
     return testerGame;
@@ -98,7 +126,7 @@ corresponding to the from-coordinates
 -^^will in the future handle returning opponent pieces*/
 Board Board::unmakeMove(Move m) const
 {
-    Board testerGame = Board(this->board);
+    Board testerGame = Board(*this);
     Piece **gameBoard = testerGame.getBoard();
     gameBoard[m.from().y][m.from().x] = testerGame.getPiece(m.to());
     return testerGame;
@@ -106,9 +134,12 @@ Board Board::unmakeMove(Move m) const
 
 bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8; }
 
-bool Board::isWhite() { return whiteTurn; }
+bool Board::isWhite() const { return whiteTurn; }
 void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
+Move Board::getPrevMove() const{ return prevMove; }
+void Board::setPrevMove(Move m) {prevMove = m;}
 ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
+ePieceCode Board::same() const { return whiteTurn ? white : black; }
 
 ostream &operator<<(ostream &os, const Board &board)
 {
@@ -116,14 +147,16 @@ ostream &operator<<(ostream &os, const Board &board)
     //                    ' ', 'P', 'K','B','R','Q','B'};
     std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
+    std::string files[] = {"1 |","2 |","3 |","4 |","5 |","6 |", "7 |", "8 |"};
     for (int j = 7; j > -1; j--)
     {
-        for (int i = 0; i < 8; i++)
+        os << files[j];
+        for (int i = 7; i > -1; i--)
         {
             Piece p = board.getPiece(Coord(i, j));
             if (p.empty())
             {
-                os << "..";
+                os << ". ";
             }
             else
             {
@@ -132,5 +165,10 @@ ostream &operator<<(ostream &os, const Board &board)
         }
         os << endl;
     }
+    os << "   ---------------" << endl;
+    os << "   a b c d e f g h" << endl;
+    os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
+    os << (board.isWhite() ? "Black" : "White") <<" played " << board.getPrevMove() << endl;
+    // os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
     return os;
 }

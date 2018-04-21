@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -Wall
+FLAGS = -std=c++11 -Wall -O3
 
 SRC = src
 OUTDIR = bin
@@ -7,7 +7,7 @@ TESTDIR = test
 OUTNAME = a.out
 INCLUDE = -I include
 
-OBJS = Move.o Piece.o Board.o Search.o
+OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
 
 %.o: $(SRC)/%.cpp
 	@mkdir -p bin
