@@ -254,7 +254,6 @@ void generateMove(std::vector<Move> &v, Board b, int code)
 
 std::vector<Move> generateMoveList(const Board &b)
 {
-    // std::cout << "I MAKE ddddddddddddddddddTHE GIRLS GO LIKE";
     std::vector<Move> v;
 
     //generates all the possible moves for the code's ePieceCode representation

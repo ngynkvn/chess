@@ -5,7 +5,7 @@
 #include "Evaluation.h"
 #include <iostream>
 
-Move mini_max(const Board& game_state)
+Move mini_max(const Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
     int bestScore = evaluate(game_state.makeMove(moves[0]));

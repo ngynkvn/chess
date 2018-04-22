@@ -3,7 +3,7 @@
 #include "Piece.h"
 #include "Board.h"
 
-unsigned long long perft(Board, int, int&, int&);
+unsigned long long perft(Board, int, int &, int &);
 
 TEST_CASE("Piece data-type works correctly", "[piece]")
 {
@@ -13,7 +13,7 @@ TEST_CASE("Piece data-type works correctly", "[piece]")
     p = Piece(epcWpawn);
 
     CHECK_FALSE(p.empty());
-    
+
     CHECK(p == Piece(epcWpawn));
     CHECK_FALSE(p != Piece(epcWpawn));
 
@@ -23,7 +23,7 @@ TEST_CASE("Piece data-type works correctly", "[piece]")
     CHECK_FALSE(p.getColor() == epcEmpty);
 }
 
-TEST_CASE("Move generation is correct.","[perft]")
+TEST_CASE("Move generation is correct.", "[perft]")
 {
     Board start;
     int captures = 0;
@@ -51,7 +51,7 @@ TEST_CASE("Board data-type works correctly", "[board]")
     Board start;
     SECTION("Pawns are in the correct positions.")
     {
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             CHECK(start.getPiece(Coord(i, 1)).getPieceCode() == epcWpawn);
             CHECK(start.getPiece(Coord(i, 6)).getPieceCode() == epcBpawn);
@@ -87,7 +87,6 @@ TEST_CASE("Board data-type works correctly", "[board]")
 
         CHECK(pieceTo.getPieceCode() == epcWpawn);
         CHECK(pieceTo.getPieceCode() != epcEmpty);
-
     }
 }
 

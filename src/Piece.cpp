@@ -4,22 +4,23 @@ Piece::Piece(ePieceCode code) : pieceCode(code) {}
 
 Piece::Piece() : pieceCode(epcEmpty) {}
 
-bool Piece::empty() {
+bool Piece::empty()
+{
     return pieceCode == epcEmpty;
 }
 
-bool Piece::operator==(const Piece& right) const
+bool Piece::operator==(const Piece &right) const
 {
     return pieceCode == right.getPieceCode();
 }
-bool Piece::operator!=(const Piece& right) const
+bool Piece::operator!=(const Piece &right) const
 {
     return !(pieceCode == right.getPieceCode());
 }
 
 ePieceCode Piece::getColor()
 {
-    if(empty())
+    if (empty())
     {
         return epcEmpty;
     }

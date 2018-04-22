@@ -5,15 +5,16 @@ typedef unsigned long long u64;
 
 //Based off perft function here:
 //http://chessprogramming.wikispaces.com/Perft
-u64 perft(Board b, int depth, int& captures, int& checks)
+u64 perft(Board b, int depth, int &captures, int &checks)
 {
-    if(depth == 1){
+    if (depth == 1)
+    {
         std::vector<Move> moves = Search::generateMoveList(b);
         for (auto i = moves.begin(); i != moves.end(); i++)
         {
-            if(b.getPiece((*i).to()) != epcEmpty)
+            if (b.getPiece((*i).to()) != epcEmpty)
                 captures++;
-            if(Search::inCheck(b, *i))
+            if (Search::inCheck(b, *i))
                 checks++;
         }
         return moves.size();
@@ -30,7 +31,8 @@ u64 perft(Board b, int depth, int& captures, int& checks)
 }
 u64 perft(Board b, int depth)
 {
-    if(depth == 1){
+    if (depth == 1)
+    {
         std::vector<Move> moves = Search::generateMoveList(b);
         return moves.size();
     }

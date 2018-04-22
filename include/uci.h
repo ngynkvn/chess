@@ -8,7 +8,7 @@
 
 class UCI
 {
-public:
+  public:
     UCI();
     static void newUCI();
     static void inputIsReady();
@@ -17,7 +17,8 @@ public:
     void uciNewGame();
     void inputIsGo();
     void print();
-private:
+
+  private:
     string nameOfEngine;
     string Line;
 };

@@ -45,7 +45,7 @@ Board::Board() : whiteTurn(true)
     }
 }
 
-Board::Board(const Board& other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
+Board::Board(const Board &other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
 {
     board = new Piece *[8];
     for (int row = 0; row < 8; row++)
@@ -58,7 +58,7 @@ Board::Board(const Board& other) : whiteTurn(other.whiteTurn), prevMove(other.pr
     }
 }
 
-Board& Board::operator= (const Board& other)
+Board &Board::operator=(const Board &other)
 {
     if (this != &other)
     {
@@ -67,16 +67,16 @@ Board& Board::operator= (const Board& other)
             delete[] board[i];
         }
         delete[] board;
-        board = new Piece*[8];
-        Piece ** b = other.getBoard();
-        for(int i = 0; i < 8; i++)
+        board = new Piece *[8];
+        Piece **b = other.getBoard();
+        for (int i = 0; i < 8; i++)
         {
             board[i] = new Piece[8];
-            for(int j = 0; j < 8; j++)
+            for (int j = 0; j < 8; j++)
             {
                 board[i][j] = b[i][j];
             }
-        } 
+        }
         whiteTurn = other.whiteTurn;
         prevMove = other.prevMove;
     }
@@ -85,7 +85,7 @@ Board& Board::operator= (const Board& other)
 
 Board::~Board()
 {
-    for(int i = 0 ; i < 8 ; i++)
+    for (int i = 0; i < 8; i++)
     {
         delete[] board[i];
     }
@@ -136,8 +136,8 @@ bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.
 
 bool Board::isWhite() const { return whiteTurn; }
 void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
-Move Board::getPrevMove() const{ return prevMove; }
-void Board::setPrevMove(Move m) {prevMove = m;}
+Move Board::getPrevMove() const { return prevMove; }
+void Board::setPrevMove(Move m) { prevMove = m; }
 ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
 ePieceCode Board::same() const { return whiteTurn ? white : black; }
 
@@ -147,7 +147,7 @@ ostream &operator<<(ostream &os, const Board &board)
     //                    ' ', 'P', 'K','B','R','Q','B'};
     std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
-    std::string files[] = {"1 |","2 |","3 |","4 |","5 |","6 |", "7 |", "8 |"};
+    std::string files[] = {"1 |", "2 |", "3 |", "4 |", "5 |", "6 |", "7 |", "8 |"};
     for (int j = 7; j > -1; j--)
     {
         os << files[j];
@@ -168,7 +168,7 @@ ostream &operator<<(ostream &os, const Board &board)
     os << "   ---------------" << endl;
     os << "   a b c d e f g h" << endl;
     os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
-    os << (board.isWhite() ? "Black" : "White") <<" played " << board.getPrevMove() << endl;
+    os << (board.isWhite() ? "Black" : "White") << " played " << board.getPrevMove() << endl;
     // os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
     return os;
 }

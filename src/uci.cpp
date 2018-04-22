@@ -1,6 +1,6 @@
-#include<iostream>
-#include<cstdlib>
-#include<string.h>
+#include <iostream>
+#include <cstdlib>
+#include <string.h>
 
 #include "uci.h"
 
@@ -36,7 +36,6 @@ int main()
         {
             print();
         }
-
     }
 
     return 0;
