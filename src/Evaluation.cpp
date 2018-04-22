@@ -23,7 +23,7 @@ Move mini_max(const Board &game_state)
 }
 
 // pass parameters minimax(current Board, 4, -10000, 10000, true);
-int mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_player)
+int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
     // is the depth zero
     if (depth == 0)
@@ -63,7 +63,7 @@ int mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_playe
     }
 }
 
-std::vector<Board> get_states(Board curr)
+std::vector<Board> get_states(const Board& curr)
 {
     std::vector<Board> v;
     std::vector<Move> moves = Search::generateMoveList(curr);
@@ -74,7 +74,7 @@ std::vector<Board> get_states(Board curr)
     return v;
 }
 
-int evaluate(Board game_state)
+int evaluate(const Board& game_state)
 {
     int evaluation = 0;
     Piece **curr_board = game_state.getBoard();

@@ -5,21 +5,19 @@
 #include "Move.h"
 #include "Search.h"
 #include <vector>
-// pair for minimax algorithm
-typedef std::pair<Move, int> eval_pair;
 
 Move mini_max(const Board &);
 // Depth first search tree which implements alpha-beta pruning
-int mini_max(Board currBoard, int depth, int alpha, int beta, bool is_max_player);
+int mini_max(const Board & currBoard, int depth, int alpha, int beta, bool is_max_player);
 
 // evaluates the current board state
-int evaluate(Board currBoard);
+int evaluate(const Board& currBoard);
 
 // gets the value of a piece at a give location
 int get_piece_value(Piece p, int x, int y);
 
 //calls generateMoveList, makes each move and appends to vector to be processed later.
-std::vector<Board> get_states(Board curr);
+std::vector<Board> get_states(const Board& curr);
 
 // board evaluation tables
 // Pawn evaluation tables

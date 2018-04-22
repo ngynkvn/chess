@@ -10,7 +10,7 @@ namespace Search
 {
 
 std::vector<Move> generateMoveList(const Board &);
-std::vector<Coord> findPieces(Board, ePieceCode);
+std::vector<Coord> findPieces(const Board&, ePieceCode);
 bool inCheck(Board, Move);
 }
 
