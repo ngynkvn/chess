@@ -12,7 +12,7 @@ Move mini_max(const Board &game_state)
     Move bestMove = moves[0];
     for (auto i = moves.begin(); i != moves.end(); i++)
     {
-        int currScore = mini_max(game_state.makeMove(*i), 4, -10000, 10000, true);
+        int currScore = mini_max(game_state.makeMove(*i), 3, -10000, 10000, true);
         if (currScore > bestScore)
         {
             bestScore = currScore;

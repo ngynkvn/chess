@@ -12,14 +12,19 @@ bool Piece::empty() {
 
 //Returns true if the move was made by the right piece
 //Otherwise, it returns false
-bool Piece::operator==(const Piece& right)
+bool Piece::operator==(const Piece& right) const
 {
     return pieceCode == right.getPieceCode();
 }
 
+bool Piece::operator==(const ePieceCode& code) const
+{
+    return pieceCode == code;
+}
+
 //Returns false if the move was not made by the right piece
 //Otherwise, it returns true
-bool Piece::operator!=(const Piece& right)
+bool Piece::operator!=(const Piece& right) const
 {
     return !(pieceCode == right.getPieceCode());
 }
