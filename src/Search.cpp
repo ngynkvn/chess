@@ -73,6 +73,7 @@ std::vector<Coord> findPieces(const Board& b, ePieceCode piece)
     return pieces;
 }
 
+
 //Function checks a board and tests if the king is in check
 bool inCheck(Board b, Move m)
 {
@@ -215,6 +216,16 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
             possibleMove = piece + dir3[j];                                                    //possibleMove set to a pawn capture direction
             if (b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite()) // test opposite color piece in square
                 v.push_back(Move(piece, possibleMove));
+            if (b.inside(possibleMove) && b.getPiece(possibleMove+Coord(0,possibleMove.y)).getColor() == b.opposite())
+                v.push_back(Move(piece, possibleMove+Coord(0,possibleMove.y)));
+            if (b.inside(possibleMove) && b.getPiece(possibleMove+Coord(0,-possibleMove.y)).getColor() == b.opposite())
+                v.push_back(Move(piece, possibleMove+Coord(0,-possibleMove.y)));
+            if (b.inside(possibleMove) && b.getPiece(possibleMove+Coord(possibleMove.x,0)).getColor() == b.opposite())
+                v.push_back(Move(piece, possibleMove+Coord(possibleMove.x,0)));
+            if (b.inside(possibleMove) && b.getPiece(possibleMove+Coord(-possibleMove.x,0)).getColor() == b.opposite())
+                v.push_back(Move(piece, possibleMove+Coord(-possibleMove.x,0)));
+            
+
         }
     }
 }
