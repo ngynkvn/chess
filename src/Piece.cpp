@@ -17,6 +17,11 @@ bool Piece::operator==(const Piece& right) const
     return pieceCode == right.getPieceCode();
 }
 
+bool Piece::operator==(const ePieceCode& code) const
+{
+    return pieceCode == code;
+}
+
 //Returns false if the move was not made by the right piece
 //Otherwise, it returns true
 bool Piece::operator!=(const Piece& right) const
