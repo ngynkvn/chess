@@ -13,7 +13,7 @@ u64 perft(Board b, int depth, int& captures, int& checks)
         {
             if(b.getPiece((*i).to()) != epcEmpty)
                 captures++;
-            if(Search::inCheck(b.makeMove(*i)))
+            if(Search::inCheck(b, *i))
                 checks++;
         }
         return moves.size();
