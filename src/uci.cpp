@@ -32,15 +32,12 @@ int main()
         {
             inputIsGo();
         }
-        else if (Line == "print")
-        {
-            print();
-        }
     }
 
     return 0;
 }
 
+//Prints out the id name, author, and that the uci is ok to run
 void UCI::newUCI()
 {
     cout << "id name" << nameOfEngine << endl;
@@ -48,6 +45,7 @@ void UCI::newUCI()
     cout << "uciok" << endl;
 }
 
+//Prints out "readyok" if the UCI isReady
 void UCI::inputIsReady()
 {
     cout << "readyok" << endl;
@@ -73,9 +71,4 @@ void UCI::uciNewGame()
 void UCI::inputIsGo()
 {
     //The method will start to calculate and ponder when the engine recieves "Go"
-}
-
-void UCI::print()
-{
-    //This method will print the commands
 }

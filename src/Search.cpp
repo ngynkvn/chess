@@ -76,16 +76,16 @@ std::vector<Coord> findPieces(Board b, ePieceCode piece)
 //Function checks a board and tests if the king is in check
 bool inCheck(Board b, Move m)
 {
-    //Board b2;
-    int i=0; //used to determine White or Black ePieceCode by adding 7 for white 0 for black
+    Board b2;
+    int i=0; //used to determine White or Black ePieceCode
     std::vector <Coord> pieceV;
-    b = b.makeMove(m);  // This is the board if the move is made
+    b2 = b.makeMove(m);  // This is the board if the move is made
     //set pieceV to the correct color
     if(b.isWhite()){
-        pieceV = findPieces(b, epcWking); //cast code to correspoding white ePieceCode
+        pieceV = findPieces(b2, epcWking); //cast code to correspoding white ePieceCode
         i=7;}
     else
-        {pieceV = findPieces(b, epcBking);} //cast code to correspoding black ePieceCode
+        {pieceV = findPieces(b2, epcBking);} //cast code to correspoding black ePieceCode
 
 
     for(unsigned int j=0; j<pieceV.size(); j++)
@@ -97,14 +97,14 @@ bool inCheck(Board b, Move m)
         {
             //Checks if there is a bishop, rook, queen, or king attack the knight
             Coord possibleMove = piece + dirQueen[k];
-            while ((b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite())))
+            while ((b2.inside(possibleMove) && (b2.getPiece(possibleMove).empty() || b2.getPiece(possibleMove).getColor() == b2.opposite())))
             {
                 //If Piece is a bishop, rook, queen, or king return true
-                if(b.getPiece(possibleMove) == ePieceCode(3+i) || b.getPiece(possibleMove) == ePieceCode(4+i)
-                || b.getPiece(possibleMove) == ePieceCode(5+i) || b.getPiece(possibleMove) == ePieceCode(6+i))
+                if(b2.getPiece(possibleMove) == ePieceCode(3+i) || b2.getPiece(possibleMove) == ePieceCode(4+i)
+                || b2.getPiece(possibleMove) == ePieceCode(5+i) || b2.getPiece(possibleMove) == ePieceCode(6+i))
                     return true;
                 //if there is an enemy piece on dirQueen[k] line that is not attacking the king
-                else if(b.getPiece(possibleMove) == b.opposite())
+                else if(b2.getPiece(possibleMove) == b2.opposite())
                     break;
                 //else check next square in the direction
                 possibleMove = possibleMove + dirQueen[k];
@@ -112,7 +112,7 @@ bool inCheck(Board b, Move m)
 
             //Checks if there is a knight attacking the king
             possibleMove = piece + dirKnight[k];
-            if(b.inside(possibleMove) && b.getPiece(possibleMove) == ePieceCode(2+i))
+            if(b2.inside(possibleMove) && b2.getPiece(possibleMove) == ePieceCode(2+i))
                 return true;
         }
 
@@ -122,20 +122,21 @@ bool inCheck(Board b, Move m)
             //if whiteTurn
             if(i)
             {
+
                 Coord possibleMove = piece + dirWpawnCapture[k]; //The two squares a pawn can be attacking from
-                if(b.inside(possibleMove) && b.getPiece(possibleMove) == ePieceCode(8))
+                if(b2.inside(possibleMove) && b2.getPiece(possibleMove) == ePieceCode(8))
                     return true;
             }
             //if black
             else
             {
                 Coord possibleMove = piece + dirBpawnCapture[k]; //The two squares a pawn can be attacking from
-                if(b.inside(possibleMove) && b.getPiece(possibleMove) == ePieceCode(1))
+                if(b2.inside(possibleMove) && b2.getPiece(possibleMove) == ePieceCode(1))
                     return true;
             }
         }
     }
-    return false;//DEBUGGING STATEMENT PURPOESS ONLY
+    return false;
 }
 
 
@@ -185,7 +186,7 @@ void squareMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::
         for (unsigned int j = 0; j < 8; j++)
         {
             Coord possibleMove = piece + dir[j];
-            if (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()))
+            if (b.inside(possibleMove) && !inCheck(b, Move(piece, possibleMove)) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()))
                 v.push_back(Move(piece, possibleMove)); //if square is empty or occupied by enemy, add possibleMove to v
         }
     }
@@ -200,12 +201,12 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
         Coord possibleMove = piece + push[0]; //possibleMove set to a pawn push
 
         //Checks forward square for pawn push direction and checks for special 2 square move
-        if (b.inside(possibleMove) && (b.getPiece(possibleMove).empty())) //tests a pawn push
+        if (b.inside(possibleMove) && !inCheck(b, Move(piece, possibleMove)) && (b.getPiece(possibleMove).empty()) && !inCheck(b, Move(piece, possibleMove))) //tests a pawn push
         {
             v.push_back(Move(piece, possibleMove));
 
             possibleMove = piece + move2[0]; //possibleMove set to special 2 square move
-            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ???? KEVINNNN
+            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ???? KEVINNNN THIS SHOULDNT BE WORKING
                 v.push_back(Move(piece, possibleMove));
         }
 
@@ -213,8 +214,8 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
         for(int j=0; j<2; j++)
         {
             possibleMove = piece + dir3[j]; //possibleMove set to a pawn capture direction
-            if(b.inside(possibleMove)&&b.getPiece(possibleMove).getColor() == b.opposite()) // test opposite color piece in square
-                v.push_back(Move(piece,possibleMove));
+            if(b.inside(possibleMove)&& !inCheck(b, Move(piece, possibleMove))&&b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove))) // test opposite color piece in square
+                    v.push_back(Move(piece,possibleMove));
         }
     }
 }

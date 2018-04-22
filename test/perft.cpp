@@ -17,6 +17,7 @@ u64 perft(Board b, int depth, int &captures, int &checks)
             if (Search::inCheck(b, *i))
                 checks++;
         }
+
         return moves.size();
     }
 

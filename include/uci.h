@@ -16,9 +16,7 @@ class UCI
     void setOption(string);
     void uciNewGame();
     void inputIsGo();
-    void print();
-
-  private:
+private:
     string nameOfEngine;
     string Line;
 };
