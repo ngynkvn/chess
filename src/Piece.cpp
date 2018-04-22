@@ -8,11 +8,11 @@ bool Piece::empty() {
     return pieceCode == epcEmpty;
 }
 
-bool Piece::operator==(const Piece& right)
+bool Piece::operator==(const Piece& right) const
 {
     return pieceCode == right.getPieceCode();
 }
-bool Piece::operator!=(const Piece& right)
+bool Piece::operator!=(const Piece& right) const
 {
     return !(pieceCode == right.getPieceCode());
 }

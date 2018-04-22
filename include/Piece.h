@@ -34,8 +34,8 @@ public:
   bool empty();
   ePieceCode getColor();
   ePieceCode getPieceCode() const;
-  bool operator==(const Piece &);
-  bool operator!=(const Piece &);
+  bool operator==(const Piece &) const;
+  bool operator!=(const Piece &) const;
 };
 
 #endif

@@ -7,6 +7,20 @@ unsigned long long perft(Board, int, int&, int&);
 
 TEST_CASE("Piece data-type works correctly", "[piece]")
 {
+    Piece p = Piece(epcEmpty);
+    CHECK(p.empty());
+
+    p = Piece(epcWpawn);
+
+    CHECK_FALSE(p.empty());
+    
+    CHECK(p == Piece(epcWpawn));
+    CHECK_FALSE(p != Piece(epcWpawn));
+
+    CHECK(p.getPieceCode() == epcWpawn);
+    CHECK(p.getColor() == white);
+    CHECK_FALSE(p.getColor() == black);
+    CHECK_FALSE(p.getColor() == epcEmpty);
 }
 
 TEST_CASE("Move generation is correct.","[perft]")
