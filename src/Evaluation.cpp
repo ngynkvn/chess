@@ -5,6 +5,9 @@
 #include "Evaluation.h"
 #include <iostream>
 
+/*
+Returns the best move by finding the move with the highest score
+*/
 Move mini_max(const Board& game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
@@ -22,7 +25,10 @@ Move mini_max(const Board& game_state)
     return bestMove;
 }
 
-// pass parameters minimax(current Board, 4, -10000, 10000, true);
+/*
+Finds the score of the board given into the parameter
+--pass parameters minimax(current Board, 4, -10000, 10000, true);
+*/
 int mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_player)
 {
     // is the depth zero
@@ -63,6 +69,10 @@ int mini_max(Board game_state, int depth, int alpha, int beta, bool is_max_playe
     }
 }
 
+/*
+Returns a vector of boards that show the outcome of each 
+possible move that can currently be made on the actual board
+*/
 std::vector<Board> get_states(Board curr)
 {
     std::vector<Board> v;
@@ -74,6 +84,9 @@ std::vector<Board> get_states(Board curr)
     return v;
 }
 
+/*
+Returns the total of the values of each of the pieces on the board given
+*/
 int evaluate(Board game_state)
 {
     int evaluation = 0;
@@ -88,6 +101,9 @@ int evaluate(Board game_state)
     return evaluation;
 }
 
+/*
+Returns the piece value, which are in the Evaluation.h file
+*/
 int get_piece_value(Piece p, int x, int y)
 {
     switch (p.getPieceCode())
