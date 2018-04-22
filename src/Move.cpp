@@ -4,12 +4,14 @@ Move::Move(int fromX, int fromY, int toX, int toY) : fromX(fromX), fromY(fromY),
 Move::Move(Coord from, Coord to) : Move(from.x, from.y, to.x, to.y) {}
 Move::Move(std::string input) : Move('h' - input.at(0), input.at(1) - '1', 'h' - input.at(2), input.at(3) - '1') {}
 
+//Returns the from coordinates of piece orginally
 Coord Move::from() const
 {
     Coord c(fromX, fromY);
     return c;
 }
 
+//Returning the to coordinates that the piece is going to
 Coord Move::to() const
 {
     Coord c(toX, toY);
