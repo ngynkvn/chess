@@ -37,8 +37,9 @@ TEST_CASE("Move generation is correct.", "[perft]")
     CHECK(captures == 0);
     SECTION("Depth 3 should show 34 captures.")
     {
-        CHECK(perft(start, 3, captures) == 8902);
+        CHECK(perft(start, 3, captures, checks) == 8902);
         CHECK(captures == 34);
+        CHECK(checks == 12);
     }
     SECTION("Depth 4 should show 1576 captures.")
     {

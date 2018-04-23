@@ -151,31 +151,29 @@ bool inCheck(Board b)
     std::vector <Coord> pieceV;
     //set pieceV to the correct color
     if(b.isWhite()){
-        pieceV = findPieces(b, epcBking); //cast code to correspoding white ePieceCode
+        pieceV = findPieces(b, epcWking); //cast code to correspoding white ePieceCode
     }
     else {
-        pieceV = findPieces(b, epcWking); //cast code to correspoding black ePieceCode
+        pieceV = findPieces(b, epcBking); //cast code to correspoding black ePieceCode
     }
     // std::cout << b2 << std::endl;
     // std::cout << pieceV.size() << std::endl;
     Coord piece = pieceV[0];
 
         if(b.isWhite())
-         return (rayCheckHelper(b, piece, dirRook, epcWrook)
-               || rayCheckHelper(b, piece, dirQueen, epcWqueen)
-               || rayCheckHelper(b, piece, dirBishop, epcWbishop)
-               || squareCheckHelper(b, piece, dirKnight, epcWknight)
-               || squareCheckHelper(b, piece, dirKing, epcWking)
-               || squareCheckHelper(b, piece, dirBpawnCapture, epcWpawn));
-
-
-        else
          return (rayCheckHelper(b, piece, dirRook,epcBrook)
                 || rayCheckHelper(b, piece, dirQueen, epcBqueen)
                 || rayCheckHelper(b, piece, dirBishop, epcBbishop)
                 || squareCheckHelper(b, piece, dirKnight, epcBknight)
                 || squareCheckHelper(b, piece, dirKing, epcBking)
                 || squareCheckHelper(b, piece, dirWpawnCapture, epcBpawn));
+        else
+         return (rayCheckHelper(b, piece, dirRook, epcWrook)
+               || rayCheckHelper(b, piece, dirQueen, epcWqueen)
+               || rayCheckHelper(b, piece, dirBishop, epcWbishop)
+               || squareCheckHelper(b, piece, dirKnight, epcWknight)
+               || squareCheckHelper(b, piece, dirKing, epcWking)
+               || squareCheckHelper(b, piece, dirBpawnCapture, epcWpawn));
         return false;
 }
 

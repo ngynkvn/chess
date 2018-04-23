@@ -12,7 +12,7 @@ bool validMove(Board b, Move m)
     return find(list.begin(), list.end(), m) != list.end();
 }
 
-int main()
+void gameLoop()
 {
     Board b;
     string in;
@@ -42,4 +42,10 @@ int main()
         }
     }
     cout << "Game over!" << endl;
+}
+
+int main()
+{
+    // Board b;
+    gameLoop();
 }
