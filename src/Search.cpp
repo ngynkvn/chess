@@ -232,28 +232,17 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
         {
             v.push_back(Move(piece, possibleMove));
 
-<<<<<<< HEAD
-            possibleMove = piece + move2[0];                                            //possibleMove set to special 2 square move
-            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ???? KEVINNNN
-=======
             possibleMove = piece + move2[0]; //possibleMove set to special 2 square move
             if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ???? KEVINNNN THIS SHOULDNT BE WORKING
->>>>>>> dc1a31cd2d0b4f177f670122a71f4e61e86ffbf9
                 v.push_back(Move(piece, possibleMove));
         }
 
         //for loop for the two capture directions
         for (int j = 0; j < 2; j++)
         {
-<<<<<<< HEAD
-            possibleMove = piece + dir3[j];                                                    //possibleMove set to a pawn capture direction
-            if (b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite()) // test opposite color piece in square
-                v.push_back(Move(piece, possibleMove));
-=======
             possibleMove = piece + dir3[j]; //possibleMove set to a pawn capture direction
             if(b.inside(possibleMove)&& !inCheck(b, Move(piece, possibleMove))&&b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove))) // test opposite color piece in square
                     v.push_back(Move(piece,possibleMove));
->>>>>>> dc1a31cd2d0b4f177f670122a71f4e61e86ffbf9
         }
     }
 }
