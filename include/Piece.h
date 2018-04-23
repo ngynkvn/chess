@@ -4,6 +4,11 @@
 /**
  * Adapted from https://chessprogramming.wikispaces.com/Pieces
  * */
+
+/*
+ * ePieceCode is a simple enumerator to allow for identification of pieces within the program. We separate pieces 
+ * by color to distinguish between opposing sides.
+ */
 enum ePieceCode
 {
   epcEmpty = -1,

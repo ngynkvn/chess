@@ -3,6 +3,10 @@
 
 #include <ostream>
 
+/** 
+ * Coord is a simple x,y struct to allow for easy interfacing to the Board class. Can be constructed from either integers
+ * or rank and file. Note that coord does not test the validity of a position as that is left up to the board to confirm.
+ */
 struct Coord
 {
   int x;
@@ -16,6 +20,11 @@ struct Coord
   friend std::ostream &operator<<(std::ostream &, const Coord &);
 };
 
+/** 
+ * Move consists of a FROM coordinate and a TO coordinate to signify movement of pieces. This is helpful for when
+ * pieces need to be moved as it is necessary to know the location the piece comes from and it's destination.
+ * Overloaded operators allow for comparison and an overloaded ostream operator prints out the move in rank-file format.
+ */
 class Move
 {
 public:

@@ -87,6 +87,10 @@ Board &Board::operator=(const Board &other)
     return *this;
 }
 
+/**
+ * Destructor to remove piece array.
+ * This is done via a simple for loop to remove each pointer array.
+ */
 Board::~Board()
 {
     for (int i = 0; i < 8; i++)

@@ -1,8 +1,18 @@
 #include "Move.h"
 #include <iostream>
-Move::Move(int fromX, int fromY, int toX, int toY) : fromX(fromX), fromY(fromY), toX(toX), toY(toY) {}
-Move::Move(Coord from, Coord to) : Move(from.x, from.y, to.x, to.y) {}
-Move::Move(std::string input) : Move('h' - input.at(0), input.at(1) - '1', 'h' - input.at(2), input.at(3) - '1') {}
+
+/** 
+ * Various constructors for creating Move class objects.
+ */
+Move::Move(int fromX, int fromY, int toX, int toY) : fromX(fromX), fromY(fromY), toX(toX), toY(toY) 
+{
+}
+Move::Move(Coord from, Coord to) : Move(from.x, from.y, to.x, to.y) 
+{
+}
+Move::Move(std::string input) : Move('h' - input.at(0), input.at(1) - '1', 'h' - input.at(2), input.at(3) - '1') 
+{
+}
 
 //Returns the from coordinates that the pieces are coming from
 Coord Move::from() const

@@ -64,7 +64,6 @@ void selfPlay()
 
 int main()
 {
-    Board b;
-    selfPlay();
-    // gameLoop();
+    // selfPlay();
+    gameLoop();
 }

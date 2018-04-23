@@ -25,6 +25,14 @@ bool is_end_game(const Board &);
 //Material weights
 const int material[] = {100,320,325,500,975,32767};
 
+/*
+ * POSITION TABLES
+ * 
+ * The tables below are responsible for evaluating a given position in our algorithm adn assign weights
+ * to the best possible outcomes in a game. These power the evaluate() function which allow the minimax algorithm to 
+ * make objective decisions during gameplay.
+ */
+
 // Position tables
 // Pawn table
 const int black_pawn_table[8][8] = {{  0,   0,   0,   0,   0,   0,   0,   0},

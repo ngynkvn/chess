@@ -6,8 +6,14 @@
 #include <ostream>
 #include <string>
 
-using namespace std;
 
+/** 
+ * Board class holds important information pertaining to the existing state of the game.
+ * This is a data-type that is treated as an immutable throughout the code, however it is important to note that 
+ * it is actually not immutable and has various methods for setting internal state.
+ * 
+ * In the future we will work to make this data-type 100% immutable to allow for cleaner code.
+ */
 class Board
 {
 public:

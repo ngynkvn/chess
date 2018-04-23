@@ -6,6 +6,12 @@ typedef unsigned long long u64;
 
 //Based off perft function here:
 //http://chessprogramming.wikispaces.com/Perft
+
+/*
+ * Perft functions allow for the testing of move generation algorithms and verify that they correctly 
+ * generate all possible board states from a given position up to a certain depth.
+ * We have included helper code to also test amounts of captures and checks to further validify our code.
+ */
 u64 perft(Board b, int depth, int &captures, int &checks)
 {
     if (depth == 1)

@@ -6,8 +6,10 @@
 #include <iostream>
 
 /*
-Returns the best move by finding the move with the highest score
-*/
+ * Returns the best move by finding the move with the highest score.
+ * This is done by the recursive minimax algorithm which simulates play up to a certain depth and calculates 
+ * a heuristical score. Scores can then be correlated with the initial move to make the best decision.
+ */
 Move mini_max(const Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
@@ -29,9 +31,8 @@ Move mini_max(const Board &game_state)
 }
 
 /*
-Finds the score of the board given into the parameter
---pass parameters minimax(current Board, 4, -10000, 10000, true);
-*/
+ * Alpha beta pruning is implemented to reduce the size of the game tree and improve performance of the algorithm.
+ */
 int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
     // is the depth zero
@@ -134,8 +135,10 @@ int evaluate(const Board& game_state)
 }
 
 /*
-Returns the piece value, which are in the Evaluation.h file
-*/
+ * Returns the piece value, which are in the Evaluation.h file
+ * This makes use of the position tables found in Evaluation.h and also includes 
+ * programmer-defined heuristics to slightly tweak how the engine plays.
+ */
 int get_piece_value(Piece p, int x, int y, bool is_end)
 {
     int score = 0;
