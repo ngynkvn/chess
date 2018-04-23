@@ -110,7 +110,11 @@ int evaluate(const Board& game_state)
     {
         for (int j = 0; j < 8; j++)
         {
-            evaluation += get_piece_value(curr_board[i][j], i, j, is_end);
+            if (curr_board[i][j].getColor() == white) {
+                evaluation += get_piece_value(curr_board[i][j], i, j, is_end);
+            } else {
+                evaluation -= get_piece_value(curr_board[i][j], i, j, is_end);
+            }
         }
     }
 
@@ -125,7 +129,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
         if (p.getPieceCode() == epcBking) {
             score += material[5];
-            score += -king_end_table[x][y];
+            score += king_end_table[x][y];
             return -score;
         } else {
             score += material[5];
@@ -137,13 +141,18 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     switch (p.getPieceCode())
     {
     // white evaluation
-    case epcWpawn: {
+    case epcWpawn:
+    case epcBpawn:
+    {
         score += material[0];
         score += pawn_table[x][y];
         if (x == 0 || x == 7) score -= 15;
         return score;
     }
-    case epcWknight: {
+
+    case epcWknight:
+    case epcBknight:
+    {
         score += material[1];
         score += knight_table[x][y];
         if (is_end) {
@@ -151,7 +160,10 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
         }
         return score;
     }
-    case epcWbishop: {
+
+    case epcWbishop:
+    case epcBbishop:
+    {
         score += material[2];
         score += bishop_table[x][y];
         if (is_end) {
@@ -159,12 +171,18 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
         }
         return score;
     }
-    case epcWrook: {
+
+    case epcWrook:
+    case epcBrook:
+    {
         score += material[3];
         score += rook_table[x][y];
         return score;
     }
-    case epcWqueen: {
+
+    case epcWqueen:
+    case epcBqueen:
+    {
         score += material[4];
         score += queen_table[x][y];
         if ((x != 7 || y != 3) && !is_end) {
@@ -172,53 +190,13 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
         }
         return score;
     }
-    case epcWking: {
+
+    case epcWking:
+    case epcBking:
+    {
         score += material[5];
         score += king_mid_table[x][y];
         return score;
-    }
-
-
-    // black evaluation
-    case epcBpawn: {
-        score += material[0];
-        score += -pawn_table[x][y];
-        if (x == 0 || x== 7) score -= 15;
-        return -score;
-    }
-    case epcBknight: {
-        score += material[1];
-        score += -knight_table[x][y];
-        if (is_end) {
-            score -= 10;
-        }
-        return -score;
-    }
-    case epcBbishop: {
-        score += material[2];
-        score += -bishop_table[x][y];
-        if (is_end) {
-            score += 10;
-        }
-        return -score;
-    }
-    case epcBrook: {
-        score += material[3];
-        score += -rook_table[x][y];
-        return -score;
-    }
-    case epcBqueen: {
-        score += material[4];
-        score += -queen_table[x][y];
-        if ((x != 7 || y != 3) && !is_end) {
-            score -= 10;
-        }
-        return -score;
-    }
-    case epcBking: {
-        score += material[5];
-        score += -king_mid_table[x][y];
-        return -score;
     }
 
     // is there no piece
