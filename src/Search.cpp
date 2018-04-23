@@ -125,6 +125,12 @@ bool inCheck(Board b, Move m)
     else {
         pieceV = findPieces(b2, epcBking); //cast code to correspoding black ePieceCode
     }
+    if(pieceV.size() == 0) {
+        std::cerr << "Invalid condition reached." << endl;
+        std::cerr << b;
+        std::cerr << b2;
+        throw runtime_error("king should not be dead!");
+    }
     // std::cout << b2 << std::endl;
     // std::cout << pieceV.size() << std::endl;
     Coord piece = pieceV[0];
@@ -197,7 +203,7 @@ void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vec
                         v.push_back(Move(piece, possibleMove));
                         possibleMove = possibleMove + dir[j];
                 }
-                if(b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite())
+                if(b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece,possibleMove)))
                     v.push_back(Move(piece, possibleMove));
             }
         }
@@ -234,7 +240,7 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
             v.push_back(Move(piece, possibleMove));
 
             possibleMove = piece + move2[0]; //possibleMove set to special 2 square move
-            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ????
+            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove))) // ????
                 v.push_back(Move(piece, possibleMove));
         }
 

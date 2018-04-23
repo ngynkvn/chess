@@ -8,17 +8,19 @@
 Move mini_max(const Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
-    int bestScore = evaluate(game_state.makeMove(moves[0]));
+    int bestScore = abs(evaluate(game_state.makeMove(moves[0])));
     Move bestMove = moves[0];
     for (auto i = moves.begin(); i != moves.end(); i++)
     {
-        int currScore = mini_max(game_state.makeMove(*i), 3, -10000, 10000, true);
+        int currScore = abs(mini_max(game_state.makeMove(*i), 3, -10000, 10000, true));
+        // cout << currScore << endl;
         if (currScore > bestScore)
         {
             bestScore = currScore;
             bestMove = *i;
         }
     }
+    // std::cout << "best score for " << (game_state.isWhite() ? "white" : "black") << " was " << bestScore << " and so they went with " << bestMove << std::endl;
     return bestMove;
 }
 
@@ -125,11 +127,11 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
         if (p.getPieceCode() == epcBking) {
             score += material[5];
-            score += -king_end_table[x][y];
+            score += -black_king_end_table[x][y];
             return -score;
         } else {
             score += material[5];
-            score += king_end_table[x][y];
+            score += white_king_end_table[x][y];
             return score;
         }
     }
@@ -139,13 +141,13 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     // white evaluation
     case epcWpawn: {
         score += material[0];
-        score += pawn_table[x][y];
+        score += white_pawn_table[x][y];
         if (x == 0 || x == 7) score -= 15;
         return score;
     }
     case epcWknight: {
         score += material[1];
-        score += knight_table[x][y];
+        score += white_knight_table[x][y];
         if (is_end) {
             score -= 10;
         }
@@ -153,7 +155,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     }
     case epcWbishop: {
         score += material[2];
-        score += bishop_table[x][y];
+        score += white_bishop_table[x][y];
         if (is_end) {
             score += 10;
         }
@@ -161,12 +163,12 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     }
     case epcWrook: {
         score += material[3];
-        score += rook_table[x][y];
+        score += white_rook_table[x][y];
         return score;
     }
     case epcWqueen: {
         score += material[4];
-        score += queen_table[x][y];
+        score += white_queen_table[x][y];
         if ((x != 7 || y != 3) && !is_end) {
             score -= 10;
         }
@@ -174,7 +176,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     }
     case epcWking: {
         score += material[5];
-        score += king_mid_table[x][y];
+        score += white_king_mid_table[x][y];
         return score;
     }
 
@@ -182,13 +184,13 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     // black evaluation
     case epcBpawn: {
         score += material[0];
-        score += -pawn_table[x][y];
+        score += black_pawn_table[x][y];
         if (x == 0 || x== 7) score -= 15;
         return -score;
     }
     case epcBknight: {
         score += material[1];
-        score += -knight_table[x][y];
+        score += black_knight_table[x][y];
         if (is_end) {
             score -= 10;
         }
@@ -196,7 +198,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     }
     case epcBbishop: {
         score += material[2];
-        score += -bishop_table[x][y];
+        score += black_bishop_table[x][y];
         if (is_end) {
             score += 10;
         }
@@ -204,12 +206,12 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     }
     case epcBrook: {
         score += material[3];
-        score += -rook_table[x][y];
+        score += black_rook_table[x][y];
         return -score;
     }
     case epcBqueen: {
         score += material[4];
-        score += -queen_table[x][y];
+        score += black_queen_table[x][y];
         if ((x != 7 || y != 3) && !is_end) {
             score -= 10;
         }
@@ -217,7 +219,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     }
     case epcBking: {
         score += material[5];
-        score += -king_mid_table[x][y];
+        score += black_king_mid_table[x][y];
         return -score;
     }
 
