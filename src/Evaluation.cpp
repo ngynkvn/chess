@@ -5,22 +5,24 @@
 #include "Evaluation.h"
 #include <iostream>
 
+using namespace std;
 Move mini_max(const Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
-    int bestScore = abs(evaluate(game_state.makeMove(moves[0])));
+    int bestScore = evaluate(game_state.makeMove(moves[0]));
     Move bestMove = moves[0];
     for (auto i = moves.begin(); i != moves.end(); i++)
     {
-        int currScore = abs(mini_max(game_state.makeMove(*i), 3, -10000, 10000, true));
-        // cout << currScore << endl;
-        if (currScore > bestScore)
+        int currScore = mini_max(game_state.makeMove(*i), 3, -10000, 10000, true);
+        if (game_state.isWhite() && currScore > bestScore)
         {
+            bestScore = currScore;
+            bestMove = *i;
+        } else if (!game_state.isWhite() && currScore < bestScore) {
             bestScore = currScore;
             bestMove = *i;
         }
     }
-    // std::cout << "best score for " << (game_state.isWhite() ? "white" : "black") << " was " << bestScore << " and so they went with " << bestMove << std::endl;
     return bestMove;
 }
 
@@ -127,7 +129,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
         if (p.getPieceCode() == epcBking) {
             score += material[5];
-            score += -black_king_end_table[x][y];
+            score += black_king_end_table[x][y];
             return -score;
         } else {
             score += material[5];

@@ -57,20 +57,6 @@ void selfPlay()
 int main()
 {
     Board b;
-    // b = b.makeMove(Move("e2e4"))
-    //      .makeMove(Move("b7b5"))
-    //      .makeMove(Move("f1b5"))
-    //      .makeMove(Move("f7f6"))
-    //      .makeMove(Move("d1h5"));
-    //      cout << b;
-    // cout << Search::inCheck(b) << endl;
-    // cout << Search::inCheck(b,Move("g4g5")) << endl;
-    // cout << b << evaluate(b) << endl;
-    // cout << b.makeMove(Move("e2e4"));
-    // cout << evaluate(b.makeMove(Move("e2e4"))) << endl;
-    // cout << b.makeMove(Move("e2e4")).makeMove(Move("e7e5")) ;
-    // cout << evaluate(b.makeMove(Move("e2e4")).makeMove(Move("e7e5"))) << endl;
-
     selfPlay();
     // gameLoop();
 }
