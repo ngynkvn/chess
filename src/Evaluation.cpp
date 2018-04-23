@@ -82,6 +82,13 @@ int evaluate(const Board& game_state)
     {
         for (int j = 0; j < 8; j++)
         {
+            if(curr_board[i][j].getColor() == game_state.same())
+            {
+                evaluation += material[curr_board[i][j].getPieceCode()];
+            } else if(curr_board[i][j].getColor() == game_state.opposite())
+            {
+                evaluation -= material[curr_board[i][j].getPieceCode()];
+            }
             evaluation += get_piece_value(curr_board[i][j], i, j);
         }
     }

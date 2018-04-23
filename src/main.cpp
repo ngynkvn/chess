@@ -17,18 +17,24 @@ int main()
     Board b;
     string in;
     cout << b << endl;
-    while (true)
-    {
-        cout << "Your move:";
-        cin >> in;
-        Move m(in);
-        if (validMove(b, m))
+        while (true)
         {
-            b = b.makeMove(m);
-            cout << b << endl;
-            cout << "Opponent is thinking.." << endl;
-            b = b.makeMove(mini_max(b));
-            cout << b << endl;
+            Move m(-1,-1,-1,-1);
+            
+            try {
+            cout << "Your move:";
+            cin >> in;
+            m = Move(in);
+            } catch (exception e)
+            {}
+
+            if (validMove(b, m))
+            {
+                b = b.makeMove(m);
+                cout << b << endl;
+                cout << "Opponent is thinking.." << endl;
+                b = b.makeMove(mini_max(b));
+                cout << b << endl;
+            }
         }
-    }
 }

@@ -169,6 +169,7 @@ ostream &operator<<(ostream &os, const Board &board)
     os << "   a b c d e f g h" << endl;
     os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
     os << (board.isWhite() ? "Black" : "White") << " played " << board.getPrevMove() << endl;
+    // os << "Board is valued at " << evaluate(board) << endl;
     // os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
     return os;
 }

@@ -19,8 +19,10 @@ int get_piece_value(Piece p, int x, int y);
 //calls generateMoveList, makes each move and appends to vector to be processed later.
 std::vector<Board> get_states(const Board& curr);
 
+//Material weights
+const int material[] = {0,100,300,301,500,800,32000,
+                        0,100,300,301,500,800,32000};
 // board evaluation tables
-
 // Pawn evaluation tables
 const int white_pawn_eval[8][8] = {{  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0  },
                                    {  5 ,  10,  10, -20, -20,  10,  10,  5  },
