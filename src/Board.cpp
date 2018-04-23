@@ -45,6 +45,10 @@ Board::Board() : whiteTurn(true)
     }
 }
 
+/*
+Creates a new Board object by setting the 2D Piece-array board
+to an already existing 2D array
+*/
 Board::Board(const Board &other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
 {
     board = new Piece *[8];
@@ -132,13 +136,39 @@ Board Board::unmakeMove(Move m) const
     return testerGame;
 }
 
+/*
+Returns true if the coordinate given is within the board
+*/
 bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8; }
 
+/*
+Returns a boolean variable that clarifies if it's white's move or not
+*/
 bool Board::isWhite() const { return whiteTurn; }
+
+/*
+Sets variable whiteTurn to true if it's white's move and false if not
+*/
 void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
+
+/*
+Returns previous move
+*/
 Move Board::getPrevMove() const { return prevMove; }
+
+/*
+Sets the previous move to another move object
+*/
 void Board::setPrevMove(Move m) { prevMove = m; }
+
+/*
+Returns the black ePieceCode if it's white's move, white if it's not
+*/
 ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
+
+/*
+Returns the same color ePieceCode of the color turn
+*/
 ePieceCode Board::same() const { return whiteTurn ? white : black; }
 
 ostream &operator<<(ostream &os, const Board &board)

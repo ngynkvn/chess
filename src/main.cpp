@@ -6,12 +6,20 @@
 #include <algorithm>
 using namespace std;
 
+/*
+Returns whether or not the move given in the parameters
+is actually a possible move on the given board
+*/
 bool validMove(Board b, Move m)
 {
     std::vector<Move> list = Search::generateMoveList(b);
     return find(list.begin(), list.end(), m) != list.end();
 }
 
+/*
+Loops the game interface to allow user to select move
+and then if AI has available moves to make, the AI responds
+*/
 void gameLoop()
 {
     Board b;
