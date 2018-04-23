@@ -5,6 +5,9 @@
 #include "Evaluation.h"
 #include <iostream>
 
+/*
+Returns the best move by finding the move with the highest score
+*/
 Move mini_max(const Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
@@ -22,7 +25,10 @@ Move mini_max(const Board &game_state)
     return bestMove;
 }
 
-// pass parameters minimax(current Board, 4, -10000, 10000, true);
+/*
+Finds the score of the board given into the parameter
+--pass parameters minimax(current Board, 4, -10000, 10000, true);
+*/
 int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
     // is the depth zero
@@ -63,6 +69,10 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     }
 }
 
+/*
+Returns a vector of boards that show the outcome of each
+possible move that can currently be made on the actual board
+*/
 std::vector<Board> get_states(const Board& curr)
 {
     std::vector<Board> v;
@@ -74,6 +84,9 @@ std::vector<Board> get_states(const Board& curr)
     return v;
 }
 
+/*
+
+*/
 bool is_end_game(const Board& game_state) {
     int piece_count = 0;
     Piece **curr_board = game_state.getBoard();
@@ -127,6 +140,9 @@ int evaluate(const Board& game_state)
     return evaluation;
 }
 
+/*
+Returns the piece value, which are in the Evaluation.h file
+*/
 int get_piece_value(Piece p, int x, int y, bool is_end)
 {
     if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
