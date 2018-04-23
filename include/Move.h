@@ -25,6 +25,7 @@ public:
   Coord from() const;
   Coord to() const;
   bool operator==(const Move &m) const { return m.from() == Coord(fromX, fromY) && m.to() == Coord(toX, toY); }
+  bool operator!=(const Move &m) const { return !(m.from() == Coord(fromX, fromY)) || !(m.to() == Coord(toX, toY)); }
   friend std::ostream &operator<<(std::ostream &, const Move &);
 
 private:
