@@ -110,16 +110,6 @@ int evaluate(const Board& game_state)
     {
         for (int j = 0; j < 8; j++)
         {
-            if(curr_board[i][j].getColor() == game_state.same())
-            {
-                evaluation += material[curr_board[i][j].getPieceCode()];
-            }
-
-            else if(curr_board[i][j].getColor() == game_state.opposite())
-            {
-                evaluation -= material[curr_board[i][j].getPieceCode()];
-            }
-
             evaluation += get_piece_value(curr_board[i][j], i, j, is_end);
         }
     }
@@ -129,46 +119,110 @@ int evaluate(const Board& game_state)
 
 int get_piece_value(Piece p, int x, int y, bool is_end)
 {
+    int score = 0;
+
+    // if end game and current piece is a king
     if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
         if (p.getPieceCode() == epcBking) {
-            return -king_end_table[x][y];
+            score += material[5];
+            score += -king_end_table[x][y];
+            return -score;
         } else {
-            return king_end_table[x][y];
+            score += material[5];
+            score += king_end_table[x][y];
+            return score;
         }
     }
 
     switch (p.getPieceCode())
     {
-    // white piece table lookup
-    case epcWpawn:
-        return pawn_table[x][y];
-    case epcWknight:
-        return knight_table[x][y];
-    case epcWbishop:
-        return bishop_table[x][y];
-    case epcWrook:
-        return rook_table[x][y];
-    case epcWqueen:
-        return queen_table[x][y];
-    case epcWking:
-        return king_mid_table[x][y];
+    // white evaluation
+    case epcWpawn: {
+        score += material[0];
+        score += pawn_table[x][y];
+        if (x == 0 || x == 7) score -= 15;
+        return score;
+    }
+    case epcWknight: {
+        score += material[1];
+        score += knight_table[x][y];
+        if (is_end) {
+            score -= 10;
+        }
+        return score;
+    }
+    case epcWbishop: {
+        score += material[2];
+        score += bishop_table[x][y];
+        if (is_end) {
+            score += 10;
+        }
+        return score;
+    }
+    case epcWrook: {
+        score += material[3];
+        score += rook_table[x][y];
+        return score;
+    }
+    case epcWqueen: {
+        score += material[4];
+        score += queen_table[x][y];
+        if ((x != 7 || y != 3) && !is_end) {
+            score -= 10;
+        }
+        return score;
+    }
+    case epcWking: {
+        score += material[5];
+        score += king_mid_table[x][y];
+        return score;
+    }
 
-    // black piece table lookup
-    case epcBpawn:
-        return -pawn_table[x][y];
-    case epcBknight:
-        return -knight_table[x][y];
-    case epcBbishop:
-        return -bishop_table[x][y];
-    case epcBrook:
-        return -rook_table[x][y];
-    case epcBqueen:
-        return -queen_table[x][y];
-    case epcBking:
-        return -king_mid_table[x][y];
+
+    // black evaluation
+    case epcBpawn: {
+        score += material[0];
+        score += -pawn_table[x][y];
+        if (x == 0 || x== 7) score -= 15;
+        return -score;
+    }
+    case epcBknight: {
+        score += material[1];
+        score += -knight_table[x][y];
+        if (is_end) {
+            score -= 10;
+        }
+        return -score;
+    }
+    case epcBbishop: {
+        score += material[2];
+        score += -bishop_table[x][y];
+        if (is_end) {
+            score += 10;
+        }
+        return -score;
+    }
+    case epcBrook: {
+        score += material[3];
+        score += -rook_table[x][y];
+        return -score;
+    }
+    case epcBqueen: {
+        score += material[4];
+        score += -queen_table[x][y];
+        if ((x != 7 || y != 3) && !is_end) {
+            score -= 10;
+        }
+        return -score;
+    }
+    case epcBking: {
+        score += material[5];
+        score += -king_mid_table[x][y];
+        return -score;
+    }
 
     // is there no piece
     default:
-        return 0;
+        return score;
     }
 }
