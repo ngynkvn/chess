@@ -23,8 +23,7 @@ std::vector<Board> get_states(const Board& curr);
 bool is_end_game(const Board &);
 
 //Material weights
-const int material[] = {0,100,320,325,500,975,32767,
-                        0,100,320,325,500,975,32767};
+const int material[] = {100,320,325,500,975,32767};
 
 // Position tables
 // Pawn table
