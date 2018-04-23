@@ -74,10 +74,38 @@ std::vector<Board> get_states(const Board& curr)
     return v;
 }
 
+bool is_end_game(const Board& game_state) {
+    int piece_count = 0;
+    Piece **curr_board = game_state.getBoard();
+
+    for (int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            if (curr_board[i][j].getPieceCode() != epcEmpty) piece_count++;
+        }
+    }
+
+    if (piece_count < 12) {
+        return true;
+    }
+    return false;
+}
+
 int evaluate(const Board& game_state)
 {
     int evaluation = 0;
     Piece **curr_board = game_state.getBoard();
+    bool is_end = is_end_game(game_state);
+
+    /*  used to add an extra component to the evaluation by increasing score by the amount of possible moves.
+     *  This increase the time to find a move significantly; therefore, it is not viable in the current build.
+     *
+     *  vector<Move> curr_moves = Search::generateMoveList(game_state);
+     *
+     *  if (curr_moves.size() > 0) {
+     *  evaluation += curr_moves.size();
+     *  }
+     */
+
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -85,50 +113,61 @@ int evaluate(const Board& game_state)
             if(curr_board[i][j].getColor() == game_state.same())
             {
                 evaluation += material[curr_board[i][j].getPieceCode()];
-            } else if(curr_board[i][j].getColor() == game_state.opposite())
+            }
+
+            else if(curr_board[i][j].getColor() == game_state.opposite())
             {
                 evaluation -= material[curr_board[i][j].getPieceCode()];
             }
-            evaluation += get_piece_value(curr_board[i][j], i, j);
+
+            evaluation += get_piece_value(curr_board[i][j], i, j, is_end);
         }
     }
+
     return evaluation;
 }
 
-int get_piece_value(Piece p, int x, int y)
+int get_piece_value(Piece p, int x, int y, bool is_end)
 {
+    if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
+        if (p.getPieceCode() == epcBking) {
+            return -king_end_table[x][y];
+        } else {
+            return king_end_table[x][y];
+        }
+    }
+
     switch (p.getPieceCode())
     {
-    // empty piece evaluation
-    case epcEmpty:
-        return 0;
-        // white piece evaluation
+    // white piece table lookup
     case epcWpawn:
-        return white_pawn_eval[x][y];
+        return pawn_table[x][y];
     case epcWknight:
-        return white_knight_eval[x][y];
+        return knight_table[x][y];
     case epcWbishop:
-        return white_bishop_eval[x][y];
+        return bishop_table[x][y];
     case epcWrook:
-        return white_rook_eval[x][y];
+        return rook_table[x][y];
     case epcWqueen:
-        return white_queen_eval[x][y];
+        return queen_table[x][y];
     case epcWking:
-        return white_king_eval[x][y];
+        return king_mid_table[x][y];
 
-        // black piece evaluation
+    // black piece table lookup
     case epcBpawn:
-        return black_pawn_eval[x][y];
+        return -pawn_table[x][y];
     case epcBknight:
-        return black_knight_eval[x][y];
+        return -knight_table[x][y];
     case epcBbishop:
-        return black_bishop_eval[x][y];
+        return -bishop_table[x][y];
     case epcBrook:
-        return black_rook_eval[x][y];
+        return -rook_table[x][y];
     case epcBqueen:
-        return black_queen_eval[x][y];
+        return -queen_table[x][y];
     case epcBking:
-        return black_king_eval[x][y];
+        return -king_mid_table[x][y];
+
+    // is there no piece
     default:
         return 0;
     }
