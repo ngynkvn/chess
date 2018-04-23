@@ -4,6 +4,7 @@
 #include "Board.h"
 
 unsigned long long perft(Board, int, int &);
+unsigned long long perft(Board, int, int &, int &);
 
 TEST_CASE("Piece data-type works correctly", "[piece]")
 {
@@ -29,6 +30,7 @@ TEST_CASE("Move generation is correct.", "[perft]")
 {
     Board start;
     int captures = 0;
+    int checks = 0;
     CHECK(perft(start, 1, captures) == 20);
     CHECK(captures == 0);
     CHECK(perft(start, 2, captures) == 400);
@@ -40,8 +42,9 @@ TEST_CASE("Move generation is correct.", "[perft]")
     }
     SECTION("Depth 4 should show 1576 captures.")
     {
-        CHECK(perft(start, 4, captures) == 197281);
+        CHECK(perft(start, 4, captures, checks) == 197281);
         CHECK(captures == 1576);
+        CHECK(checks == 469);
     }
 }
 

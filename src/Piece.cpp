@@ -44,3 +44,8 @@ ePieceCode Piece::getPieceCode() const
 {
     return pieceCode;
 }
+
+void Piece::setPieceCode(ePieceCode c) 
+{
+    pieceCode = c;
+}

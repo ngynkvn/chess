@@ -44,13 +44,13 @@ std::vector<Coord> dirKing = {Coord(-1, -1),        //The 8 square directions a 
 //The three unique movements of a white pawn (Push, Capture, and Move2)
 std::vector<Coord> dirWpawnPush = {Coord(0, 1)};
 std::vector<Coord> dirWpawnCapture = {Coord(1, 1),
-                                    Coord(-1, 1)};
+                                      Coord(-1, 1)};
 std::vector<Coord> dirWpawnMove2 = {Coord(0, 2)}; //White Pawn on a starting rank has option to move 2 squares
 
 //The three unique movements of a black pawn (Push, Capture, and Move2)
 std::vector<Coord> dirBpawnPush = {Coord(0, -1)};
 std::vector<Coord> dirBpawnCapture = {Coord(1, -1),
-                                    Coord(-1, -1)};
+                                      Coord(-1, -1)};
 std::vector<Coord> dirBpawnMove2 = {Coord(0, -2)};  //Black Pawn on a starting rank has option to move 2 squares
 
 // returns a vector<Coord> of all pieces with same ePieceCode
@@ -71,6 +71,18 @@ std::vector<Coord> findPieces(Board b, ePieceCode piece)
         }
     }
     return pieces;
+}
+
+
+void promote(const Board & b)
+{
+    Piece ** board = b.getBoard();
+    for(int i=0; i<8; i++)
+    {
+         if(board[b.isWhite() ? 7 : 0][i].getPieceCode() == (b.isWhite() ? epcWpawn : epcBpawn) ){
+             board[b.isWhite() ? 7 : 0][i].setPieceCode(b.isWhite() ? epcWqueen : epcBqueen);
+         }
+    }
 }
 
 bool rayCheckHelper(Board b, Coord piece, std::vector<Coord> dir, ePieceCode code)
@@ -149,21 +161,22 @@ bool inCheck(Board b)
     Coord piece = pieceV[0];
 
         if(b.isWhite())
+         return (rayCheckHelper(b, piece, dirRook, epcWrook)
+               || rayCheckHelper(b, piece, dirQueen, epcWqueen)
+               || rayCheckHelper(b, piece, dirBishop, epcWbishop)
+               || squareCheckHelper(b, piece, dirKnight, epcWknight)
+               || squareCheckHelper(b, piece, dirKing, epcWking)
+               || squareCheckHelper(b, piece, dirBpawnCapture, epcWpawn));
+
+
+        else
          return (rayCheckHelper(b, piece, dirRook,epcBrook)
                 || rayCheckHelper(b, piece, dirQueen, epcBqueen)
                 || rayCheckHelper(b, piece, dirBishop, epcBbishop)
                 || squareCheckHelper(b, piece, dirKnight, epcBknight)
                 || squareCheckHelper(b, piece, dirKing, epcBking)
                 || squareCheckHelper(b, piece, dirWpawnCapture, epcBpawn));
-
-        else
-         return (rayCheckHelper(b, piece, dirRook, epcWrook)
-                || rayCheckHelper(b, piece, dirQueen, epcWqueen)
-                || rayCheckHelper(b, piece, dirBishop, epcWbishop)
-                || squareCheckHelper(b, piece, dirKnight, epcWknight)
-                || squareCheckHelper(b, piece, dirKing, epcWking)
-                || squareCheckHelper(b, piece, dirBpawnCapture, epcWpawn));
-    return false;
+        return false;
 }
 
 
@@ -182,25 +195,14 @@ void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vec
                 //Examines each square in the direction dir[j]
                 //while the square is empty or opposite (color)
                 //Note: When the possibleMove is occupied by same color piece. break while loop (do not examine rest of the squares in that direction)
-                while (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()))
+                while (b.inside(possibleMove) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove)))
                 {
-                    //if square is occupied by enemy, option to occupy square. break while loop
-                    if (b.getPiece(possibleMove).getColor() == b.opposite())
-                    {
-                        // Board b2 = b.makeMove(Move(piece, possibleMove));
-                        // std::cout<<b2<<endl;
-                        v.push_back(Move(piece, possibleMove));
-                        break;
-                    }
-                    //else add possibleMove and slide to the next square in the same direction
-                    else
-                    {
                         v.push_back(Move(piece, possibleMove));
                         possibleMove = possibleMove + dir[j];
-                    }
                 }
+                if(b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite())
+                    v.push_back(Move(piece, possibleMove));
             }
-
         }
     }
 }
@@ -230,12 +232,12 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
         Coord possibleMove = piece + push[0]; //possibleMove set to a pawn push
 
         //Checks forward square for pawn push direction and checks for special 2 square move
-        if (b.inside(possibleMove) && !inCheck(b, Move(piece, possibleMove)) && (b.getPiece(possibleMove).empty()) && !inCheck(b, Move(piece, possibleMove))) //tests a pawn push
+        if (b.inside(possibleMove) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove))) //tests a pawn push
         {
             v.push_back(Move(piece, possibleMove));
 
             possibleMove = piece + move2[0]; //possibleMove set to special 2 square move
-            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ???? KEVINNNN THIS SHOULDNT BE WORKING
+            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // ????
                 v.push_back(Move(piece, possibleMove));
         }
 
@@ -243,11 +245,12 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
         for(int j=0; j<2; j++)
         {
             possibleMove = piece + dir3[j]; //possibleMove set to a pawn capture direction
-            if(b.inside(possibleMove)&& !inCheck(b, Move(piece, possibleMove))&&b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove))) // test opposite color piece in square
-                    v.push_back(Move(piece,possibleMove));
+            if(b.inside(possibleMove)&&b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove))) // test opposite color piece in square
+                v.push_back(Move(piece,possibleMove));
         }
     }
 }
+
 void generateMove(std::vector<Move> &v, Board b, int code)
 {
     std::vector<Coord> pieceV;
@@ -280,6 +283,7 @@ void generateMove(std::vector<Move> &v, Board b, int code)
             squareMove(v, b, pieceV, dirKing); break;
 
     }
+        promote(b);
 }
 
 std::vector<Move> generateMoveList(const Board &b)
@@ -293,5 +297,6 @@ std::vector<Move> generateMoveList(const Board &b)
         generateMove(v, b, code);
     }
     return v;
+
 }
 }
