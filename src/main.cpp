@@ -32,6 +32,8 @@ void gameLoop()
         try {
         cout << "Your move:";
         cin >> in;
+        if(in == "q")
+            return;
         m = Move(in);
         } catch (exception e)
         {}

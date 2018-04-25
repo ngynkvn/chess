@@ -229,7 +229,7 @@ void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vec
                 }
                 //if the loops breaks because there is an enemy on the square
                 //Captures that square from an enemy piece but does not continue down the line
-                if(b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite())
+                if(b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
                     v.push_back(Move(piece, possibleMove)); //capture move
             }
         }
@@ -273,7 +273,7 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
             //tests if the pawn is on a original starting color and if the second square is empty
             //(inside prev if loop because the square immediatly in front of it must also be empty)
             possibleMove = piece + move2[0]; //possibleMove set to special 2 square move
-            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty()) // pawn is on rank file and two moves in front square is empty
+            if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove))) // pawn is on rank file and two moves in front square is empty
                 v.push_back(Move(piece, possibleMove)); //add Move to v
         }
 
@@ -288,7 +288,7 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
     }
 }
 
-void generateMove(std::vector<Move> &v, Board b, int code)
+void generateMove(std::vector<Move> &v, Board b, ePieceCode code)
 {
     std::vector<Coord> pieceV;
 
@@ -318,6 +318,8 @@ void generateMove(std::vector<Move> &v, Board b, int code)
             rayMove(v, b, pieceV, dirQueen); break;
         case 6://king move
             squareMove(v, b, pieceV, dirKing); break;
+        default:
+            throw("Not a known pieceCode.");
 
     }
     //tests the board to see if a pawn has reached the end of the board or not. if so promotes a piece
@@ -327,13 +329,12 @@ void generateMove(std::vector<Move> &v, Board b, int code)
 std::vector<Move> generateMoveList(const Board &b)
 {
     std::vector<Move> v;
-
-    //generates all the possible moves for the code's ePieceCode representation
-    //1-6 of enum ePieceCode are piece types with a corresponding number
-    for(int code=1; code<7; code++)
-    {
-        generateMove(v, b, code);
-    }
+    generateMove(v,b,epcWqueen);
+    generateMove(v,b,epcWrook);
+    generateMove(v,b,epcWbishop);
+    generateMove(v,b,epcWknight);
+    generateMove(v,b,epcWpawn);
+    generateMove(v,b,epcWking);
     return v;
 
 }

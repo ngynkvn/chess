@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -Wall -O3
+FLAGS = -std=c++11 -Wall -O3 -g
 
 SRC = src
 OUTDIR = bin
