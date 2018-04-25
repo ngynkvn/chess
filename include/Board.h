@@ -33,7 +33,7 @@ public:
   Move getPrevMove() const;
   void setPrevMove(Move);
   Board &operator=(const Board &); //copy assignment constructor.
-  friend ostream &operator<<(ostream &, const Board &);
+  friend std::ostream &operator<<(std::ostream &, const Board &);
 
 private:
   Piece **board = 0;

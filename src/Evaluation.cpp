@@ -22,7 +22,9 @@ Move mini_max(const Board &game_state)
         {
             bestScore = currScore;
             bestMove = *i;
-        } else if (!game_state.isWhite() && currScore < bestScore) {
+        }
+        else if (!game_state.isWhite() && currScore < bestScore)
+        {
             bestScore = currScore;
             bestMove = *i;
         }
@@ -37,7 +39,9 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
 {
     // is the depth zero
     if (depth == 0)
+    {
         return evaluate(game_state);
+    }
 
     // are there no more possible game states
     std::vector<Board> children_states = get_states(game_state);
@@ -77,7 +81,7 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
 Returns a vector of boards that show the outcome of each
 possible move that can currently be made on the actual board
 */
-std::vector<Board> get_states(const Board& curr)
+std::vector<Board> get_states(const Board &curr)
 {
     std::vector<Board> v;
     std::vector<Move> moves = Search::generateMoveList(curr);
@@ -91,23 +95,28 @@ std::vector<Board> get_states(const Board& curr)
 /*
 
 */
-bool is_end_game(const Board& game_state) {
+bool is_end_game(const Board &game_state)
+{
     int piece_count = 0;
     Piece **curr_board = game_state.getBoard();
 
-    for (int i = 0; i < 8; i++) {
-        for(int j = 0; j < 8; j++) {
-            if (curr_board[i][j].getPieceCode() != epcEmpty) piece_count++;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (curr_board[i][j].getPieceCode() != epcEmpty)
+                piece_count++;
         }
     }
 
-    if (piece_count < 12) {
+    if (piece_count < 12)
+    {
         return true;
     }
     return false;
 }
 
-int evaluate(const Board& game_state)
+int evaluate(const Board &game_state)
 {
     int evaluation = 0;
     Piece **curr_board = game_state.getBoard();
@@ -122,7 +131,6 @@ int evaluate(const Board& game_state)
      *  evaluation += curr_moves.size();
      *  }
      */
-
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -130,7 +138,6 @@ int evaluate(const Board& game_state)
             evaluation += get_piece_value(curr_board[i][j], i, j, is_end);
         }
     }
-
     return evaluation;
 }
 
@@ -144,12 +151,16 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     int score = 0;
 
     // if end game and current piece is a king
-    if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking)) {
-        if (p.getPieceCode() == epcBking) {
+    if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking))
+    {
+        if (p.getPieceCode() == epcBking)
+        {
             score += material[5];
             score += black_king_end_table[x][y];
             return -score;
-        } else {
+        }
+        else
+        {
             score += material[5];
             score += white_king_end_table[x][y];
             return score;
@@ -159,85 +170,104 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
     switch (p.getPieceCode())
     {
     // white evaluation
-    case epcWpawn: {
+    case epcWpawn:
+    {
         score += material[0];
         score += white_pawn_table[x][y];
-        if (x == 0 || x == 7) score -= 15;
+        if (x == 0 || x == 7)
+            score -= 15;
         return score;
     }
-    case epcWknight: {
+    case epcWknight:
+    {
         score += material[1];
         score += white_knight_table[x][y];
-        if (is_end) {
+        if (is_end)
+        {
             score -= 10;
         }
         return score;
     }
-    case epcWbishop: {
+    case epcWbishop:
+    {
         score += material[2];
         score += white_bishop_table[x][y];
-        if (is_end) {
+        if (is_end)
+        {
             score += 10;
         }
         return score;
     }
-    case epcWrook: {
+    case epcWrook:
+    {
         score += material[3];
         score += white_rook_table[x][y];
         return score;
     }
-    case epcWqueen: {
+    case epcWqueen:
+    {
         score += material[4];
         score += white_queen_table[x][y];
-        if ((x != 7 || y != 3) && !is_end) {
+        if ((x != 7 || y != 3) && !is_end)
+        {
             score -= 10;
         }
         return score;
     }
-    case epcWking: {
+    case epcWking:
+    {
         score += material[5];
         score += white_king_mid_table[x][y];
         return score;
     }
 
-
     // black evaluation
-    case epcBpawn: {
+    case epcBpawn:
+    {
         score += material[0];
         score += black_pawn_table[x][y];
-        if (x == 0 || x== 7) score -= 15;
+        if (x == 0 || x == 7)
+            score -= 15;
         return -score;
     }
-    case epcBknight: {
+    case epcBknight:
+    {
         score += material[1];
         score += black_knight_table[x][y];
-        if (is_end) {
+        if (is_end)
+        {
             score -= 10;
         }
         return -score;
     }
-    case epcBbishop: {
+    case epcBbishop:
+    {
         score += material[2];
         score += black_bishop_table[x][y];
-        if (is_end) {
+        if (is_end)
+        {
             score += 10;
         }
         return -score;
     }
-    case epcBrook: {
+    case epcBrook:
+    {
         score += material[3];
         score += black_rook_table[x][y];
         return -score;
     }
-    case epcBqueen: {
+    case epcBqueen:
+    {
         score += material[4];
         score += black_queen_table[x][y];
-        if ((x != 7 || y != 3) && !is_end) {
+        if ((x != 7 || y != 3) && !is_end)
+        {
             score -= 10;
         }
         return -score;
     }
-    case epcBking: {
+    case epcBking:
+    {
         score += material[5];
         score += black_king_mid_table[x][y];
         return -score;

@@ -57,6 +57,7 @@ void selfPlay()
     Board b;
     while(Search::generateMoveList(b).size() != 0){
         cout << b;
+        cout << evaluate(b) << endl;
         b = b.makeMove(mini_max(b));
     }
     cout << b;
