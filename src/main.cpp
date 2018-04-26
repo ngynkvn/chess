@@ -57,7 +57,7 @@ void gameLoop()
 void selfPlay()
 {
     Board b;
-    while(Search::generateMoveList(b).size() != 0){
+    while(!Search::generateMoveList(b).empty()){
         cout << b;
         cout << evaluate(b) << endl;
         b = b.makeMove(mini_max(b));
@@ -67,13 +67,13 @@ void selfPlay()
 
 int main()
 {
-//    Board b;
+    Board b;
 //    b.makeMove(Move("e2e4"));
-////    mini_max(b);
+//    b.makeMove(mini_max(b));
 //    b.makeMove(Move("d2d4"));
-//    cout << b << endl;
+    cout << b << endl;
 //    b.unmakeMove();
 //    cout << b << endl;
-    // selfPlay();
-    gameLoop();
+     selfPlay();
+//    gameLoop();
 }

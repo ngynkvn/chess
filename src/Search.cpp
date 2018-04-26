@@ -333,6 +333,5 @@ std::vector<Move> generateMoveList(const Board &b)
     generateMove(v,b,epcWpawn);
     generateMove(v,b,epcWking);
     return v;
-
 }
 }

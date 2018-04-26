@@ -4,34 +4,47 @@
 
 #include "Evaluation.h"
 #include <iostream>
+#include <algorithm>
 
 /*
  * Returns the best move by finding the move with the highest score.
  * This is done by the recursive minimax algorithm which simulates play up to a certain depth and calculates 
  * a heuristical score. Scores can then be correlated with the initial move to make the best decision.
  */
+int callCount = 0;
 Move mini_max(Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
+    callCount = 0;
+    sort(moves.begin(),moves.end(), [&game_state](Move a, Move b){
+        game_state.makeMove(a);
+        int scoreA = evaluate(game_state);
+        game_state.unmakeMove();
+        game_state.makeMove(b);
+        int scoreB = evaluate(game_state);
+        game_state.unmakeMove();
+        return game_state.isWhite() ? scoreA > scoreB : scoreB > scoreA;
+    });
+
     int bestScore = evaluate(game_state.makeMove(moves[0]));
     game_state.unmakeMove();
     Move bestMove = moves[0];
-    for (auto i = moves.begin(); i != moves.end(); i++)
-    {
-        game_state.makeMove(*i);
-        int currScore = mini_max(game_state, 3, -10000, 10000, true);
+    for (auto &move : moves) {
+        game_state.makeMove(move);
+        int currScore = mini_max(game_state, 4, -10000, 10000, game_state.isWhite());
         game_state.unmakeMove();
         if (game_state.isWhite() && currScore > bestScore)
         {
             bestScore = currScore;
-            bestMove = *i;
+            bestMove = move;
         }
         else if (!game_state.isWhite() && currScore < bestScore)
         {
             bestScore = currScore;
-            bestMove = *i;
+            bestMove = move;
         }
     }
+    std::cout << "Call count: " << callCount << std::endl;
     return bestMove;
 }
 
@@ -40,6 +53,7 @@ Move mini_max(Board &game_state)
  */
 int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
+    callCount++;
     // is the depth zero
     if (depth == 0)
     {
@@ -51,6 +65,16 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
     if (children_states.empty())
         return evaluate(game_state);
 
+    sort(children_states.begin(),children_states.end(), [&game_state](Move a, Move b){
+        game_state.makeMove(a);
+        int scoreA = evaluate(game_state);
+        game_state.unmakeMove();
+        game_state.makeMove(b);
+        int scoreB = evaluate(game_state);
+        game_state.unmakeMove();
+        return game_state.isWhite() ? scoreA > scoreB : scoreB > scoreA;
+    });
+
     // maximize and minimize the possible moves
     if (is_max_player) // if it the players turn
     {
@@ -58,12 +82,13 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
         for (Move m : children_states)
         {
             game_state.makeMove(m);
-            int v_prime = mini_max(game_state, depth - 1, v, beta, !is_max_player);
+            int v_prime = mini_max(game_state, depth - 1, alpha, beta, !is_max_player);
             game_state.unmakeMove();
-            if (v_prime > v)
-                v = v_prime;
-            if (v > beta)
-                return beta;
+            v = std::max(v_prime, v);
+            alpha = std::max(alpha, v);
+            if (beta <= alpha){
+                break;
+            }
         }
         return v;
     }
@@ -73,12 +98,13 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
         for (Move m : children_states)
         {
             game_state.makeMove(m);
-            int v_prime = mini_max(game_state, depth - 1, alpha, v, !is_max_player);
+            int v_prime = mini_max(game_state, depth - 1, alpha, beta, !is_max_player);
             game_state.unmakeMove();
-            if (v_prime < v)
-                v = v_prime;
-            if (v < alpha)
-                return alpha;
+            v = std::min(v_prime, v);
+            beta = std::min(beta, v);
+            if (beta <= alpha){
+                break;
+            }
         }
         return v;
     }
