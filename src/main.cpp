@@ -67,6 +67,18 @@ void selfPlay()
 
 int main()
 {
+    Board b;
+    b = b.makeMove(Move("e2e4"));
+    b = b.makeMove(mini_max(b));
+//    b = b.makeMove(Move("d2d3"));
+//    b = b.makeMove(mini_max(b)); // 3
+    cout << b << endl;
+    // b = b.makeMove(mini_max(b)); // 2
+    // cout << b << endl;
+    // b = b.makeMove(mini_max(b)); // 1
+    // cout << b << endl;
+    // b = b.makeMove(mini_max(b));
+    // cout << b << endl;
     // selfPlay();
-    gameLoop();
+    // gameLoop();
 }

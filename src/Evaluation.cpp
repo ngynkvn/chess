@@ -4,31 +4,41 @@
 
 #include "Evaluation.h"
 #include <iostream>
+#include <algorithm>
 
 /*
  * Returns the best move by finding the move with the highest score.
  * This is done by the recursive minimax algorithm which simulates play up to a certain depth and calculates 
  * a heuristical score. Scores can then be correlated with the initial move to make the best decision.
  */
+int callCount = 0;
 Move mini_max(const Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
     int bestScore = evaluate(game_state.makeMove(moves[0]));
     Move bestMove = moves[0];
-    for (auto i = moves.begin(); i != moves.end(); i++)
-    {
-        int currScore = mini_max(game_state.makeMove(*i), 3, -10000, 10000, true);
+    int alpha = -10000;
+    int beta = 10000;
+    std::sort(moves.begin(), moves.end(), [game_state](Move first, Move second) {
+        if (game_state.isWhite())
+            return evaluate(game_state.makeMove(first)) > evaluate(game_state.makeMove(second));
+        else
+            return evaluate(game_state.makeMove(first)) < evaluate(game_state.makeMove(second));
+    });
+    for (auto &move : moves) {
+        int currScore = mini_max(game_state.makeMove(move), 4, alpha, beta, true);
         if (game_state.isWhite() && currScore > bestScore)
         {
             bestScore = currScore;
-            bestMove = *i;
+            bestMove = move;
         }
         else if (!game_state.isWhite() && currScore < bestScore)
         {
             bestScore = currScore;
-            bestMove = *i;
+            bestMove = move;
         }
     }
+    std::cout << "callCount: " << callCount << std::endl;
     return bestMove;
 }
 
@@ -37,6 +47,7 @@ Move mini_max(const Board &game_state)
  */
 int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
+    callCount++;
     // is the depth zero
     if (depth == 0)
     {
@@ -45,33 +56,41 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
 
     // are there no more possible game states
     std::vector<Board> children_states = get_states(game_state);
-    if (children_states.size() == 0)
+    sort(children_states.begin(), children_states.end(), [game_state](Board a, Board b){
+        if(game_state.isWhite())
+            return evaluate(a) > evaluate(b);
+        else
+            return evaluate(a) < evaluate(b);
+    });
+    if (children_states.empty())
         return evaluate(game_state);
 
     // maximize and minimize the possible moves
     if (is_max_player) // if it the players turn
     {
         int v = alpha;
-        for (Board b : children_states)
+        for (const Board &b : children_states)
         {
-            int v_prime = mini_max(b, depth - 1, v, beta, !is_max_player);
-            if (v_prime > v)
-                v = v_prime;
-            if (v > beta)
-                return beta;
+            int v_prime = mini_max(b, depth - 1, alpha, beta, !is_max_player);
+            v = std::max(v_prime, v);
+            alpha = std::max(alpha, v);
+            if (beta <= alpha){
+                break;
+            }
         }
         return v;
     }
     else // if it's the opponents turn
     {
         int v = beta;
-        for (Board b : children_states)
+        for (const Board &b : children_states)
         {
-            int v_prime = mini_max(b, depth - 1, alpha, v, !is_max_player);
-            if (v_prime < v)
-                v = v_prime;
-            if (v < alpha)
-                return alpha;
+            int v_prime = mini_max(b, depth - 1, alpha, beta, !is_max_player);
+            v = std::min(v_prime, v);
+            beta = std::min(beta, v);
+            if (beta <= alpha){
+                break;
+            }
         }
         return v;
     }
@@ -85,9 +104,8 @@ std::vector<Board> get_states(const Board &curr)
 {
     std::vector<Board> v;
     std::vector<Move> moves = Search::generateMoveList(curr);
-    for (auto i = moves.begin(); i != moves.end(); i++)
-    {
-        v.push_back(curr.makeMove(*i));
+    for (auto &move : moves) {
+        v.push_back(curr.makeMove(move));
     }
     return v;
 }
@@ -109,11 +127,7 @@ bool is_end_game(const Board &game_state)
         }
     }
 
-    if (piece_count < 12)
-    {
-        return true;
-    }
-    return false;
+    return piece_count < 12;
 }
 
 int evaluate(const Board &game_state)

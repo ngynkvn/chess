@@ -303,20 +303,20 @@ void generateMove(std::vector<Move> &v, Board b, ePieceCode code)
     {
         //each move function parameters are
         //all possible moves vector v, the Board b, a vector of all piece types, and vector direction the piece moves
-        case 1: //Pawn move
+        case epcWpawn: //Pawn move
             if(b.isWhite())
                 {pawnMove(v, b, pieceV, dirWpawnPush, dirWpawnMove2, dirWpawnCapture); break;}
             else
                 {pawnMove(v, b, pieceV, dirBpawnPush, dirBpawnMove2, dirBpawnCapture); break;}
-        case 2://Knight move
+        case epcWknight://Knight move
             squareMove(v, b, pieceV, dirKnight); break;
-        case 3://Bishop move
+        case epcWbishop://Bishop move
             rayMove(v, b, pieceV, dirBishop); break;
-        case 4://Rook move
+        case epcWrook://Rook move
             rayMove(v, b, pieceV, dirRook); break;
-        case 5://Queen move
+        case epcWqueen://Queen move
             rayMove(v, b, pieceV, dirQueen); break;
-        case 6://king move
+        case epcWking://king move
             squareMove(v, b, pieceV, dirKing); break;
         default:
             throw("Not a known pieceCode.");
@@ -329,11 +329,11 @@ void generateMove(std::vector<Move> &v, Board b, ePieceCode code)
 std::vector<Move> generateMoveList(const Board &b)
 {
     std::vector<Move> v;
-    generateMove(v,b,epcWqueen);
-    generateMove(v,b,epcWrook);
+    generateMove(v,b,epcWpawn);
     generateMove(v,b,epcWbishop);
     generateMove(v,b,epcWknight);
-    generateMove(v,b,epcWpawn);
+    generateMove(v,b,epcWrook);
+    generateMove(v,b,epcWqueen);
     generateMove(v,b,epcWking);
     return v;
 
