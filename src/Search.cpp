@@ -138,35 +138,36 @@ bool squareCheckHelper(Board b, Coord piece, std::vector<Coord> dir, ePieceCode 
 bool inCheck(Board b, Move m)
 {
     std::vector <Coord> pieceV;
-    Board b2 = b.makeMove(m);  // This is the modified board if the move is made
-
+    b.makeMove(m);  // This is the modified board if the move is made
     //set pieceV to the correct color
-    if(b.isWhite()){
-        pieceV = findPieces(b2, epcWking); //cast code to correspoding white ePieceCode
+    if(!b.isWhite()){
+        pieceV = findPieces(b, epcWking); //cast code to correspoding white ePieceCode
     }
     else {
-        pieceV = findPieces(b2, epcBking); //cast code to correspoding black ePieceCode
+        pieceV = findPieces(b, epcBking); //cast code to correspoding black ePieceCode
     }
-    // std::cout << b2 << std::endl;
-    // std::cout << pieceV.size() << std::endl;
+    if(pieceV.empty()){
+        std::cout << b << std::endl;
+        throw std::runtime_error("uhoh");
+    }
     Coord piece = pieceV[0];    //location of king
-
-    if(b.isWhite())     //For White turn
-     return (rayCheckHelper(b2, piece, dirRook,epcBrook)                    //If any of these black pieces are threatening the king then return true
-            || rayCheckHelper(b2, piece, dirQueen, epcBqueen)
-            || rayCheckHelper(b2, piece, dirBishop, epcBbishop)
-            || squareCheckHelper(b2, piece, dirKnight, epcBknight)
-            || squareCheckHelper(b2, piece, dirKing, epcBking)
-            || squareCheckHelper(b2, piece, dirWpawnCapture, epcBpawn));
+    bool result;
+    if(!b.isWhite())     //For White turn
+    result = (rayCheckHelper(b, piece, dirRook,epcBrook)                    //If any of these black pieces are threatening the king then return true
+            || rayCheckHelper(b, piece, dirQueen, epcBqueen)
+            || rayCheckHelper(b, piece, dirBishop, epcBbishop)
+            || squareCheckHelper(b, piece, dirKnight, epcBknight)
+            || squareCheckHelper(b, piece, dirKing, epcBking)
+            || squareCheckHelper(b, piece, dirWpawnCapture, epcBpawn));
     else                //For black turn
-     return (rayCheckHelper(b2, piece, dirRook, epcWrook)                   //If any of these white pieces are threatening the king then return true
-            || rayCheckHelper(b2, piece, dirQueen, epcWqueen)
-            || rayCheckHelper(b2, piece, dirBishop, epcWbishop)
-            || squareCheckHelper(b2, piece, dirKnight, epcWknight)
-            || squareCheckHelper(b2, piece, dirKing, epcWking)
-            || squareCheckHelper(b2, piece, dirBpawnCapture, epcWpawn));
-    //if nothing returns equal then nothing is threatening the king so return false
-    return false;
+    result =  (rayCheckHelper(b, piece, dirRook, epcWrook)                   //If any of these white pieces are threatening the king then return true
+            || rayCheckHelper(b, piece, dirQueen, epcWqueen)
+            || rayCheckHelper(b, piece, dirBishop, epcWbishop)
+            || squareCheckHelper(b, piece, dirKnight, epcWknight)
+            || squareCheckHelper(b, piece, dirKing, epcWking)
+            || squareCheckHelper(b, piece, dirBpawnCapture, epcWpawn));
+    b.unmakeMove();
+    return result;
 }
 
 //Overloaded function that checks for checking the enemy
@@ -200,21 +201,17 @@ bool inCheck(Board b)
                 || squareCheckHelper(b, piece, dirKnight, epcBknight)
                 || squareCheckHelper(b, piece, dirKing, epcBking)
                 || squareCheckHelper(b, piece, dirWpawnCapture, epcBpawn));
-        //if nothing returns equal then nothing is threatening the king so return false
-        return false;
 }
 
 
 //Purpose: Add all possible moves to v for pieces that move in rays (Rooks, Bishops, Queens)
 //rayPieces can move in a line indefinitely, but are blocked by pieces obstructing the path
-void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
+void rayMove(std::vector<Move> &v, const Board &b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
 {
-    for (unsigned int i = 0; i < pieceV.size(); i++)
-    {
-        Coord piece = pieceV[i]; //storing location
-        for (unsigned int j = 0; j < dir.size(); j++)
-        {
-            Coord possibleMove = piece + dir[j];
+    for (auto piece : pieceV) {
+        //storing location
+        for (auto j : dir) {
+            Coord possibleMove = piece + j;
             //if possible move is inside and (     square is empty         ||            enemy occupy square                       &&   !if move made exposes king to check   )
             if(b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()) && !inCheck(b, Move(piece, possibleMove)))
             {
@@ -225,7 +222,7 @@ void rayMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vec
                 {
                         //can move to empty square and continue down the line of direction dir[j]
                         v.push_back(Move(piece, possibleMove));
-                        possibleMove = possibleMove + dir[j];
+                        possibleMove = possibleMove + j;
                 }
                 //if the loops breaks because there is an enemy on the square
                 //Captures that square from an enemy piece but does not continue down the line
@@ -303,20 +300,20 @@ void generateMove(std::vector<Move> &v, Board b, ePieceCode code)
     {
         //each move function parameters are
         //all possible moves vector v, the Board b, a vector of all piece types, and vector direction the piece moves
-        case 1: //Pawn move
+        case epcWpawn: //Pawn move
             if(b.isWhite())
                 {pawnMove(v, b, pieceV, dirWpawnPush, dirWpawnMove2, dirWpawnCapture); break;}
             else
                 {pawnMove(v, b, pieceV, dirBpawnPush, dirBpawnMove2, dirBpawnCapture); break;}
-        case 2://Knight move
+        case epcWknight://Knight move
             squareMove(v, b, pieceV, dirKnight); break;
-        case 3://Bishop move
+        case epcWbishop://Bishop move
             rayMove(v, b, pieceV, dirBishop); break;
-        case 4://Rook move
+        case epcWrook://Rook move
             rayMove(v, b, pieceV, dirRook); break;
-        case 5://Queen move
+        case epcWqueen://Queen move
             rayMove(v, b, pieceV, dirQueen); break;
-        case 6://king move
+        case epcWking://king move
             squareMove(v, b, pieceV, dirKing); break;
         default:
             throw("Not a known pieceCode.");

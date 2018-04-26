@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include "Move.h"
 #include <ostream>
+#include <vector>
 #include <string>
 
 
@@ -22,8 +23,8 @@ public:
   ~Board();
   Piece **getBoard() const;
   Piece getPiece(Coord) const;
-  Board makeMove(Move) const;
-  Board unmakeMove(Move) const;
+  Board & makeMove(Move);
+  Board unmakeMove();
   bool inside(Coord) const;
   bool isWhite() const;
   ePieceCode currColor() { return whiteTurn ? white : black; };
@@ -37,8 +38,11 @@ public:
 
 private:
   Piece **board = 0;
-  bool whiteTurn;
+  bool whiteTurn = true;
+  std::vector<Move> history;
   Move prevMove = Move(-1, -1, -1, -1);
+  Piece prevCapture = Piece(epcEmpty);
+  std::vector<Piece> captures;
 };
 
 #endif // BOARD_H

@@ -13,12 +13,12 @@ class UCI
     static void newUCI();
     static void inputIsReady();
     void debug();
-    void setOption(string);
+    void setOption(std::string);
     void uciNewGame();
     void inputIsGo();
 private:
-    string nameOfEngine;
-    string Line;
+    std::string nameOfEngine;
+    std::string Line;
 };
 
 #endif

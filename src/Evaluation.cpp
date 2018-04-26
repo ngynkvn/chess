@@ -10,14 +10,17 @@
  * This is done by the recursive minimax algorithm which simulates play up to a certain depth and calculates 
  * a heuristical score. Scores can then be correlated with the initial move to make the best decision.
  */
-Move mini_max(const Board &game_state)
+Move mini_max(Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
     int bestScore = evaluate(game_state.makeMove(moves[0]));
+    game_state.unmakeMove();
     Move bestMove = moves[0];
     for (auto i = moves.begin(); i != moves.end(); i++)
     {
-        int currScore = mini_max(game_state.makeMove(*i), 3, -10000, 10000, true);
+        game_state.makeMove(*i);
+        int currScore = mini_max(game_state, 3, -10000, 10000, true);
+        game_state.unmakeMove();
         if (game_state.isWhite() && currScore > bestScore)
         {
             bestScore = currScore;
@@ -35,7 +38,7 @@ Move mini_max(const Board &game_state)
 /*
  * Alpha beta pruning is implemented to reduce the size of the game tree and improve performance of the algorithm.
  */
-int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_max_player)
+int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
     // is the depth zero
     if (depth == 0)
@@ -44,17 +47,19 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     }
 
     // are there no more possible game states
-    std::vector<Board> children_states = get_states(game_state);
-    if (children_states.size() == 0)
+    std::vector<Move> children_states = Search::generateMoveList(game_state);
+    if (children_states.empty())
         return evaluate(game_state);
 
     // maximize and minimize the possible moves
     if (is_max_player) // if it the players turn
     {
         int v = alpha;
-        for (Board b : children_states)
+        for (Move m : children_states)
         {
-            int v_prime = mini_max(b, depth - 1, v, beta, !is_max_player);
+            game_state.makeMove(m);
+            int v_prime = mini_max(game_state, depth - 1, v, beta, !is_max_player);
+            game_state.unmakeMove();
             if (v_prime > v)
                 v = v_prime;
             if (v > beta)
@@ -65,9 +70,11 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     else // if it's the opponents turn
     {
         int v = beta;
-        for (Board b : children_states)
+        for (Move m : children_states)
         {
-            int v_prime = mini_max(b, depth - 1, alpha, v, !is_max_player);
+            game_state.makeMove(m);
+            int v_prime = mini_max(game_state, depth - 1, alpha, v, !is_max_player);
+            game_state.unmakeMove();
             if (v_prime < v)
                 v = v_prime;
             if (v < alpha)
@@ -87,7 +94,7 @@ std::vector<Board> get_states(const Board &curr)
     std::vector<Move> moves = Search::generateMoveList(curr);
     for (auto i = moves.begin(); i != moves.end(); i++)
     {
-        v.push_back(curr.makeMove(*i));
+//        v.push_back(curr.makeMove(*i));
     }
     return v;
 }
@@ -109,14 +116,10 @@ bool is_end_game(const Board &game_state)
         }
     }
 
-    if (piece_count < 12)
-    {
-        return true;
-    }
-    return false;
+    return piece_count < 12;
 }
 
-int evaluate(const Board &game_state)
+int evaluate(Board &game_state)
 {
     int evaluation = 0;
     Piece **curr_board = game_state.getBoard();

@@ -6,18 +6,18 @@
 #include "Search.h"
 #include <vector>
 
-Move mini_max(const Board &);
+Move mini_max(Board &);
 // Depth first search tree which implements alpha-beta pruning
-int mini_max(const Board & currBoard, int depth, int alpha, int beta, bool is_max_player);
+int mini_max(Board & currBoard, int depth, int alpha, int beta, bool is_max_player);
 
 // evaluates the current board state
-int evaluate(const Board& currBoard);
+int evaluate(Board& currBoard);
 
 // gets the value of a piece at a give location
 int get_piece_value(Piece p, int x, int y, bool is_end);
 
 // calls generateMoveList, makes each move and appends to vector to be processed later.
-std::vector<Board> get_states(const Board& curr);
+// std::vector<Board> get_states(const Board& curr);
 
 // is the game in end game scenarios
 bool is_end_game(const Board &);
