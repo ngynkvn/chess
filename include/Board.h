@@ -24,7 +24,7 @@ public:
   Piece **getBoard() const;
   Piece getPiece(Coord) const;
   Board & makeMove(Move);
-  Board unmakeMove();
+  void unmakeMove();
   bool inside(Coord) const;
   bool isWhite() const;
   ePieceCode currColor() { return whiteTurn ? white : black; };

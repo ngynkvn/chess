@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -Wall -O3 -g
+FLAGS = -std=c++11 -Wall -pg -g3
 
 SRC = src
 OUTDIR = bin
@@ -31,5 +31,7 @@ clean:
 	rm -rf $(OUTDIR)
 	rm -f $(addprefix $(TESTDIR)/,*.out *.exe, runtest)
 
+profile: main
+	gprof ./$(OUTDIR)/$(OUTNAME) > ./profiling/result.gprof
 
 .PHONY: clean test

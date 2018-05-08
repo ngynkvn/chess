@@ -46,23 +46,6 @@ Board::Board()
     }
 }
 
-/*
-Creates a new Board object by setting the 2D Piece-array board
-to an already existing 2D array
-*/
-Board::Board(const Board &other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
-{
-    board = new Piece *[8];
-    for (int row = 0; row < 8; row++)
-    {
-        board[row] = new Piece[8];
-        for (int col = 0; col < 8; col++)
-        {
-            board[row][col] = other.board[row][col];
-        }
-    }
-}
-
 Board &Board::operator=(const Board &other)
 {
     if (this != &other)
@@ -132,7 +115,7 @@ corresponding to the from-coordinates
 -then returns a Board object with these changes
 -the actual Board has not been affected
 -^^will in the future handle returning opponent pieces*/
-Board Board::unmakeMove()
+void Board::unmakeMove()
 {
     setTurn(!whiteTurn);
     Move prev = history.back();
@@ -140,7 +123,6 @@ Board Board::unmakeMove()
     board[prev.from().y][prev.from().x] = (*this).getPiece(prev.to());
     board[prev.to().y][prev.to().x] = captures.back();
     captures.pop_back();
-    return *this;
 }
 
 /*
