@@ -14,7 +14,7 @@
 namespace Search
 {
 std::vector<Move> generateMoveList(Board &);
-std::vector<Coord> findPieces(Board&, ePieceCode);
+std::vector<Coord> findPieces(Board&, int);
 bool inCheck(Board&, Move);
 bool inCheck(Board&);
 }

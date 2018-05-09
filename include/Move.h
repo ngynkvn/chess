@@ -14,8 +14,8 @@ struct Coord
   Coord() : x(-1), y(-1){};
   Coord(int x, int y) : x(x), y(y){};
   Coord(char letter, int y) : x('h'-letter), y(y - 1){};
-  Coord operator+(const Coord &other) { return Coord(x + other.x, y + other.y); };
-  Coord operator-(const Coord &other) { return Coord(x - other.x, y - other.y); };
+  Coord operator+(const Coord &other) { return {x + other.x, y + other.y}; };
+  Coord operator-(const Coord &other) { return {x - other.x, y - other.y}; };
   bool operator==(const Coord &c) { return c.x == x && c.y == y; }
   friend std::ostream &operator<<(std::ostream &, const Coord &);
 };
@@ -30,7 +30,7 @@ class Move
 public:
   Move(int, int, int, int);
   Move(Coord, Coord);
-  Move(std::string);
+  explicit Move(std::string);
   Coord from() const;
   Coord to() const;
   bool operator==(const Move &m) const { return m.from() == Coord(fromX, fromY) && m.to() == Coord(toX, toY); }

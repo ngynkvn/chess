@@ -35,14 +35,14 @@ void gameLoop()
         if(in == "q")
             return;
         m = Move(in);
-        } catch (exception e)
+        } catch (exception& e)
         {}
 
         if (validMove(b, m))
         {
             b.makeMove(m);
             cout << b << endl;
-            if(Search::generateMoveList(b).size() != 0){
+            if(!Search::generateMoveList(b).empty()){
             cout << "Opponent is thinking.." << endl;
             b.makeMove(mini_max(b));
             cout << b << endl;

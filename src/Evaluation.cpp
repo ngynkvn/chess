@@ -16,15 +16,6 @@ Move mini_max(Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
     callCount = 0;
-    sort(moves.begin(),moves.end(), [&game_state](Move a, Move b){
-        game_state.makeMove(a);
-        int scoreA = evaluate(game_state);
-        game_state.unmakeMove();
-        game_state.makeMove(b);
-        int scoreB = evaluate(game_state);
-        game_state.unmakeMove();
-        return game_state.isWhite() ? scoreA > scoreB : scoreB > scoreA;
-    });
 
     int bestScore = evaluate(game_state.makeMove(moves[0]));
     game_state.unmakeMove();
@@ -65,16 +56,6 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
     if (children_states.empty())
         return evaluate(game_state);
 
-    sort(children_states.begin(),children_states.end(), [&game_state](Move a, Move b){
-        game_state.makeMove(a);
-        int scoreA = evaluate(game_state);
-        game_state.unmakeMove();
-        game_state.makeMove(b);
-        int scoreB = evaluate(game_state);
-        game_state.unmakeMove();
-        return game_state.isWhite() ? scoreA > scoreB : scoreB > scoreA;
-    });
-
     // maximize and minimize the possible moves
     if (is_max_player) // if it the players turn
     {
@@ -110,24 +91,6 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
     }
 }
 
-/*
-Returns a vector of boards that show the outcome of each
-possible move that can currently be made on the actual board
-*/
-std::vector<Board> get_states(const Board &curr)
-{
-    std::vector<Board> v;
-    std::vector<Move> moves = Search::generateMoveList(curr);
-    for (auto i = moves.begin(); i != moves.end(); i++)
-    {
-//        v.push_back(curr.makeMove(*i));
-    }
-    return v;
-}
-
-/*
-
-*/
 bool is_end_game(const Board &game_state)
 {
     int piece_count = 0;
