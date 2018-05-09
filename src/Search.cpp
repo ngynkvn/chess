@@ -59,7 +59,7 @@ std::vector<Coord> dirBpawnCapture = {Coord(1, -1), // two direction black pawn 
 std::vector<Coord> dirBpawnMove2 = {Coord(0, -2)};  //Black Pawn on a starting rank has option to move 2 squares
 
 // returns a vector<Coord> of all pieces with same ePieceCode
-std::vector<Coord> findPieces(const Board& b, ePieceCode piece)
+std::vector<Coord> findPieces(const Board& b, int piece)
 {
     Piece **board = b.getBoard();
     std::vector<Coord> pieces;
@@ -71,7 +71,7 @@ std::vector<Coord> findPieces(const Board& b, ePieceCode piece)
         {
             if (board[i][j].getPieceCode() == piece)
             {
-                pieces.push_back(Coord(j, i)); // adds coordinates to pieces
+                pieces.emplace_back(j, i); // adds coordinates to pieces
             }
         }
     }
@@ -96,18 +96,17 @@ void promote(const Board & b)
 //Checks in the directions of the Coord dir from the king if there is an enemy piece thretening the king
 //think: checks if the king can see an enemy ray piece that attacks on that line
 //rayPieces can move in a line indefinitely, but are blocked by pieces obstructing the path
-bool rayCheckHelper(Board b, Coord piece, std::vector<Coord> dir, ePieceCode code)
+bool rayCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, ePieceCode code)
 {
     //For each direction in vector dir
-    for(unsigned int k =0; k< dir.size(); k++)
-    {
+    for (auto k : dir) {
         //Exmines each square in an extending line until break condition is met
         //condition: while the next square in the same direction is empty, examinee that square
         //conditions that break loop: square is a ally piece, opponent, or out of board.
-        Coord possibleMove = piece + dir[k];
+        Coord possibleMove = piece + k;
         while ((b.inside(possibleMove) && (b.getPiece(possibleMove).empty())))
         {
-            possibleMove = possibleMove + dir[k];
+            possibleMove = possibleMove + k;
         }
         //if the loops breaks because there is an enemy on the square
         if(b.inside(possibleMove) && b.getPiece(possibleMove) == code)
@@ -120,14 +119,13 @@ bool rayCheckHelper(Board b, Coord piece, std::vector<Coord> dir, ePieceCode cod
 //"semi-"helper" function for the function inCheck
 //Checks the squares that Coord dir points to see if there is an enemy piece thretening the king
 //Pieces can move to a square that the Coord dir points to, if the square is not occupied by ally
-bool squareCheckHelper(Board b, Coord piece, std::vector<Coord> dir, ePieceCode code)
+bool squareCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int code)
 {
     //for each direction in vector dir
-    for(unsigned int k=0; k<dir.size(); k++)
-    {
+    for (auto k : dir) {
         //check that square
-        Coord possibleMove = piece +dir[k];
-        if(b.inside(possibleMove) && b.getPiece(possibleMove) == code)
+        Coord possibleMove = piece + k;
+        if(b.inside(possibleMove) && b.getPiece(possibleMove) == ePieceCode(code))
             return true; //Corresponding enemy piece occupies square
     }
     //if return true is never called
@@ -255,23 +253,21 @@ void squareMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::
 //Purpose: adds to v by generating all moves based off 3 conditional types of pawn movements
 void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::vector<Coord> push, std::vector<Coord> move2, std::vector<Coord> dir3)
 {
-    for (unsigned int i = 0; i < pieceV.size(); i++)
-    {
-        Coord piece = pieceV[i];
+    for (auto piece : pieceV) {
         Coord possibleMove = piece + push[0]; //possibleMove set to a pawn push
 
         //Checks forward square for pawn push direction and checks for special 2 square move
         //if ( move inside board   &&          square is empty         && !if move made exposes king to check )))
         if (b.inside(possibleMove) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove))) //tests a pawn push
         {
-            v.push_back(Move(piece, possibleMove));
+            v.emplace_back(piece, possibleMove);
 
             //conditional 2 pawn jump start move
             //tests if the pawn is on a original starting color and if the second square is empty
             //(inside prev if loop because the square immediatly in front of it must also be empty)
             possibleMove = piece + move2[0]; //possibleMove set to special 2 square move
             if ((piece.y == (b.isWhite() ? 1 : 6)) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove))) // pawn is on rank file and two moves in front square is empty
-                v.push_back(Move(piece, possibleMove)); //add Move to v
+                v.emplace_back(piece, possibleMove); //add Move to v
         }
 
         //for loop for the two capture directions
@@ -280,20 +276,20 @@ void pawnMove(std::vector<Move> &v, Board b, std::vector<Coord> &pieceV, std::ve
             //capture a piece
             possibleMove = piece + dir3[j]; //possibleMove set to a pawn capture direction
             if(b.inside(possibleMove)&&b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove))) // test opposite color piece in square
-                v.push_back(Move(piece,possibleMove));  //captures
+                v.emplace_back(piece,possibleMove);  //captures
         }
     }
 }
 
-void generateMove(std::vector<Move> &v, Board b, ePieceCode code)
+void generateMove(std::vector<Move> &v, const Board &b, int code)
 {
     std::vector<Coord> pieceV;
 
     // sets pieceV to the correct color
     if (b.isWhite())
-        pieceV = findPieces(b, (ePieceCode)code); //cast code to correspoding white ePieceCode
+        pieceV = findPieces(b, code); //cast code to correspoding white ePieceCode
     else
-        pieceV = findPieces(b, (ePieceCode)(code+7)); //cast code to correspoding black ePieceCode
+        pieceV = findPieces(b, code + 7); //cast code to correspoding black ePieceCode
 
     //Based on the ePieceCode, the appropriate move function is called with appropriate parameters
     switch(code)

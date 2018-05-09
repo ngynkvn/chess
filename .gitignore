@@ -37,3 +37,4 @@ snippets
 *.exe
 *.out
 *.app
+CMakeLists.txt

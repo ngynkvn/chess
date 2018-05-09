@@ -37,7 +37,7 @@ public:
   friend std::ostream &operator<<(std::ostream &, const Board &);
 
 private:
-  Piece **board = 0;
+  Piece **board = nullptr;
   bool whiteTurn = true;
   std::vector<Move> history;
   Move prevMove = Move(-1, -1, -1, -1);

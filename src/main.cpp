@@ -10,7 +10,7 @@ using namespace std;
 Returns whether or not the move given in the parameters
 is actually a possible move on the given board
 */
-bool validMove(Board b, Move m)
+bool validMove(const Board &b, Move m)
 {
     std::vector<Move> list = Search::generateMoveList(b);
     return find(list.begin(), list.end(), m) != list.end();
@@ -35,14 +35,14 @@ void gameLoop()
         if(in == "q")
             return;
         m = Move(in);
-        } catch (exception e)
+        } catch (exception& e)
         {}
 
         if (validMove(b, m))
         {
             b.makeMove(m);
             cout << b << endl;
-            if(Search::generateMoveList(b).size() != 0){
+            if(!Search::generateMoveList(b).empty()){
             cout << "Opponent is thinking.." << endl;
             b.makeMove(mini_max(b));
             cout << b << endl;
@@ -69,11 +69,11 @@ int main()
 {
     Board b;
 //    b.makeMove(Move("e2e4"));
-//    b.makeMove(mini_max(b));
+   b.makeMove(mini_max(b));
 //    b.makeMove(Move("d2d4"));
     cout << b << endl;
 //    b.unmakeMove();
 //    cout << b << endl;
-     selfPlay();
+    //  selfPlay();
 //    gameLoop();
 }

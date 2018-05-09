@@ -34,7 +34,7 @@ private:
   ePieceCode pieceCode;
 
 public:
-  Piece(ePieceCode);
+    explicit Piece(ePieceCode);
   Piece();
   bool empty();
   ePieceCode getColor();

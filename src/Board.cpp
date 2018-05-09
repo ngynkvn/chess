@@ -8,7 +8,7 @@ using namespace std;
 Board::Board()
 {
     this->board = new Piece *[8];
-    history.push_back(Move(-1,-1,-1,-1));
+    history.emplace_back(Move(-1,-1,-1,-1));
     /*setting empty spaces first*/
 
     Piece startPiece(epcEmpty);
@@ -121,7 +121,7 @@ Board & Board::makeMove(Move m)
 {
     setTurn(!whiteTurn);
     history.push_back(m);
-    captures.push_back(Piece(getPiece(m.to()).getPieceCode()));
+    captures.emplace_back(Piece(getPiece(m.to()).getPieceCode()));
     board[m.to().y][m.to().x] = Piece(getPiece(m.from()).getPieceCode());
     board[m.from().y][m.from().x] = Piece(epcEmpty);
     return *this;
