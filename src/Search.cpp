@@ -1,5 +1,7 @@
 #include "Search.h"
 #include <iostream>
+#include <map>
+#include <assert.h>
 
 namespace Search
 {
@@ -58,24 +60,25 @@ std::vector<Coord> dirBpawnCapture = {Coord(1, -1), // two direction black pawn 
                                       Coord(-1, -1)};
 std::vector<Coord> dirBpawnMove2 = {Coord(0, -2)}; //Black Pawn on a starting rank has option to move 2 squares
 
+std::map<ePieceCode, std::vector<Coord>> cachePos;
+
+void cachePositions(Board& b)
+{
+    cachePos.clear();
+    Piece** board = b.getBoard();
+    for(int i = 0; i < 8; i++)
+        for(int j = 0; j < 8; j++)
+        {
+            if(!board[i][j].empty()){
+                cachePos[board[i][j].getPieceCode()].emplace_back(j,i);
+            }
+        }
+}
+
 // returns a vector<Coord> of all pieces with same ePieceCode
 std::vector<Coord> findPieces(Board& b, int piece)
 {
-    Piece **board = b.getBoard();
-    std::vector<Coord> pieces;
-
-    //Searches all squares
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            if (board[i][j].getPieceCode() == piece)
-            {
-                pieces.emplace_back(j, i); // adds coordinates to pieces
-            }
-        }
-    }
-    return pieces;
+    return cachePos[(ePieceCode)piece];
 }
 
 //When a pawn reaches the end of the board, it promotes to a queen piece
@@ -209,13 +212,13 @@ void rayMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::ve
                 while (b.inside(possibleMove) && b.getPiece(possibleMove).empty() && !inCheck(b, Move(piece, possibleMove)))
                 {
                     //can move to empty square and continue down the line of direction dir[j]
-                    v.push_back(Move(piece, possibleMove));
+                    v.emplace_back(piece, possibleMove);
                     possibleMove = possibleMove + j;
                 }
                 //if the loops breaks because there is an enemy on the square
                 //Captures that square from an enemy piece but does not continue down the line
                 if (b.inside(possibleMove) && b.getPiece(possibleMove).getColor() == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
-                    v.push_back(Move(piece, possibleMove)); //capture move
+                    v.emplace_back(piece, possibleMove); //capture move
             }
         }
     }
@@ -235,7 +238,7 @@ void squareMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std:
             Coord possibleMove = piece + dir[j]; //the square where dir[j] points to from piece origin
             //if ( possibleMove is in board &&       square is empty        ||         enemy ocuppies square                        && !if move made exposes king to check )))
             if (b.inside(possibleMove) && (b.getPiece(possibleMove).empty() || b.getPiece(possibleMove).getColor() == b.opposite()) && !inCheck(b, Move(piece, possibleMove)))
-                v.push_back(Move(piece, possibleMove)); //if square is empty or occupied by enemy, add possibleMove to v
+                v.emplace_back(piece, possibleMove); //if square is empty or occupied by enemy, add possibleMove to v
         }
     }
 }
@@ -322,6 +325,7 @@ void generateMove(std::vector<Move> &v, Board &b, int code)
 std::vector<Move> generateMoveList(Board &b)
 {
     std::vector<Move> v;
+    cachePositions(b);
     generateMove(v, b, epcWqueen);
     generateMove(v, b, epcWrook);
     generateMove(v, b, epcWbishop);

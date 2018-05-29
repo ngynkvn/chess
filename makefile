@@ -38,7 +38,7 @@ callgrind: main
 gprof: main
 	@echo "\tRunning.."
 	@time -p ./$(OUTDIR)/$(OUTNAME)
-	@gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result.gprof
+	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%e-%T").gprof
 	@head ./snippets/profiling/result.gprof
 
 .PHONY: clean test

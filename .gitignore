@@ -38,3 +38,4 @@ snippets
 *.out
 *.app
 CMakeLists.txt
+callgrind.out.*
