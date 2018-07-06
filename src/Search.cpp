@@ -65,12 +65,12 @@ std::map<ePieceCode, std::vector<Coord>> cachePos;
 void cachePositions(Board& b)
 {
     cachePos.clear();
-    Piece** board = b.getBoard();
+    ePieceCode **board = b.getBoard();
     for(int i = 0; i < 8; i++)
         for(int j = 0; j < 8; j++)
         {
-            if(!board[i][j].empty()){
-                cachePos[board[i][j].getPieceCode()].emplace_back(j,i);
+            if(board[i][j] != epcEmpty){
+                cachePos[board[i][j]].emplace_back(j,i);
             }
         }
 }
