@@ -78,7 +78,7 @@ void cachePositions(Board& b)
 // returns a vector<Coord> of all pieces with same ePieceCode
 std::vector<Coord> findPieces(Board& b, int piece)
 {
-    return cachePos[(ePieceCode)piece];
+    return cachePos.at((ePieceCode)piece);
 }
 
 //When a pawn reaches the end of the board, it promotes to a queen piece
