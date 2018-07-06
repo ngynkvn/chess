@@ -22,7 +22,7 @@ Move mini_max(Board &game_state)
     Move bestMove = moves[0];
     for (auto &move : moves) {
         game_state.makeMove(move);
-        int currScore = mini_max(game_state, 5, -10000, 10000, game_state.isWhite());
+        int currScore = mini_max(game_state, 3, -10000, 10000, game_state.isWhite());
         game_state.unmakeMove();
         if (game_state.isWhite() && currScore > bestScore)
         {
@@ -36,6 +36,7 @@ Move mini_max(Board &game_state)
         }
     }
     std::cout << "Call count: " << callCount << std::endl;
+    callCount = 0;
     return bestMove;
 }
 
@@ -94,13 +95,13 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
 bool is_end_game(const Board &game_state)
 {
     int piece_count = 0;
-    Piece **curr_board = game_state.getBoard();
+    ePieceCode **curr_board = game_state.getBoard();
 
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (curr_board[i][j].getPieceCode() != epcEmpty)
+            if (curr_board[i][j] != epcEmpty)
                 piece_count++;
         }
     }
@@ -111,7 +112,7 @@ bool is_end_game(const Board &game_state)
 int evaluate(Board &game_state)
 {
     int evaluation = 0;
-    Piece **curr_board = game_state.getBoard();
+    ePieceCode **curr_board = game_state.getBoard();
     bool is_end = is_end_game(game_state);
 
     /*  used to add an extra component to the evaluation by increasing score by the amount of possible moves.
@@ -138,14 +139,14 @@ int evaluate(Board &game_state)
  * This makes use of the position tables found in Evaluation.h and also includes 
  * programmer-defined heuristics to slightly tweak how the engine plays.
  */
-int get_piece_value(Piece p, int x, int y, bool is_end)
+int get_piece_value(ePieceCode p, int x, int y, bool is_end)
 {
     int score = 0;
 
     // if end game and current piece is a king
-    if (is_end && (p.getPieceCode() == epcBking || p.getPieceCode() == epcWking))
+    if (is_end && (p == epcBking || p == epcWking))
     {
-        if (p.getPieceCode() == epcBking)
+        if (p == epcBking)
         {
             score += material[5];
             score += black_king_end_table[x][y];
@@ -159,7 +160,7 @@ int get_piece_value(Piece p, int x, int y, bool is_end)
         }
     }
 
-    switch (p.getPieceCode())
+    switch (p)
     {
     // white evaluation
     case epcWpawn:

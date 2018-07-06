@@ -21,8 +21,8 @@ public:
   Board();
   Board(const Board &);
   ~Board();
-  Piece **getBoard() const;
-  Piece getPiece(Coord) const;
+  ePieceCode **getBoard() const;
+  ePieceCode & getPiece(Coord) const;
   Board & makeMove(Move);
   void unmakeMove();
   bool inside(Coord) const;
@@ -37,12 +37,12 @@ public:
   friend std::ostream &operator<<(std::ostream &, const Board &);
 
 private:
-  Piece **board = nullptr;
+  ePieceCode **board = nullptr;
   bool whiteTurn = true;
   std::vector<Move> history;
   Move prevMove = Move(-1, -1, -1, -1);
-  Piece prevCapture = Piece(epcEmpty);
-  std::vector<Piece> captures;
+  ePieceCode prevCapture = epcEmpty;
+  std::vector<ePieceCode > captures;
 };
 
 #endif // BOARD_H
