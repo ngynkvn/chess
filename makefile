@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -Wall -O3 -g
+FLAGS = -std=c++11 -Wall -O3 -pg -g3
 
 SRC = src
 OUTDIR = bin
@@ -31,5 +31,14 @@ clean:
 	rm -rf $(OUTDIR)
 	rm -f $(addprefix $(TESTDIR)/,*.out *.exe, runtest)
 
+callgrind: main
+	@echo "\tRunning.."
+	time -p valgrind --tool=callgrind ./$(OUTDIR)/$(OUTNAME)
+
+gprof: main
+	@echo "\tRunning.."
+	@time -p ./$(OUTDIR)/$(OUTNAME)
+	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%e-%T").gprof
+	@head ./snippets/profiling/result.gprof
 
 .PHONY: clean test

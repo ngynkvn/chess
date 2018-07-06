@@ -1,13 +1,14 @@
+#include <iostream>
 #include "Board.h"
 #include "Search.h"
 
 using namespace std;
 /*constructor sets up the board for a new game*/
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
-Board::Board() : whiteTurn(true)
+Board::Board()
 {
     this->board = new Piece *[8];
-
+    history.emplace_back(Move(-1,-1,-1,-1));
     /*setting empty spaces first*/
 
     Piece startPiece(epcEmpty);
@@ -42,23 +43,6 @@ Board::Board() : whiteTurn(true)
         this->board[0][i] = startPiece;
         startPiece = Piece(majorPiecesB[i]); //black pieces
         this->board[7][i] = startPiece;
-    }
-}
-
-/*
-Creates a new Board object by setting the 2D Piece-array board
-to an already existing 2D array
-*/
-Board::Board(const Board &other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
-{
-    board = new Piece *[8];
-    for (int row = 0; row < 8; row++)
-    {
-        board[row] = new Piece[8];
-        for (int col = 0; col < 8; col++)
-        {
-            board[row][col] = other.board[row][col];
-        }
     }
 }
 
@@ -108,7 +92,7 @@ Piece **Board::getBoard() const
 /*returns the piece held at that index of the board 2Darray */
 Piece Board::getPiece(Coord c) const
 {
-    return this->board[c.y][c.x];
+    return board[c.y][c.x];
 }
 
 /*sets the piece at the from-coordinates to the index of the board 2Darray
@@ -116,15 +100,14 @@ corresponding to the to-coordinates
 -then returns a Board object with these changes
 -the actual Board has not been affected
 -^^will in the future handle taking opponent pieces*/
-Board Board::makeMove(Move m) const
+Board & Board::makeMove(Move m)
 {
-    Board testerGame(*this);
-    Piece **gameBoard = testerGame.getBoard();
-    testerGame.setTurn(!whiteTurn);
-    testerGame.setPrevMove(m); // board.h and add in methods there and make public
-    gameBoard[m.to().y][m.to().x] = testerGame.getPiece(m.from());
-    gameBoard[m.from().y][m.from().x] = Piece(epcEmpty);
-    return testerGame;
+    setTurn(!whiteTurn);
+    history.push_back(m);
+    captures.emplace_back(Piece(getPiece(m.to()).getPieceCode()));
+    board[m.to().y][m.to().x] = Piece(getPiece(m.from()).getPieceCode());
+    board[m.from().y][m.from().x] = Piece(epcEmpty);
+    return *this;
 }
 
 /*sets the piece at the to-coordinates to the index of the board 2Darray
@@ -132,12 +115,14 @@ corresponding to the from-coordinates
 -then returns a Board object with these changes
 -the actual Board has not been affected
 -^^will in the future handle returning opponent pieces*/
-Board Board::unmakeMove(Move m) const
+void Board::unmakeMove()
 {
-    Board testerGame = Board(*this);
-    Piece **gameBoard = testerGame.getBoard();
-    gameBoard[m.from().y][m.from().x] = testerGame.getPiece(m.to());
-    return testerGame;
+    setTurn(!whiteTurn);
+    Move prev = history.back();
+    history.pop_back();
+    board[prev.from().y][prev.from().x] = (*this).getPiece(prev.to());
+    board[prev.to().y][prev.to().x] = captures.back();
+    captures.pop_back();
 }
 
 /*
@@ -158,7 +143,7 @@ void Board::setTurn(bool isWhite) { whiteTurn = isWhite; }
 /*
 Returns previous move
 */
-Move Board::getPrevMove() const { return prevMove; }
+Move Board::getPrevMove() const { return history.back(); }
 
 /*
 Sets the previous move to another move object
@@ -177,9 +162,9 @@ ePieceCode Board::same() const { return whiteTurn ? white : black; }
 
 ostream &operator<<(ostream &os, const Board &board)
 {
-    // char outChars[] = {' ', 'p', 'k','b','r','q','W',
-    //                    ' ', 'P', 'K','B','R','Q','B'};
-    std::string prettyPrint[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
+//     char outChars[] = {' ', 'p', 'k','b','r','q','W',
+//                        ' ', 'P', 'K','B','R','Q','B'};
+    std::string outChars[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
                                  " ", "♟", "♞", "♝", "♜", "♛", "♚"};
     std::string files[] = {"1 |", "2 |", "3 |", "4 |", "5 |", "6 |", "7 |", "8 |"};
     for (int j = 7; j > -1; j--)
@@ -194,7 +179,7 @@ ostream &operator<<(ostream &os, const Board &board)
             }
             else
             {
-                os << prettyPrint[p.getPieceCode()] << " ";
+                os << outChars[p.getPieceCode()] << " ";
             }
         }
         os << endl;

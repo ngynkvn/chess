@@ -12,21 +12,18 @@
  * a heuristical score. Scores can then be correlated with the initial move to make the best decision.
  */
 int callCount = 0;
-Move mini_max(const Board &game_state)
+Move mini_max(Board &game_state)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
+    callCount = 0;
+
     int bestScore = evaluate(game_state.makeMove(moves[0]));
+    game_state.unmakeMove();
     Move bestMove = moves[0];
-    int alpha = -10000;
-    int beta = 10000;
-    std::sort(moves.begin(), moves.end(), [game_state](Move first, Move second) {
-        if (game_state.isWhite())
-            return evaluate(game_state.makeMove(first)) > evaluate(game_state.makeMove(second));
-        else
-            return evaluate(game_state.makeMove(first)) < evaluate(game_state.makeMove(second));
-    });
     for (auto &move : moves) {
-        int currScore = mini_max(game_state.makeMove(move), 4, alpha, beta, true);
+        game_state.makeMove(move);
+        int currScore = mini_max(game_state, 5, -10000, 10000, game_state.isWhite());
+        game_state.unmakeMove();
         if (game_state.isWhite() && currScore > bestScore)
         {
             bestScore = currScore;
@@ -38,14 +35,14 @@ Move mini_max(const Board &game_state)
             bestMove = move;
         }
     }
-    std::cout << "callCount: " << callCount << std::endl;
+    std::cout << "Call count: " << callCount << std::endl;
     return bestMove;
 }
 
 /*
  * Alpha beta pruning is implemented to reduce the size of the game tree and improve performance of the algorithm.
  */
-int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_max_player)
+int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_player)
 {
     callCount++;
     // is the depth zero
@@ -55,13 +52,7 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     }
 
     // are there no more possible game states
-    std::vector<Board> children_states = get_states(game_state);
-    sort(children_states.begin(), children_states.end(), [game_state](Board a, Board b){
-        if(game_state.isWhite())
-            return evaluate(a) > evaluate(b);
-        else
-            return evaluate(a) < evaluate(b);
-    });
+    std::vector<Move> children_states = Search::generateMoveList(game_state);
     if (children_states.empty())
         return evaluate(game_state);
 
@@ -69,9 +60,11 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     if (is_max_player) // if it the players turn
     {
         int v = alpha;
-        for (const Board &b : children_states)
+        for (Move m : children_states)
         {
-            int v_prime = mini_max(b, depth - 1, alpha, beta, !is_max_player);
+            game_state.makeMove(m);
+            int v_prime = mini_max(game_state, depth - 1, alpha, beta, !is_max_player);
+            game_state.unmakeMove();
             v = std::max(v_prime, v);
             alpha = std::max(alpha, v);
             if (beta <= alpha){
@@ -83,9 +76,11 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     else // if it's the opponents turn
     {
         int v = beta;
-        for (const Board &b : children_states)
+        for (Move m : children_states)
         {
-            int v_prime = mini_max(b, depth - 1, alpha, beta, !is_max_player);
+            game_state.makeMove(m);
+            int v_prime = mini_max(game_state, depth - 1, alpha, beta, !is_max_player);
+            game_state.unmakeMove();
             v = std::min(v_prime, v);
             beta = std::min(beta, v);
             if (beta <= alpha){
@@ -96,23 +91,6 @@ int mini_max(const Board &game_state, int depth, int alpha, int beta, bool is_ma
     }
 }
 
-/*
-Returns a vector of boards that show the outcome of each
-possible move that can currently be made on the actual board
-*/
-std::vector<Board> get_states(const Board &curr)
-{
-    std::vector<Board> v;
-    std::vector<Move> moves = Search::generateMoveList(curr);
-    for (auto &move : moves) {
-        v.push_back(curr.makeMove(move));
-    }
-    return v;
-}
-
-/*
-
-*/
 bool is_end_game(const Board &game_state)
 {
     int piece_count = 0;
@@ -130,7 +108,7 @@ bool is_end_game(const Board &game_state)
     return piece_count < 12;
 }
 
-int evaluate(const Board &game_state)
+int evaluate(Board &game_state)
 {
     int evaluation = 0;
     Piece **curr_board = game_state.getBoard();

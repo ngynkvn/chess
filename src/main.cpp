@@ -10,7 +10,7 @@ using namespace std;
 Returns whether or not the move given in the parameters
 is actually a possible move on the given board
 */
-bool validMove(Board b, Move m)
+bool validMove(Board& b, Move m)
 {
     std::vector<Move> list = Search::generateMoveList(b);
     return find(list.begin(), list.end(), m) != list.end();
@@ -35,16 +35,16 @@ void gameLoop()
         if(in == "q")
             return;
         m = Move(in);
-        } catch (exception e)
+        } catch (exception& e)
         {}
 
         if (validMove(b, m))
         {
-            b = b.makeMove(m);
+            b.makeMove(m);
             cout << b << endl;
-            if(Search::generateMoveList(b).size() != 0){
+            if(!Search::generateMoveList(b).empty()){
             cout << "Opponent is thinking.." << endl;
-            b = b.makeMove(mini_max(b));
+            b.makeMove(mini_max(b));
             cout << b << endl;
             } else {
                 break;
@@ -57,7 +57,7 @@ void gameLoop()
 void selfPlay()
 {
     Board b;
-    while(Search::generateMoveList(b).size() != 0){
+    while(!Search::generateMoveList(b).empty()){
         cout << b;
         cout << evaluate(b) << endl;
         b = b.makeMove(mini_max(b));
@@ -68,17 +68,12 @@ void selfPlay()
 int main()
 {
     Board b;
-    b = b.makeMove(Move("e2e4"));
-    b = b.makeMove(mini_max(b));
-//    b = b.makeMove(Move("d2d3"));
-//    b = b.makeMove(mini_max(b)); // 3
-    cout << b << endl;
-    // b = b.makeMove(mini_max(b)); // 2
+    // b.makeMove(Move("e2e4"));
+    b.makeMove(mini_max(b));
+    // b.makeMove(Move("d2d4"));
     // cout << b << endl;
-    // b = b.makeMove(mini_max(b)); // 1
+    // b.unmakeMove();
     // cout << b << endl;
-    // b = b.makeMove(mini_max(b));
-    // cout << b << endl;
-    // selfPlay();
-    // gameLoop();
+//     selfPlay();
+//    gameLoop();
 }
