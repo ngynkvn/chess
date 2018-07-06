@@ -14,7 +14,7 @@ int mini_max(Board & currBoard, int depth, int alpha, int beta, bool is_max_play
 int evaluate(Board& currBoard);
 
 // gets the value of a piece at a give location
-int get_piece_value(Piece p, int x, int y, bool is_end);
+int get_piece_value(ePieceCode p, int x, int y, bool is_end);
 
 // calls generateMoveList, makes each move and appends to vector to be processed later.
 // std::vector<Board> get_states(const Board& curr);

@@ -56,13 +56,13 @@ void gameLoop()
 
 void selfPlay()
 {
-    Board b;
-    while(!Search::generateMoveList(b).empty()){
-        cout << b;
-        cout << evaluate(b) << endl;
-        b = b.makeMove(mini_max(b));
-    }
-    cout << b;
+   Board b;
+   while(!Search::generateMoveList(b).empty()){
+       cout << b;
+       cout << evaluate(b) << endl;
+       b = b.makeMove(mini_max(b));
+   }
+   cout << b;
 }
 
 int main()
