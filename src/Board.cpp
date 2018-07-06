@@ -7,42 +7,36 @@ using namespace std;
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
 Board::Board()
 {
-    this->board = new Piece *[8];
+    this->board = new ePieceCode* [8];
     history.emplace_back(Move(-1,-1,-1,-1));
     /*setting empty spaces first*/
-
-    Piece startPiece(epcEmpty);
     for (int i = 2; i <= 5; i++)
     {
-        this->board[i] = new Piece[8];
+        this->board[i] = new ePieceCode[8];
         for (int j = 0; j < 8; j++)
         {
-            this->board[i][j] = startPiece;
+            this->board[i][j] = epcEmpty;
         }
     }
 
     /*setting pawns*/
-    this->board[1] = new Piece[8];
-    this->board[6] = new Piece[8];
+    this->board[1] = new ePieceCode[8];
+    this->board[6] = new ePieceCode[8];
     for (int i = 0; i < 8; i++)
     {
-        startPiece = Piece(epcWpawn); //white pawns
-        this->board[1][i] = startPiece;
-        startPiece = Piece(epcBpawn); //black pawns
-        this->board[6][i] = startPiece;
+        this->board[1][i] = epcWpawn;
+        this->board[6][i] = epcBpawn;
     }
 
     /*setting major pieces*/
-    this->board[0] = new Piece[8];
-    this->board[7] = new Piece[8];
+    this->board[0] = new ePieceCode[8];
+    this->board[7] = new ePieceCode[8];
     ePieceCode majorPiecesW[8] = {epcWrook, epcWknight, epcWbishop, epcWking, epcWqueen, epcWbishop, epcWknight, epcWrook};
     ePieceCode majorPiecesB[8] = {epcBrook, epcBknight, epcBbishop, epcBking, epcBqueen, epcBbishop, epcBknight, epcBrook};
     for (int i = 0; i < 8; i++)
     {
-        startPiece = Piece(majorPiecesW[i]); //white pieces
-        this->board[0][i] = startPiece;
-        startPiece = Piece(majorPiecesB[i]); //black pieces
-        this->board[7][i] = startPiece;
+        this->board[0][i] = majorPiecesW[i];
+        this->board[7][i] = majorPiecesB[i];
     }
 }
 
@@ -52,10 +46,10 @@ to an already existing 2D array
 */
 Board::Board(const Board &other) : whiteTurn(other.whiteTurn), prevMove(other.prevMove)
 {
-    board = new Piece *[8];
+    board = new ePieceCode *[8];
     for (int row = 0; row < 8; row++)
     {
-        board[row] = new Piece[8];
+        board[row] = new ePieceCode[8];
         for (int col = 0; col < 8; col++)
         {
             board[row][col] = other.board[row][col];
@@ -72,11 +66,11 @@ Board &Board::operator=(const Board &other)
             delete[] board[i];
         }
         delete[] board;
-        board = new Piece *[8];
-        Piece **b = other.getBoard();
+        board = new ePieceCode *[8];
+        ePieceCode **b = other.getBoard();
         for (int i = 0; i < 8; i++)
         {
-            board[i] = new Piece[8];
+            board[i] = new ePieceCode[8];
             for (int j = 0; j < 8; j++)
             {
                 board[i][j] = b[i][j];
@@ -101,13 +95,13 @@ Board::~Board()
     delete[] board;
 }
 /*returns the 2Darray of pieces that represents the board*/
-Piece **Board::getBoard() const
+ePieceCode **Board::getBoard() const
 {
     return this->board;
 }
 
 /*returns the piece held at that index of the board 2Darray */
-Piece Board::getPiece(Coord c) const
+ePieceCode& Board::getPiece(Coord c) const
 {
     return board[c.y][c.x];
 }
@@ -121,9 +115,9 @@ Board & Board::makeMove(Move m)
 {
     setTurn(!whiteTurn);
     history.push_back(m);
-    captures.emplace_back(Piece(getPiece(m.to()).getPieceCode()));
-    board[m.to().y][m.to().x] = Piece(getPiece(m.from()).getPieceCode());
-    board[m.from().y][m.from().x] = Piece(epcEmpty);
+    captures.emplace_back(getPiece(m.to()));
+    board[m.to().y][m.to().x] = getPiece(m.from());
+    board[m.from().y][m.from().x] = epcEmpty;
     return *this;
 }
 
@@ -190,15 +184,8 @@ ostream &operator<<(ostream &os, const Board &board)
         os << files[j];
         for (int i = 7; i > -1; i--)
         {
-            Piece p = board.getPiece(Coord(i, j));
-            if (p.empty())
-            {
-                os << ". ";
-            }
-            else
-            {
-                os << outChars[p.getPieceCode()] << " ";
-            }
+            ePieceCode p = board.getPiece(Coord(i, j));
+            p == epcEmpty ? os << ". " : os << outChars[p] << " ";
         }
         os << endl;
     }

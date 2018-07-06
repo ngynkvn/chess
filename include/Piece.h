@@ -26,7 +26,7 @@ enum ePieceCode
   epcBrook,
   epcBqueen,
   epcBking
-};
+,};
 
 class Piece
 {
