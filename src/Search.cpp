@@ -238,10 +238,8 @@ void rayMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::ve
 void squareMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
 {
     //for each piece of that type
-    for (unsigned int i = 0; i < pieceV.size(); i++)
+    for (auto piece : pieceV)
     {
-        //check each possible square that dir points to if square is empty or occupties by enemy
-        Coord piece = pieceV[i]; //storing location
         for (unsigned int j = 0; j < 8; j++)
         {
             Coord possibleMove = piece + dir[j]; //the square where dir[j] points to from piece origin
