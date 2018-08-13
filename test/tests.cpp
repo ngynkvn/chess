@@ -3,28 +3,8 @@
 #include "Piece.h"
 #include "Board.h"
 
-unsigned long long perft(Board, int, int &);
-unsigned long long perft(Board, int, int &, int &);
-
-TEST_CASE("Piece data-type works correctly", "[piece]")
-{
-    Piece p = Piece(epcEmpty);
-    CHECK(p.empty());
-
-    p = Piece(epcWpawn);
-
-    CHECK_FALSE(p.empty());
-
-    CHECK(p == Piece(epcWpawn));
-    CHECK(p == epcWpawn);
-    CHECK_FALSE(p == epcEmpty);
-    CHECK_FALSE(p != Piece(epcWpawn));
-
-    CHECK(p.getPieceCode() == epcWpawn);
-    CHECK(p.getColor() == white);
-    CHECK_FALSE(p.getColor() == black);
-    CHECK_FALSE(p.getColor() == epcEmpty);
-}
+unsigned long long perft(Board&, int, int &);
+unsigned long long perft(Board&, int, int &, int &);
 
 TEST_CASE("Move generation is correct.", "[perft]")
 {
@@ -37,15 +17,13 @@ TEST_CASE("Move generation is correct.", "[perft]")
     CHECK(captures == 0);
     SECTION("Depth 3 should show 34 captures.")
     {
-        CHECK(perft(start, 3, captures, checks) == 8902);
+        CHECK(perft(start, 3, captures) == 8902);
         CHECK(captures == 34);
-        CHECK(checks == 12);
     }
     SECTION("Depth 4 should show 1576 captures.")
     {
-        CHECK(perft(start, 4, captures, checks) == 197281);
+        CHECK(perft(start, 4, captures) == 197281);
         CHECK(captures == 1576);
-        CHECK(checks == 469);
     }
 }
 
@@ -56,8 +34,8 @@ TEST_CASE("Board data-type works correctly", "[board]")
     {
         for (int i = 0; i < 8; i++)
         {
-            CHECK(start.getPiece(Coord(i, 1)).getPieceCode() == epcWpawn);
-            CHECK(start.getPiece(Coord(i, 6)).getPieceCode() == epcBpawn);
+            CHECK(start.getPiece(Coord(i, 1)) == epcWpawn);
+            CHECK(start.getPiece(Coord(i, 6)) == epcBpawn);
         }
     }
     SECTION("Major pieces are in the correct positions.")
@@ -65,31 +43,32 @@ TEST_CASE("Board data-type works correctly", "[board]")
         ePieceCode table[] = {epcWrook, epcWknight, epcWbishop, epcWking, epcWqueen, epcWbishop, epcWknight, epcWrook};
         for (int i = 0; i < 8; i++)
         {
-            CHECK(start.getPiece(Coord(i, 0)).getPieceCode() == table[i]);
-            CHECK(start.getPiece(Coord(i, 7)).getPieceCode() == table[i] + black);
+            CHECK(start.getPiece(Coord(i, 0)) == table[i]);
+            CHECK(start.getPiece(Coord(i, 7)) == table[i] + black);
         }
     }
     SECTION("Inputting moves does not modify previous board state.")
     {
         Move wPawnPush(Coord(1, 1), Coord(1, 2));
-        Board postMortem = start.makeMove(wPawnPush);
 
-        Piece pieceFrom = start.getPiece(wPawnPush.from());
-        Piece pieceTo = start.getPiece(wPawnPush.to());
+        ePieceCode pieceFrom = start.getPiece(wPawnPush.from());
+        ePieceCode pieceTo = start.getPiece(wPawnPush.to());
 
-        CHECK(pieceFrom.getPieceCode() != epcEmpty);
-        CHECK(pieceTo.getPieceCode() != epcWpawn);
-        CHECK(pieceFrom.getPieceCode() == epcWpawn);
-        CHECK(pieceTo.getPieceCode() == epcEmpty);
+        start.makeMove(wPawnPush);
 
-        pieceFrom = postMortem.getPiece(wPawnPush.from());
-        pieceTo = postMortem.getPiece(wPawnPush.to());
+        CHECK(pieceFrom != epcEmpty);
+        CHECK(pieceTo != epcWpawn);
+        CHECK(pieceFrom == epcWpawn);
+        CHECK(pieceTo == epcEmpty);
 
-        CHECK(pieceFrom.getPieceCode() != epcWpawn);
-        CHECK(pieceFrom.getPieceCode() == epcEmpty);
+        pieceFrom = start.getPiece(wPawnPush.from());
+        pieceTo = start.getPiece(wPawnPush.to());
 
-        CHECK(pieceTo.getPieceCode() == epcWpawn);
-        CHECK(pieceTo.getPieceCode() != epcEmpty);
+        CHECK(pieceFrom != epcWpawn);
+        CHECK(pieceFrom == epcEmpty);
+
+        CHECK(pieceTo == epcWpawn);
+        CHECK(pieceTo != epcEmpty);
     }
 }
 

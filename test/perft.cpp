@@ -12,36 +12,37 @@ typedef unsigned long long u64;
  * generate all possible board states from a given position up to a certain depth.
  * We have included helper code to also test amounts of captures and checks to further validify our code.
  */
-u64 perft(Board b, int depth, int &captures, int &checks)
+u64 perft(Board& b, int depth, int &captures, int &checks)
 {
+    std::vector<Move> moves = Search::generateMoveList(b);
+
     if (depth == 1)
     {
-        std::vector<Move> moves = Search::generateMoveList(b);
-        for (auto i = moves.begin(); i != moves.end(); i++)
+        for (auto move : moves)
         {
-            if (b.getPiece((*i).to()) != epcEmpty)
+            if (b.getPiece((move).to()) != epcEmpty)
                 captures++;
-            if (Search::inCheck(b,*i)) 
+            if (Search::inCheck(b, move)) 
                 checks++;
         }
         return moves.size();
     }
 
     u64 nodes = 0;
-    std::vector<Move> moves = Search::generateMoveList(b);
-    for (auto i = moves.begin(); i != moves.end(); i++)
+    for (auto i : moves)
     {
-        b.makeMove(*i);
+        b.makeMove(i);
         nodes += perft(b, depth - 1, captures, checks);
         b.unmakeMove();
     }
     return nodes;
 }
-u64 perft(Board b, int depth, int &captures)
+
+u64 perft(Board& b, int depth, int &captures)
 {
+    std::vector<Move> moves = Search::generateMoveList(b);
     if (depth == 1)
     {
-        std::vector<Move> moves = Search::generateMoveList(b);
         for (auto i = moves.begin(); i != moves.end(); i++)
         {
             if (b.getPiece((*i).to()) != epcEmpty)
@@ -51,8 +52,7 @@ u64 perft(Board b, int depth, int &captures)
     }
 
     u64 nodes = 0;
-    std::vector<Move> moves = Search::generateMoveList(b);
-    for (auto i = moves.begin(); i != moves.end(); i++)
+    for (auto i : moves)
     {
         b.makeMove(*i);
         nodes += perft(b, depth - 1, captures);
@@ -60,19 +60,19 @@ u64 perft(Board b, int depth, int &captures)
     }
     return nodes;
 }
-u64 perft(Board b, int depth)
+
+u64 perft(Board& b, int depth)
 {
+    std::vector<Move> moves = Search::generateMoveList(b);
     if (depth == 1)
     {
-        std::vector<Move> moves = Search::generateMoveList(b);
         return moves.size();
     }
 
     u64 nodes = 0;
-    std::vector<Move> moves = Search::generateMoveList(b);
-    for (auto i = moves.begin(); i != moves.end(); i++)
+    for (auto i : moves)
     {
-        b.makeMove(*i);
+        b.makeMove(i);
         nodes += perft(b, depth - 1);
         b.unmakeMove();
     }
