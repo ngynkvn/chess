@@ -72,20 +72,6 @@ std::vector<Coord> findPieces(Board &b, int piece)
     return cachePos[static_cast<ePieceCode>(piece)];
 }
 
-void promote(const Board &b)
-{
-    ePieceCode **board = b.getBoard();
-
-    for (int i = 0; i < 8; i++)
-    {
-
-        if (board[b.isWhite() ? 7 : 0][i] == (b.isWhite() ? epcWpawn : epcBpawn))
-        {
-            board[b.isWhite() ? 7 : 0][i] = (b.isWhite() ? epcWqueen : epcBqueen);
-        }
-    }
-}
-
 bool rayCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode)
 {
     ePieceCode code = static_cast<ePieceCode>(epcCode);
@@ -160,8 +146,6 @@ void rayMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::ve
         for (auto j : dir)
         {
             Coord possibleMove = piece + j;
-            if (b.inside(possibleMove) && (b.getPiece(possibleMove) == epcEmpty || getColor(b.getPiece(possibleMove)) == b.opposite()) && !inCheck(b, Move(piece, possibleMove)))
-            {
                 while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty && !inCheck(b, Move(piece, possibleMove)))
                 {
                     v.emplace_back(piece, possibleMove);
@@ -169,7 +153,6 @@ void rayMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::ve
                 }
                 if (b.inside(possibleMove) && getColor(b.getPiece(possibleMove)) == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
                     v.emplace_back(piece, possibleMove);
-            }
         }
     }
 }
@@ -255,8 +238,6 @@ void generateMove(std::vector<Move> &v, Board &b, int code)
     default:
         throw("Not a known pieceCode.");
     }
-
-    promote(b);
 }
 
 std::vector<Move> generateMoveList(Board &b)
