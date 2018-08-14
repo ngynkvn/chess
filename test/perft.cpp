@@ -20,7 +20,7 @@ u64 perft(Board& b, int depth, int &captures, int &checks)
     {
         for (auto move : moves)
         {
-            if (b.getPiece((move).to()) != epcEmpty)
+            if (b.getPiece(move.to()) != epcEmpty)
                 captures++;
             if (Search::inCheck(b, move)) 
                 checks++;
@@ -43,9 +43,9 @@ u64 perft(Board& b, int depth, int &captures)
     std::vector<Move> moves = Search::generateMoveList(b);
     if (depth == 1)
     {
-        for (auto i = moves.begin(); i != moves.end(); i++)
+        for (auto i : moves)
         {
-            if (b.getPiece((*i).to()) != epcEmpty)
+            if (b.getPiece(i.to()) != epcEmpty)
                 captures++;
         }
         return moves.size();
@@ -54,7 +54,7 @@ u64 perft(Board& b, int depth, int &captures)
     u64 nodes = 0;
     for (auto i : moves)
     {
-        b.makeMove(*i);
+        b.makeMove(i);
         nodes += perft(b, depth - 1, captures);
         b.unmakeMove();
     }

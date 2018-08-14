@@ -44,7 +44,7 @@ void gameLoop()
             cout << b << endl;
             if(!Search::generateMoveList(b).empty()){
             cout << "Opponent is thinking.." << endl;
-            b.makeMove(mini_max(b));
+            b.makeMove(mini_max(b, 1));
             cout << b << endl;
             } else {
                 break;
@@ -54,22 +54,23 @@ void gameLoop()
     cout << "Game over!" << endl;
 }
 
-void selfPlay()
-{
-    Board b;
-    while(!Search::generateMoveList(b).empty()){
-        cout << b;
-        cout << evaluate(b) << endl;
-        b = b.makeMove(mini_max(b));
-    }
-    cout << b;
-}
+// void selfPlay()
+// {
+//     Board b;
+//     while(!Search::generateMoveList(b).empty()){
+//         cout << b;
+//         cout << evaluate(b) << endl;
+//         // b = b.makeMove(mini_max(b));
+//     }
+//     cout << b;
+// }
 
 int main()
 {
     Board b;
+    cout << Search::generateMoveList(b).size() << endl;
     // b.makeMove(Move("e2e4"));
-    b.makeMove(mini_max(b));
+    // b.makeMove(mini_max(b, 1));
     // b.makeMove(Move("d2d4"));
     // cout << b << endl;
     // b.unmakeMove();

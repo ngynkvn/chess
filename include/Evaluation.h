@@ -6,7 +6,7 @@
 #include "Search.h"
 #include <vector>
 
-Move mini_max(Board &);
+Move mini_max(Board &, int depth);
 // Depth first search tree which implements alpha-beta pruning
 int mini_max(Board & currBoard, int depth, int alpha, int beta, bool is_max_player);
 

@@ -12,7 +12,7 @@
  * a heuristical score. Scores can then be correlated with the initial move to make the best decision.
  */
 int callCount = 0;
-Move mini_max(Board &game_state)
+Move mini_max(Board &game_state, int depth)
 {
     std::vector<Move> moves = Search::generateMoveList(game_state);
     callCount = 0;
@@ -22,7 +22,7 @@ Move mini_max(Board &game_state)
     Move bestMove = moves[0];
     for (auto &move : moves) {
         game_state.makeMove(move);
-        int currScore = mini_max(game_state, 5, -10000, 10000, game_state.isWhite());
+        int currScore = mini_max(game_state, depth, -10000, 10000, game_state.isWhite());
         game_state.unmakeMove();
         if (game_state.isWhite() && currScore > bestScore)
         {
