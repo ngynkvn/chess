@@ -108,8 +108,14 @@ bool inCheck(Board &b, Move m)
 {
     bool turnIsWhite = b.isWhite();
     int c = turnIsWhite ? white : black;
-    std::vector<Coord> pieceV = findPieces(b, epcWking + c);
+    auto pieceTo = b.getPiece(m.to());
 
+    if (pieceTo == epcWking || pieceTo == epcBking)
+    {
+        return true;
+    }
+
+    std::vector<Coord> pieceV = findPieces(b, epcWking + c);
     b.makeMove(m);
 
     if (pieceV.empty())
@@ -146,13 +152,18 @@ void rayMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::ve
         for (auto j : dir)
         {
             Coord possibleMove = piece + j;
-                while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty && !inCheck(b, Move(piece, possibleMove)))
-                {
-                    v.emplace_back(piece, possibleMove);
-                    possibleMove = possibleMove + j;
-                }
-                if (b.inside(possibleMove) && getColor(b.getPiece(possibleMove)) == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
-                    v.emplace_back(piece, possibleMove);
+            while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty && !inCheck(b, Move(piece, possibleMove)))
+            {
+                v.emplace_back(piece, possibleMove);
+                possibleMove = possibleMove + j;
+            }
+
+            if (!b.inside(possibleMove))
+                continue;
+
+            auto pieceTo = b.getPiece(possibleMove);
+            if (getColor(pieceTo) == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
+                v.emplace_back(piece, possibleMove);
         }
     }
 }
@@ -174,8 +185,10 @@ void squareMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std:
         for (auto d : dir)
         {
             Coord possibleMove = piece + d;
-
-            if (b.inside(possibleMove) && (b.getPiece(possibleMove) == epcEmpty || getColor(b.getPiece(possibleMove)) == b.opposite()) && !inCheck(b, Move(piece, possibleMove)))
+            if (!b.inside(possibleMove))
+                continue;
+            auto pieceTo = b.getPiece(possibleMove);
+            if ((pieceTo == epcEmpty || getColor(pieceTo) == b.opposite()) && (pieceTo != epcBking && pieceTo != epcWking) && !inCheck(b, Move(piece, possibleMove)))
                 v.emplace_back(piece, possibleMove);
         }
     }
@@ -194,15 +207,12 @@ void pawnMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV)
         if (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty && !inCheck(b, Move(piece, possibleMove)))
         {
             v.emplace_back(piece, possibleMove);
-
             Coord possibleMove2 = possibleMove + push;
             if ((piece.y == (turnIsWhite ? 1 : 6)) && b.getPiece(possibleMove2) == epcEmpty && !inCheck(b, Move(piece, possibleMove2)))
                 v.emplace_back(piece, possibleMove2);
         }
-
         for (Coord cap : captures)
         {
-
             Coord possibleMove = piece + cap;
             if (b.inside(possibleMove) && getColor(b.getPiece(possibleMove)) == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
                 v.emplace_back(piece, possibleMove);
@@ -245,11 +255,52 @@ std::vector<Move> generateMoveList(Board &b)
     std::vector<Move> v;
     cachePositions(b);
     generateMove(v, b, epcWknight);
+    if (!checkValidMoves(v, b))
+    {
+        assert(false);
+    }
     generateMove(v, b, epcWbishop);
+    if (!checkValidMoves(v, b))
+    {
+        assert(false);
+    }
     generateMove(v, b, epcWqueen);
+    if (!checkValidMoves(v, b))
+    {
+        assert(false);
+    }
     generateMove(v, b, epcWrook);
+    if (!checkValidMoves(v, b))
+    {
+        assert(false);
+    }
     generateMove(v, b, epcWpawn);
+    if (!checkValidMoves(v, b))
+    {
+        assert(false);
+    }
     generateMove(v, b, epcWking);
+    if (!checkValidMoves(v, b))
+    {
+        assert(false);
+    }
+
     return v;
+}
+
+
+bool checkValidMoves(std::vector<Move> v, const Board &b)
+{
+    for (auto m : v)
+    {
+        auto piece = b.getPiece(m.to());
+        if (piece == epcWking || piece == epcBking)
+        {
+            std::cout << b << std::endl;
+            std::cout << m << std::endl;
+            return false;
+        }
+    }
+    return true;
 }
 } // namespace Search

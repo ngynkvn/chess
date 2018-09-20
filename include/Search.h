@@ -17,6 +17,7 @@ std::vector<Move> generateMoveList(Board &);
 std::vector<Coord> findPieces(Board&, int);
 bool inCheck(Board&, Move);
 bool inCheck(Board&);
+bool checkValidMoves(std::vector<Move> v, const Board &b);
 }
 
 #endif
