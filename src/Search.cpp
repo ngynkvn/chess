@@ -9,8 +9,6 @@
 
 namespace Search
 {
-
-
     ePieceCode getColor(ePieceCode code)
     {
         if (code == epcEmpty)
@@ -50,17 +48,13 @@ namespace Search
     };
 
 std::vector<Coord> dirRook = {Coord(0, 1),
-                              Coord(0, -1),
-                              Coord(1, 0),
-                              Coord(-1, 0)};
-Movement movementRook = Movement(epcWrook, dirRook, true);
-
+                          Coord(0, -1),
+                          Coord(1, 0),
+                          Coord(-1, 0)};
 std::vector<Coord> dirBishop = {Coord(1, 1),
-                                Coord(1, -1),
-                                Coord(-1, -1),
-                                Coord(-1, 1)};
-Movement movementBishop = Movement(epcWbishop, dirBishop, true);
-
+                            Coord(1, -1),
+                            Coord(-1, -1),
+                            Coord(-1, 1)};
 std::vector<Coord> dirQueen = {Coord(1, 1),
                                Coord(1, -1),
                                Coord(-1, -1),
@@ -68,36 +62,30 @@ std::vector<Coord> dirQueen = {Coord(1, 1),
                                Coord(0, 1),
                                Coord(0, -1),
                                Coord(1, 0),
-                               Coord(-1, 0)};
-Movement movementQueen = Movement(epcWqueen, dirQueen, true);
-
+                               Coord(-1, 0)};;
 std::vector<Coord> dirKnight = {Coord(1, 2),
-                                Coord(2, 1),
-                                Coord(2, -1),
-                                Coord(1, -2),
-                                Coord(-1, 2),
-                                Coord(-2, 1),
-                                Coord(-2, -1),
-                                Coord(-1, -2)};
+                            Coord(2, 1),
+                            Coord(2, -1),
+                            Coord(1, -2),
+                            Coord(-1, 2),
+                            Coord(-2, 1),
+                            Coord(-2, -1),
+                            Coord(-1, -2)};
+std::vector<Coord> dirKing = dirQueen;
+Movement movementRook = Movement(epcWrook, dirRook, true);
+Movement movementBishop = Movement(epcWbishop, dirBishop, true);
+Movement movementQueen = Movement(epcWqueen, dirQueen, true);
 Movement movementKnight = Movement(epcWknight, dirKnight, false);
 
-std::vector<Coord> dirKing = {Coord(-1, -1),
-                              Coord(-1, 0),
-                              Coord(-1, 1),
-                              Coord(0, 1),
-                              Coord(0, -1),
-                              Coord(1, -1),
-                              Coord(1, 0),
-                              Coord(1, 1)};
 Movement movementKing = Movement(epcWking, dirKing, false);
 
 Coord wPawnPush = Coord(0, 1);
 Coord bPawnPush = Coord(0, -1);
 std::vector<Coord> wPawnCaptures = {Coord(1, 1),
                                     Coord(-1, 1)};
-
 std::vector<Coord> bPawnCaptures = {Coord(1, -1),
                                     Coord(-1, -1)};
+Movement movementPawn = Movement(epcWpawn, wPawnCaptures, false);
 
 std::map<ePieceCode, std::vector<Coord>> cachePos;
 
@@ -120,20 +108,21 @@ std::vector<Coord> findPieces(Board &b, int piece)
     return cachePos[static_cast<ePieceCode>(piece)];
 }
 
-bool checkHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode, bool ray)
+Coord firstPieceOnRay(Coord point, Coord dirRay, const Board& b)
+{
+    do {
+        point += dirRay;
+    } while (b.inside(point) && b.getPiece(point) == epcEmpty);
+    return point;
+}
+
+bool checkHelper(const Board &b, Coord piece, std::vector<Coord> dirs, int epcCode, bool ray)
 {
     auto code = static_cast<ePieceCode>(epcCode);
-    for (auto k : dir)
-    {
-        Coord possibleMove = piece + k;
-        while (ray && b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
-        {
-            possibleMove = possibleMove + k;
-        }
-        if (b.inside(possibleMove) && b.getPiece(possibleMove) == code)
-            return true;
-    }
-    return false;
+    return any_of(dirs.begin(), dirs.end(), [&](const Coord& dir) {
+        Coord possibleMove = ray ? firstPieceOnRay(piece, dir, b) : piece + dir;
+        return b.inside(possibleMove) && b.getPiece(possibleMove) == code;
+    });
 }
 bool checkHelper(const Board &b, Coord piece, Movement m)
 {

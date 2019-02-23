@@ -14,9 +14,20 @@ struct Coord
   Coord() : x(-1), y(-1){};
   Coord(int x, int y) : x(x), y(y){};
   Coord(char letter, int y) : x('h'-letter), y(y - 1){};
-  Coord operator+(const Coord &other) { return {x + other.x, y + other.y}; };
-  Coord operator-(const Coord &other) { return {x - other.x, y - other.y}; };
-  bool operator==(const Coord &c) { return c.x == x && c.y == y; }
+  Coord operator+(const Coord &other) { 
+    return {x + other.x, y + other.y}; 
+  };
+  Coord& operator +=(const Coord &other) {
+    this->x += other.x; 
+    this->y += other.y; 
+    return *this;
+  };
+  Coord operator-(const Coord &other) { 
+    return {x - other.x, y - other.y}; 
+  };
+  bool operator==(const Coord &c) { 
+    return c.x == x && c.y == y; 
+  }
   friend std::ostream &operator<<(std::ostream &, const Coord &);
 };
 
