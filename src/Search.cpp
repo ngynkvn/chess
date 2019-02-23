@@ -120,37 +120,26 @@ std::vector<Coord> findPieces(Board &b, int piece)
     return cachePos[static_cast<ePieceCode>(piece)];
 }
 
-bool rayCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode)
+bool checkHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode, bool ray)
 {
     auto code = static_cast<ePieceCode>(epcCode);
-
     for (auto k : dir)
     {
-
         Coord possibleMove = piece + k;
-        while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
+        while (ray && b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
         {
             possibleMove = possibleMove + k;
         }
-
         if (b.inside(possibleMove) && b.getPiece(possibleMove) == code)
             return true;
     }
-
     return false;
 }
-
-bool squareCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode)
+bool checkHelper(const Board &b, Coord piece, Movement m)
 {
-    auto code = static_cast<ePieceCode>(epcCode);
-    for (auto k : dir)
-    {
-        Coord possibleMove = piece + k;
-        if (b.inside(possibleMove) && b.getPiece(possibleMove) == code)
-            return true;
-    }
-    return false;
+    return checkHelper(b, piece, m.directions, m.piece + (b.isWhite() ? white : black), m.ray);
 }
+
 
 bool inCheck(Board &b, Move consideringMove)
 {
@@ -169,7 +158,12 @@ bool inCheck(Board &b, Move consideringMove)
     Coord piece = pieceV[0];
 
     c = turnIsWhite ? black : white;
-    bool result = rayCheckHelper(b, piece, dirRook, epcWrook + c) || rayCheckHelper(b, piece, dirQueen, epcWqueen + c) || rayCheckHelper(b, piece, dirBishop, epcWbishop + c) || squareCheckHelper(b, piece, dirKnight, epcWknight + c) || squareCheckHelper(b, piece, turnIsWhite ? wPawnCaptures : bPawnCaptures, epcWpawn + c) || squareCheckHelper(b, piece, dirKing, epcWking + c);
+    bool result = checkHelper(b, piece, movementRook)
+            || checkHelper(b, piece, movementQueen)
+            || checkHelper(b, piece, movementBishop)
+            || checkHelper(b, piece, movementKnight)
+            || checkHelper(b, piece, turnIsWhite ? wPawnCaptures : bPawnCaptures, epcWpawn + c, false)
+            || checkHelper(b, piece, movementKing);
     b.unmakeMove();
     return result;
 }
