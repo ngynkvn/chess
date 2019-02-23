@@ -1,20 +1,65 @@
+#include <utility>
+
 #include "Search.h"
 #include <iostream>
 #include <map>
 #include <assert.h>
+#include <algorithm>
+#include <functional>
 
 namespace Search
 {
+
+
+    ePieceCode getColor(ePieceCode code)
+    {
+        if (code == epcEmpty)
+        {
+            return epcEmpty;
+        }
+        return code > black ? ePieceCode::black : ePieceCode::white;
+    }
+    struct Movement {
+        ePieceCode piece;
+        std::vector<Coord> directions;
+        bool ray;
+        Movement(ePieceCode piece, std::vector<Coord> directions, bool ray) : piece(piece), directions(std::move(directions)), ray(ray) {}
+        std::vector<Move> generateMoves(Board& b)
+        {
+            std::vector<Coord> pieceCoords = findPieces(b, piece + (b.isWhite() ? 0 : 7));
+            std::vector<Move> moves;
+            for (auto pieceCoord : pieceCoords)
+            {
+                for (auto j : directions)
+                {
+                    Coord possibleMove = pieceCoord + j;
+                    while (ray && b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty && !inCheck(b, Move(pieceCoord, possibleMove)))
+                    {
+                        moves.emplace_back(pieceCoord, possibleMove);
+                        possibleMove = possibleMove + j;
+                    }
+                    if (!b.inside(possibleMove))
+                        continue;
+                    auto pieceTo = b.getPiece(possibleMove);
+                    if ((getColor(pieceTo) == b.opposite() || pieceTo == epcEmpty) && !inCheck(b, Move(pieceCoord, possibleMove)))
+                        moves.emplace_back(pieceCoord, possibleMove);
+                }
+            }
+            return moves;
+        }
+    };
 
 std::vector<Coord> dirRook = {Coord(0, 1),
                               Coord(0, -1),
                               Coord(1, 0),
                               Coord(-1, 0)};
+Movement movementRook = Movement(epcWrook, dirRook, true);
 
 std::vector<Coord> dirBishop = {Coord(1, 1),
                                 Coord(1, -1),
                                 Coord(-1, -1),
                                 Coord(-1, 1)};
+Movement movementBishop = Movement(epcWbishop, dirBishop, true);
 
 std::vector<Coord> dirQueen = {Coord(1, 1),
                                Coord(1, -1),
@@ -24,6 +69,7 @@ std::vector<Coord> dirQueen = {Coord(1, 1),
                                Coord(0, -1),
                                Coord(1, 0),
                                Coord(-1, 0)};
+Movement movementQueen = Movement(epcWqueen, dirQueen, true);
 
 std::vector<Coord> dirKnight = {Coord(1, 2),
                                 Coord(2, 1),
@@ -33,6 +79,7 @@ std::vector<Coord> dirKnight = {Coord(1, 2),
                                 Coord(-2, 1),
                                 Coord(-2, -1),
                                 Coord(-1, -2)};
+Movement movementKnight = Movement(epcWknight, dirKnight, false);
 
 std::vector<Coord> dirKing = {Coord(-1, -1),
                               Coord(-1, 0),
@@ -42,6 +89,7 @@ std::vector<Coord> dirKing = {Coord(-1, -1),
                               Coord(1, -1),
                               Coord(1, 0),
                               Coord(1, 1)};
+Movement movementKing = Movement(epcWking, dirKing, false);
 
 Coord wPawnPush = Coord(0, 1);
 Coord bPawnPush = Coord(0, -1);
@@ -74,7 +122,7 @@ std::vector<Coord> findPieces(Board &b, int piece)
 
 bool rayCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode)
 {
-    ePieceCode code = static_cast<ePieceCode>(epcCode);
+    auto code = static_cast<ePieceCode>(epcCode);
 
     for (auto k : dir)
     {
@@ -94,7 +142,7 @@ bool rayCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epc
 
 bool squareCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int epcCode)
 {
-    ePieceCode code = static_cast<ePieceCode>(epcCode);
+    auto code = static_cast<ePieceCode>(epcCode);
     for (auto k : dir)
     {
         Coord possibleMove = piece + k;
@@ -104,22 +152,19 @@ bool squareCheckHelper(const Board &b, Coord piece, std::vector<Coord> dir, int 
     return false;
 }
 
-bool inCheck(Board &b, Move m)
+bool inCheck(Board &b, Move consideringMove)
 {
     bool turnIsWhite = b.isWhite();
     int c = turnIsWhite ? white : black;
-    auto pieceTo = b.getPiece(m.to());
+    auto pieceTo = b.getPiece(consideringMove.to());
 
-    if (pieceTo == epcWking || pieceTo == epcBking)
+    if (pieceTo == (turnIsWhite ? epcWking : epcBking))
     {
         return true;
     }
 
     std::vector<Coord> pieceV = findPieces(b, epcWking + c);
-    b.makeMove(m);
-
-    if (pieceV.empty())
-        throw std::runtime_error("Found king is not on board.");
+    b.makeMove(consideringMove);
 
     Coord piece = pieceV[0];
 
@@ -127,71 +172,6 @@ bool inCheck(Board &b, Move m)
     bool result = rayCheckHelper(b, piece, dirRook, epcWrook + c) || rayCheckHelper(b, piece, dirQueen, epcWqueen + c) || rayCheckHelper(b, piece, dirBishop, epcWbishop + c) || squareCheckHelper(b, piece, dirKnight, epcWknight + c) || squareCheckHelper(b, piece, turnIsWhite ? wPawnCaptures : bPawnCaptures, epcWpawn + c) || squareCheckHelper(b, piece, dirKing, epcWking + c);
     b.unmakeMove();
     return result;
-}
-
-bool inCheck(Board &b)
-{
-    bool turnIsWhite = b.isWhite();
-
-    std::vector<Coord> pieceV = turnIsWhite ? findPieces(b, epcWking) : findPieces(b, epcBking);
-
-    Coord piece = pieceV[0];
-    int c = turnIsWhite ? black : white;
-    bool result = rayCheckHelper(b, piece, dirRook, epcWrook + c) || rayCheckHelper(b, piece, dirQueen, epcWqueen + c) || rayCheckHelper(b, piece, dirBishop, epcWbishop + c) || squareCheckHelper(b, piece, dirKnight, epcWknight + c) || squareCheckHelper(b, piece, turnIsWhite ? wPawnCaptures : bPawnCaptures, epcWpawn + c);
-    b.unmakeMove();
-    return result;
-}
-
-ePieceCode getColor(ePieceCode code);
-
-void rayMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
-{
-    for (auto piece : pieceV)
-    {
-
-        for (auto j : dir)
-        {
-            Coord possibleMove = piece + j;
-            while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty && !inCheck(b, Move(piece, possibleMove)))
-            {
-                v.emplace_back(piece, possibleMove);
-                possibleMove = possibleMove + j;
-            }
-
-            if (!b.inside(possibleMove))
-                continue;
-
-            auto pieceTo = b.getPiece(possibleMove);
-            if (getColor(pieceTo) == b.opposite() && !inCheck(b, Move(piece, possibleMove)))
-                v.emplace_back(piece, possibleMove);
-        }
-    }
-}
-
-ePieceCode getColor(ePieceCode code)
-{
-    if (code == epcEmpty)
-    {
-        return epcEmpty;
-    }
-    return code > black ? ePieceCode::black : ePieceCode::white;
-}
-
-void squareMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV, std::vector<Coord> dir)
-{
-
-    for (auto piece : pieceV)
-    {
-        for (auto d : dir)
-        {
-            Coord possibleMove = piece + d;
-            if (!b.inside(possibleMove))
-                continue;
-            auto pieceTo = b.getPiece(possibleMove);
-            if ((pieceTo == epcEmpty || getColor(pieceTo) == b.opposite()) && (pieceTo != epcBking && pieceTo != epcWking) && !inCheck(b, Move(piece, possibleMove)))
-                v.emplace_back(piece, possibleMove);
-        }
-    }
 }
 
 void pawnMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV)
@@ -220,87 +200,24 @@ void pawnMove(std::vector<Move> &v, Board &b, std::vector<Coord> &pieceV)
     }
 }
 
-void generateMove(std::vector<Move> &v, Board &b, int code)
+void addMovesTo(std::vector<Move> &v, std::vector<Move> moves)
 {
-    std::vector<Coord> pieceV = b.isWhite() ? findPieces(b, code) : findPieces(b, code + 7);
-
-    switch (code)
-    {
-
-    case epcWpawn:
-        pawnMove(v, b, pieceV);
-        break;
-    case epcWknight:
-        squareMove(v, b, pieceV, dirKnight);
-        break;
-    case epcWbishop:
-        rayMove(v, b, pieceV, dirBishop);
-        break;
-    case epcWrook:
-        rayMove(v, b, pieceV, dirRook);
-        break;
-    case epcWqueen:
-        rayMove(v, b, pieceV, dirQueen);
-        break;
-    case epcWking:
-        squareMove(v, b, pieceV, dirKing);
-        break;
-    default:
-        throw("Not a known pieceCode.");
-    }
+    v.insert(v.end(), moves.begin(), moves.end());
 }
 
 std::vector<Move> generateMoveList(Board &b)
 {
     std::vector<Move> v;
     cachePositions(b);
-    generateMove(v, b, epcWknight);
-    if (!checkValidMoves(v, b))
-    {
-        assert(false);
-    }
-    generateMove(v, b, epcWbishop);
-    if (!checkValidMoves(v, b))
-    {
-        assert(false);
-    }
-    generateMove(v, b, epcWqueen);
-    if (!checkValidMoves(v, b))
-    {
-        assert(false);
-    }
-    generateMove(v, b, epcWrook);
-    if (!checkValidMoves(v, b))
-    {
-        assert(false);
-    }
-    generateMove(v, b, epcWpawn);
-    if (!checkValidMoves(v, b))
-    {
-        assert(false);
-    }
-    generateMove(v, b, epcWking);
-    if (!checkValidMoves(v, b))
-    {
-        assert(false);
-    }
-
+    addMovesTo(v, movementKnight.generateMoves(b));
+    addMovesTo(v, movementBishop.generateMoves(b));
+    addMovesTo(v, movementQueen.generateMoves(b));
+    addMovesTo(v, movementRook.generateMoves(b));
+    auto pieces = findPieces(b, b.isWhite() ? epcWpawn : epcBpawn);
+    pawnMove(v, b, pieces);
+    addMovesTo(v, movementKing.generateMoves(b));
     return v;
 }
 
 
-bool checkValidMoves(std::vector<Move> v, const Board &b)
-{
-    for (auto m : v)
-    {
-        auto piece = b.getPiece(m.to());
-        if (piece == epcWking || piece == epcBking)
-        {
-            std::cout << b << std::endl;
-            std::cout << m << std::endl;
-            return false;
-        }
-    }
-    return true;
-}
 } // namespace Search
