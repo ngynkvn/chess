@@ -5,16 +5,15 @@ SRC = src
 OUTDIR = bin
 TESTDIR = test
 OUTNAME = a.out
-INCLUDE = -I include
 
 OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
 
 %.o: $(SRC)/%.cpp
 	@mkdir -p bin
-	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ $(INCLUDE)
+	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ 
 
 main: $(OBJS)
-	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) $(INCLUDE)
+	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) 
 
 run: main
 	./$(OUTDIR)/$(OUTNAME)
@@ -23,7 +22,7 @@ catch:
 	$(CC) $(FLAGS) -c $(TESTDIR)/test-main.cpp -o $(TESTDIR)/catch.o
 
 test: $(OBJS)
-	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest $(INCLUDE)
+	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest -I src
 	@./$(TESTDIR)/runtest
 	
 clean:
