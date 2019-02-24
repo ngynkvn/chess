@@ -18,6 +18,7 @@ std::vector<Coord> findPieces(Board&, int);
 bool inCheck(Board&, Move);
 bool inCheck(Board&);
 bool checkValidMoves(std::vector<Move> v, const Board &b);
+ePieceCode getColor(ePieceCode);
 }
 
 #endif
