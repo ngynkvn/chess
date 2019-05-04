@@ -1,3 +1,6 @@
+#if !defined(MOVEGEN_H)
+#define MOVEGEN_H
+
 #include "Board.h"
 class MoveGenerator {
     protected:
@@ -30,3 +33,5 @@ class PawnMoveGenerator : public MoveGenerator {
         };
         void genMove(Coord);
 };
+
+#endif // MOVEGEN_H

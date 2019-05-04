@@ -6,7 +6,7 @@ OUTDIR = bin
 TESTDIR = test
 OUTNAME = a.out
 
-OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
+OBJS = Move.o Piece.o Board.o Search.o Evaluation.o MoveGenerator.o
 
 %.o: $(SRC)/%.cpp
 	@mkdir -p bin
