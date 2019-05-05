@@ -34,7 +34,7 @@ Coord firstPieceOnRay(Coord point, Coord dirRay, const Board& b)
 bool checkHelper(const Board &b, Coord piece, std::vector<Coord> dirs, int epcCode, bool ray)
 {
     auto code = static_cast<ePieceCode>(epcCode);
-    return any_of(dirs.begin(), dirs.end(), [&](const Coord& dir) {
+    return std::any_of(dirs.begin(), dirs.end(), [&](const Coord& dir) {
         Coord possibleMove = ray ? firstPieceOnRay(piece, dir, b) : piece + dir;
         return b.inside(possibleMove) && b.getPiece(possibleMove) == code;
     });
@@ -56,7 +56,7 @@ bool inCheck(Board &b, Move consideringMove)
         return true;
     }
 
-    std::vector<Coord> pieceCoords = findPieces(b, epcWking + c);
+    std::vector<Coord> pieceCoords = Cache::findPieces(b, epcWking + c);
     b.makeMove(consideringMove);
 
     Coord piece = pieceCoords[0];
@@ -64,7 +64,7 @@ bool inCheck(Board &b, Move consideringMove)
     c = turnIsWhite ? black : white;
     bool result = std::any_of(Movement::movements.begin(), Movement::movements.end(), [&](Movement::MoveSet m) {
         return checkHelper(b, piece, m);
-    }) || checkHelper(b, piece, turnIsWhite ? wPawnCaptures : bPawnCaptures, epcWpawn + c, false);
+    });
     
     b.unmakeMove();
     return result;

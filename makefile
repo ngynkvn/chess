@@ -1,5 +1,5 @@
-CC = g++
-FLAGS = -std=c++11 -Wall -O3 -pg -g3
+CC = g++-9
+FLAGS = -std=c++17 -Wall -O3
 
 SRC = src
 OUTDIR = bin

@@ -30,7 +30,7 @@ void PawnMoveGenerator::genMove(Coord piece) {
     {
         moves->emplace_back(piece, possibleMove);
         Coord possibleMove2 = possibleMove + push;
-        if ((piece.y == HOME_ROW) && b.getPiece(possibleMove2) == epcEmpty && !Search::inCheck(b, Move(piece, possibleMove2)))
+        if ((piece.second == HOME_ROW) && b.getPiece(possibleMove2) == epcEmpty && !Search::inCheck(b, Move(piece, possibleMove2)))
             moves->emplace_back(piece, possibleMove2);
     }
     for (Coord cap : captures)

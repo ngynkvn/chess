@@ -20,7 +20,7 @@ u64 perft(Board& b, int depth, int &captures, int &checks)
     {
         for (auto move : moves)
         {
-            if (b.getPiece(move.to()) != epcEmpty)
+            if (b.getPiece(move.to) != epcEmpty)
                 captures++;
             if (Search::inCheck(b, move)) 
                 checks++;
@@ -45,7 +45,7 @@ u64 perft(Board& b, int depth, int &captures)
     {
         for (auto i : moves)
         {
-            if (b.getPiece(i.to()) != epcEmpty)
+            if (b.getPiece(i.to) != epcEmpty)
                 captures++;
         }
         return moves.size();
