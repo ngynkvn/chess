@@ -27,7 +27,7 @@ public:
   void unmakeMove();
   bool inside(Coord) const;
   bool isWhite() const;
-  ePieceCode currColor() { return whiteTurn ? white : black; };
+  ePieceCode currColor() { return whiteTurn ? White : Black; };
   void setTurn(bool);
   ePieceCode opposite() const;
   ePieceCode same() const;

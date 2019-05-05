@@ -36,7 +36,7 @@ ePieceCode Piece::getColor()
     {
         return epcEmpty;
     }
-    return pieceCode > black ? ePieceCode::black : ePieceCode::white;
+    return pieceCode > Black ? ePieceCode::Black : ePieceCode::White;
 }
 
 //Returns the piececode of the piece

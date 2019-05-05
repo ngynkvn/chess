@@ -14,7 +14,7 @@ namespace Search
         {
             return epcEmpty;
         }
-        return code > black ? ePieceCode::black : ePieceCode::white;
+        return code > Black ? ePieceCode::Black : ePieceCode::White;
     }
                       
 
@@ -41,14 +41,14 @@ bool checkHelper(const Board &b, Coord piece, std::vector<Coord> dirs, int epcCo
 }
 bool checkHelper(const Board &b, Coord piece, Movement::MoveSet m)
 {
-    return checkHelper(b, piece, m.directions, m.piece + (b.isWhite() ? white : black), m.ray);
+    return checkHelper(b, piece, m.directions, m.piece + (b.isWhite() ? White : Black), m.ray);
 }
 
 
 bool inCheck(Board &b, Move consideringMove)
 {
     bool turnIsWhite = b.isWhite();
-    int c = turnIsWhite ? white : black;
+    int c = turnIsWhite ? White : Black;
     auto pieceTo = b.getPiece(consideringMove.to);
 
     if (pieceTo == (turnIsWhite ? epcWking : epcBking))
@@ -56,12 +56,12 @@ bool inCheck(Board &b, Move consideringMove)
         return true;
     }
 
-    std::vector<Coord> pieceCoords = Cache::findPieces(b, epcWking + c);
+    std::vector<Coord> pieceCoords = Cache::findPieces(b, King + c);
     b.makeMove(consideringMove);
 
-    Coord piece = pieceCoords[0];
+    Coord piece = pieceCoords.at(0);
 
-    c = turnIsWhite ? black : white;
+    c = turnIsWhite ? Black : White;
     bool result = std::any_of(Movement::movements.begin(), Movement::movements.end(), [&](Movement::MoveSet m) {
         return checkHelper(b, piece, m);
     });

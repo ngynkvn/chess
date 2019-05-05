@@ -49,7 +49,7 @@ TEST_CASE("Board data-type works correctly", "[board]")
         for (int i = 0; i < 8; i++)
         {
             CHECK(start.getPiece(Coord(i, 0)) == table[i]);
-            CHECK(start.getPiece(Coord(i, 7)) == table[i] + black);
+            CHECK(start.getPiece(Coord(i, 7)) == table[i] + ePieceCode::Black);
         }
     }
     SECTION("Inputting moves does not modify previous board state.")

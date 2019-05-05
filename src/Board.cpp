@@ -154,12 +154,12 @@ void Board::setPrevMove(Move m) { prevMove = m; }
 /*
 Returns the black ePieceCode if it's white's move, white if it's not
 */
-ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
+ePieceCode Board::opposite() const { return whiteTurn ? Black : White; }
 
 /*
 Returns the same color ePieceCode of the color turn
 */
-ePieceCode Board::same() const { return whiteTurn ? white : black; }
+ePieceCode Board::same() const { return whiteTurn ? White : Black; }
 
 std::ostream &operator<<(std::ostream &os, const Board &board)
 {

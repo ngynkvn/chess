@@ -14,7 +14,7 @@ struct MoveSet
     {
         std::vector<Move> moves;
         MoveGenerator *moveGenerator = new BaseMoveGenerator(b, ray, directions, &moves);
-        if (piece == epcWpawn) // Should this be a constexpr?
+        if (piece == ePieceCode::Pawn) // Should this be a constexpr?
         {
             moveGenerator = new PawnMoveGenerator(b, &moves);
         }
@@ -53,12 +53,12 @@ const std::vector<Coord> dirKnight = {Coord(1, 2),
                                       Coord(-2, -1),
                                       Coord(-1, -2)};
 const std::vector<Coord> dirKing = dirQueen;
-const MoveSet Rook = MoveSet(epcWrook, dirRook, true);
-const MoveSet Bishop = MoveSet(epcWbishop, dirBishop, true);
-const MoveSet Queen = MoveSet(epcWqueen, dirQueen, true);
-const MoveSet Knight = MoveSet(epcWknight, dirKnight, false);
-const MoveSet King = MoveSet(epcWking, dirKing, false);
-const MoveSet Pawn = MoveSet(epcWpawn);
+const MoveSet Rook = MoveSet(ePieceCode::Rook, dirRook, true);
+const MoveSet Bishop = MoveSet(ePieceCode::Bishop, dirBishop, true);
+const MoveSet Queen = MoveSet(ePieceCode::Queen, dirQueen, true);
+const MoveSet Knight = MoveSet(ePieceCode::Knight, dirKnight, false);
+const MoveSet King = MoveSet(ePieceCode::King, dirKing, false);
+const MoveSet Pawn = MoveSet(ePieceCode::Pawn);
 const std::vector<MoveSet> movements = {Rook, Bishop, Queen, Knight, Pawn, King};
 } // namespace Movement
 #endif // MOVEMENT_H
