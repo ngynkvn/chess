@@ -9,7 +9,6 @@
  */
 using Coord = std::pair<int, int>;
 Coord operator+(const Coord& l, const Coord& r);
-Coord operator+=(const Coord& l, const Coord& r);
 Coord operator-(const Coord& l, const Coord& r);
 /** 
  * Move consists of a FROM coordinate and a TO coordinate to signify movement of pieces. This is helpful for when

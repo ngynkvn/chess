@@ -6,10 +6,6 @@ Coord operator+(const Coord& l, const Coord& r)
 {
   return {l.first + r.first, l.second + r.second};
 }
-Coord operator+=(const Coord& l, const Coord& r) 
-{
-  return {l.first + r.first, l.second + r.second};
-}
 Coord operator-(const Coord& l, const Coord& r) 
 {
   return {l.first - r.first, l.second - r.second};

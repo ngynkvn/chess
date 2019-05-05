@@ -26,7 +26,7 @@ std::vector<Coord> bPawnCaptures = {Coord(1, -1),
 Coord firstPieceOnRay(Coord point, Coord dirRay, const Board& b)
 {
     do {
-        point += dirRay;
+        point = point + dirRay;
     } while (b.inside(point) && b.getPiece(point) == epcEmpty);
     return point;
 }
