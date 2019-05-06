@@ -25,11 +25,24 @@ void cachePositions(Board &b)
         }
 }
 
+// std::vector<Coord> findPieces(Board &b, int piece)
+// {
+//     return cachePos[static_cast<ePieceCode>(piece)];
+// }
 std::vector<Coord> findPieces(Board &b, int piece)
 {
-    return cachePos[static_cast<ePieceCode>(piece)];
+    std::vector<Coord> v;
+    ePieceCode **board = b.getBoard();
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+        {
+            if (board[i][j] == piece)
+            {
+                v.emplace_back(j, i);
+            }
+        }
+    return v;
 }
-
 } // namespace Cache
 
 #endif // CACHE_H

@@ -1,8 +1,12 @@
 #include "Board.h"
 #include "Search.h"
+#include "Move.h"
 #include<iostream>
 #include <vector>
-typedef unsigned long long u64;
+#include<string>
+#include<sstream>
+#include<map>
+using u64 = unsigned long long;
 
 //Based off perft function here:
 //http://chessprogramming.wikispaces.com/Perft
