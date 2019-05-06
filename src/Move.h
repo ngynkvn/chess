@@ -10,6 +10,7 @@
 using Coord = std::pair<int, int>;
 Coord operator+(const Coord& l, const Coord& r);
 Coord operator-(const Coord& l, const Coord& r);
+std::ostream &operator<<(std::ostream &os, const Coord &coord);
 /** 
  * Move consists of a FROM coordinate and a TO coordinate to signify movement of pieces. This is helpful for when
  * pieces need to be moved as it is necessary to know the location the piece comes from and it's destination.

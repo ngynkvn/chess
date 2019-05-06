@@ -2,34 +2,41 @@
 #include "Move.h"
 #include "Piece.h"
 #include "Board.h"
-
-unsigned long long perft(Board&, int, int &);
-unsigned long long perft(Board&, int, int &, int &);
+#include "pertf.h"
+#include <iostream>
 
 TEST_CASE("Move generation is correct.", "[perft]")
 {
     Board start;
-    int captures = 0;
-    int checks = 0;
-    CHECK(perft(start, 1, captures) == 20);
-    CHECK(captures == 0);
-    CHECK(perft(start, 2, captures) == 400);
-    CHECK(captures == 0);
+    SECTION("Depth 1")
+    {
+        auto [nodes, captures, checks] = perft(start, 1);
+        CHECK(nodes == 20);
+        CHECK(captures == 0);
+    }
+    SECTION("Depth 2")
+    {
+        auto [nodes, captures, checks] = perft(start, 2);
+        CHECK(nodes == 400);
+        CHECK(captures == 0);
+    }
     SECTION("Depth 3 should show 34 captures.")
     {
-        CHECK(perft(start, 3, captures) == 8902);
+        auto [nodes, captures, checks] = perft(start, 3);
+        CHECK(nodes == 8902);
         CHECK(captures == 34);
     }
     SECTION("Depth 4 should show 1576 captures.")
     {
-        CHECK(perft(start, 4, captures) == 197281);
+        auto [nodes, captures, checks] = perft(start, 4);
+        CHECK(nodes == 197281);
         CHECK(captures == 1576);
     }
-    SECTION("Depth 5")
-    {
-        // CHECK(perft(start, 5, captures) == 4865609);
-        // CHECK(captures == 82719);
-    }
+    // SECTION("Depth 5")
+    // {
+    //     CHECK(perft(start, 5, captures) == 4865609);
+    //     CHECK(captures == 82719);
+    // }
 }
 
 TEST_CASE("Board data-type works correctly", "[board]")

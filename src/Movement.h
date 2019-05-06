@@ -53,12 +53,12 @@ const std::vector<Coord> dirKnight = {Coord(1, 2),
                                       Coord(-2, -1),
                                       Coord(-1, -2)};
 const std::vector<Coord> dirKing = dirQueen;
-const MoveSet Rook = MoveSet(ePieceCode::Rook, dirRook, true);
-const MoveSet Bishop = MoveSet(ePieceCode::Bishop, dirBishop, true);
-const MoveSet Queen = MoveSet(ePieceCode::Queen, dirQueen, true);
-const MoveSet Knight = MoveSet(ePieceCode::Knight, dirKnight, false);
-const MoveSet King = MoveSet(ePieceCode::King, dirKing, false);
-const MoveSet Pawn = MoveSet(ePieceCode::Pawn);
+MoveSet Rook = MoveSet(ePieceCode::Rook, dirRook, true);
+MoveSet Bishop = MoveSet(ePieceCode::Bishop, dirBishop, true);
+MoveSet Queen = MoveSet(ePieceCode::Queen, dirQueen, true);
+MoveSet Knight = MoveSet(ePieceCode::Knight, dirKnight, false);
+MoveSet King = MoveSet(ePieceCode::King, dirKing, false);
+MoveSet Pawn = MoveSet(ePieceCode::Pawn);
 const std::vector<MoveSet> movements = {Rook, Bishop, Queen, Knight, Pawn, King};
 } // namespace Movement
 #endif // MOVEMENT_H
