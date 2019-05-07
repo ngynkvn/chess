@@ -48,12 +48,6 @@ bool inCheck(Board &b, Move consideringMove)
 {
     bool turnIsWhite = b.isWhite();
     int c = turnIsWhite ? White : Black;
-    auto pieceTo = b.getPiece(consideringMove.to);
-
-    if (pieceTo == (turnIsWhite ? epcWking : epcBking))
-    {
-        return true;
-    }
 
     b.makeMove(consideringMove);
     std::vector<Coord> pieceCoords = Cache::findPieces(b, King + c);

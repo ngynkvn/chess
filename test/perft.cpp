@@ -26,8 +26,6 @@ u64 perft_nodes(Board &b, int depth, u64 &captures, u64 &checks)
         {
             if(b.getPiece(i.to) != epcEmpty) 
                 captures++;
-            if(Search::inCheck(b, i))
-                checks++;
         }
         return moves.size();
     }
