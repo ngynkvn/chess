@@ -25,6 +25,9 @@ test: $(OBJS)
 	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest -I src
 	@./$(TESTDIR)/runtest
 	
+time: main 
+	time -p ./bin/a.out
+
 clean:
 	@echo "\tCleaning..";
 	rm -rf $(OUTDIR)

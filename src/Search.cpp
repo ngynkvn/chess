@@ -44,7 +44,7 @@ bool checkHelper(const Board &b, Coord piece, Movement::MoveSet m)
     return checkHelper(b, piece, m.directions, m.piece + (b.isWhite() ? White : Black), m.ray);
 }
 
-bool inCheck(Board &b, Move consideringMove)
+bool inCheck(Board &b, const Move& consideringMove)
 {
     bool turnIsWhite = b.isWhite();
     int c = turnIsWhite ? White : Black;
