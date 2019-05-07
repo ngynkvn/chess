@@ -1,5 +1,5 @@
 CC = g++-9
-FLAGS = -std=c++17 -Wall -O3
+FLAGS = -std=c++17 -Wall
 
 SRC = src
 OUTDIR = bin
@@ -37,7 +37,8 @@ callgrind: main
 gprof: main
 	@echo "\tRunning.."
 	@time -p ./$(OUTDIR)/$(OUTNAME)
-	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%e-%T").gprof
-	@head ./snippets/profiling/result.gprof
+	@mkdir -p ./snippets/profiling
+	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%T").gprof
+	@head ./snippets/profiling/result$(shell date "+%m-%T").gprof
 
 .PHONY: clean test

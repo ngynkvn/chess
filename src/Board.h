@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 
-
 /** 
  * Board class holds important information pertaining to the existing state of the game.
  * This is a data-type that is treated as an immutable throughout the code, however it is important to note that 
@@ -22,10 +21,10 @@ public:
   Board(const Board &);
   ~Board();
   ePieceCode **getBoard() const;
-  ePieceCode & getPiece(Coord) const;
-  Board & makeMove(Move);
+  ePieceCode &getPiece(const Coord &) const;
+  Board &makeMove(const Move &);
   void unmakeMove();
-  bool inside(Coord) const;
+  bool inside(const Coord &c) const;
   bool isWhite() const;
   ePieceCode currColor() { return whiteTurn ? White : Black; };
   void setTurn(bool);
@@ -42,7 +41,22 @@ private:
   std::vector<Move> history;
   Move prevMove = Move(-1, -1, -1, -1);
   ePieceCode prevCapture = epcEmpty;
-  std::vector<ePieceCode > captures;
+  std::vector<ePieceCode> captures;
 };
+
+inline ePieceCode &Board::getPiece(const Coord &c) const
+{
+  auto [x, y] = c;
+  return board[y][x];
+}
+inline bool Board::inside(const Coord &c) const
+{
+  auto [x, y] = c;
+  return x > -1 && x < 8 && y > -1 && y < 8;
+};
+inline ePieceCode **Board::getBoard() const
+{
+    return this->board;
+}
 
 #endif // BOARD_H

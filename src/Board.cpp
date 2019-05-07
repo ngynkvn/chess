@@ -76,25 +76,13 @@ Board::~Board()
     }
     delete[] board;
 }
-/*returns the 2Darray of pieces that represents the board*/
-ePieceCode **Board::getBoard() const
-{
-    return this->board;
-}
-
-/*returns the piece held at that index of the board 2Darray */
-ePieceCode& Board::getPiece(Coord c) const
-{
-    auto [x, y] = c;
-    return board[y][x];
-}
 
 /*sets the piece at the from-coordinates to the index of the board 2Darray
 corresponding to the to-coordinates
 -then returns a Board object with these changes
 -the actual Board has not been affected
 -^^will in the future handle taking opponent pieces*/
-Board & Board::makeMove(Move m)
+Board & Board::makeMove(const Move& m)
 {
     setTurn(!whiteTurn);
     history.push_back(m);
@@ -122,15 +110,6 @@ void Board::unmakeMove()
     board[toY][toX] = captures.back();
     captures.pop_back();
 }
-
-/*
-Returns true if the coordinate given is within the board
-*/
-bool Board::inside(Coord c) const { 
-    auto [x, y] = c;
-    return x > -1 && x < 8 && y > -1 && y < 8; 
-}
-
 /*
 Returns a boolean variable that clarifies if it's white's move or not
 */
