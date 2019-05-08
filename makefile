@@ -1,20 +1,19 @@
-CC = g++
-FLAGS = -std=c++11 -Wall -O3 -pg -g3
+CC = g++-9
+FLAGS = -std=c++17 -Wall
 
 SRC = src
 OUTDIR = bin
 TESTDIR = test
 OUTNAME = a.out
-INCLUDE = -I include
 
-OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
+OBJS = Move.o Piece.o Board.o Search.o Evaluation.o MoveGenerator.o
 
 %.o: $(SRC)/%.cpp
 	@mkdir -p bin
-	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ $(INCLUDE)
+	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ 
 
 main: $(OBJS)
-	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) $(INCLUDE)
+	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) 
 
 run: main
 	./$(OUTDIR)/$(OUTNAME)
@@ -23,9 +22,12 @@ catch:
 	$(CC) $(FLAGS) -c $(TESTDIR)/test-main.cpp -o $(TESTDIR)/catch.o
 
 test: $(OBJS)
-	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest $(INCLUDE)
+	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest -I src
 	@./$(TESTDIR)/runtest
 	
+time: main 
+	time -p ./bin/a.out
+
 clean:
 	@echo "\tCleaning..";
 	rm -rf $(OUTDIR)
@@ -38,7 +40,8 @@ callgrind: main
 gprof: main
 	@echo "\tRunning.."
 	@time -p ./$(OUTDIR)/$(OUTNAME)
-	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%e-%T").gprof
-	@head ./snippets/profiling/result.gprof
+	@mkdir -p ./snippets/profiling
+	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%T").gprof
+	@head ./snippets/profiling/result$(shell date "+%m-%T").gprof
 
 .PHONY: clean test

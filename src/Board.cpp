@@ -2,7 +2,6 @@
 #include "Board.h"
 #include "Search.h"
 
-using namespace std;
 /*constructor sets up the board for a new game*/
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
 Board::Board()
@@ -77,30 +76,21 @@ Board::~Board()
     }
     delete[] board;
 }
-/*returns the 2Darray of pieces that represents the board*/
-ePieceCode **Board::getBoard() const
-{
-    return this->board;
-}
-
-/*returns the piece held at that index of the board 2Darray */
-ePieceCode& Board::getPiece(Coord c) const
-{
-    return board[c.y][c.x];
-}
 
 /*sets the piece at the from-coordinates to the index of the board 2Darray
 corresponding to the to-coordinates
 -then returns a Board object with these changes
 -the actual Board has not been affected
 -^^will in the future handle taking opponent pieces*/
-Board & Board::makeMove(Move m)
+Board & Board::makeMove(const Move& m)
 {
     setTurn(!whiteTurn);
     history.push_back(m);
-    captures.emplace_back(getPiece(m.to()));
-    board[m.to().y][m.to().x] = getPiece(m.from());
-    board[m.from().y][m.from().x] = epcEmpty;
+    auto [fromX, fromY] = m.from;
+    auto [toX, toY] = m.to;
+    captures.emplace_back(getPiece(m.to));
+    board[toY][toX] = getPiece(m.from);
+    board[fromY][fromX] = epcEmpty;
     return *this;
 }
 
@@ -114,16 +104,12 @@ void Board::unmakeMove()
     setTurn(!whiteTurn);
     Move prev = history.back();
     history.pop_back();
-    board[prev.from().y][prev.from().x] = (*this).getPiece(prev.to());
-    board[prev.to().y][prev.to().x] = captures.back();
+    auto [fromX, fromY] = prev.from;
+    auto [toX, toY] = prev.to;
+    board[fromY][fromX] = (*this).getPiece(prev.to);
+    board[toY][toX] = captures.back();
     captures.pop_back();
 }
-
-/*
-Returns true if the coordinate given is within the board
-*/
-bool Board::inside(Coord c) const { return c.x > -1 && c.x < 8 && c.y > -1 && c.y < 8; }
-
 /*
 Returns a boolean variable that clarifies if it's white's move or not
 */
@@ -147,14 +133,14 @@ void Board::setPrevMove(Move m) { prevMove = m; }
 /*
 Returns the black ePieceCode if it's white's move, white if it's not
 */
-ePieceCode Board::opposite() const { return whiteTurn ? black : white; }
+ePieceCode Board::opposite() const { return whiteTurn ? Black : White; }
 
 /*
 Returns the same color ePieceCode of the color turn
 */
-ePieceCode Board::same() const { return whiteTurn ? white : black; }
+ePieceCode Board::same() const { return whiteTurn ? White : Black; }
 
-ostream &operator<<(ostream &os, const Board &board)
+std::ostream &operator<<(std::ostream &os, const Board &board)
 {
 //     char outChars[] = {' ', 'p', 'k','b','r','q','W',
 //                        ' ', 'P', 'K','B','R','Q','B'};
@@ -169,13 +155,13 @@ ostream &operator<<(ostream &os, const Board &board)
             ePieceCode p = board.getPiece(Coord(i, j));
             p == epcEmpty ? os << ". " : os << outChars[p] << " ";
         }
-        os << endl;
+        os << std::endl;
     }
-    os << "   ---------------" << endl;
-    os << "   a b c d e f g h" << endl;
-    os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << endl;
-    os << (board.isWhite() ? "Black" : "White") << " played " << board.getPrevMove() << endl;
-    // os << "Board is valued at " << evaluate(board) << endl;
-    // os << "They have " << Search::generateMoveList(board).size() << " moves" << endl;
+    os << "   ---------------" << std::endl;
+    os << "   a b c d e f g h" << std::endl;
+    os << "It is " << (board.isWhite() ? "white's" : "black's") << " turn" << std::endl;
+    os << (board.isWhite() ? "Black" : "White") << " played " << board.getPrevMove() << std::endl;
+    // os << "Board is valued at " << evaluate(board) << std::endl;
+    // os << "They have " << Search::generateMoveList(board).size() << " moves" << std::endl;
     return os;
 }

@@ -51,7 +51,6 @@ int mini_max(Board &game_state, int depth, int alpha, int beta, bool is_max_play
     {
         return evaluate(game_state);
     }
-
     // are there no more possible game states
     std::vector<Move> children_states = Search::generateMoveList(game_state);
     if (children_states.empty())

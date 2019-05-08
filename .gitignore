@@ -39,3 +39,5 @@ snippets
 *.app
 CMakeLists.txt
 callgrind.out.*
+runtest*
+bin

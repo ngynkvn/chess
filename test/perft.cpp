@@ -1,8 +1,12 @@
 #include "Board.h"
 #include "Search.h"
-#include<iostream>
+#include "Move.h"
+#include "pertf.h"
+#include <iostream>
 #include <vector>
-typedef unsigned long long u64;
+#include <string>
+#include <sstream>
+#include <map>
 
 //Based off perft function here:
 //http://chessprogramming.wikispaces.com/Perft
@@ -12,40 +16,15 @@ typedef unsigned long long u64;
  * generate all possible board states from a given position up to a certain depth.
  * We have included helper code to also test amounts of captures and checks to further validify our code.
  */
-u64 perft(Board& b, int depth, int &captures, int &checks)
-{
-    std::vector<Move> moves = Search::generateMoveList(b);
 
-    if (depth == 1)
-    {
-        for (auto move : moves)
-        {
-            if (b.getPiece(move.to()) != epcEmpty)
-                captures++;
-            if (Search::inCheck(b, move)) 
-                checks++;
-        }
-        return moves.size();
-    }
-
-    u64 nodes = 0;
-    for (auto i : moves)
-    {
-        b.makeMove(i);
-        nodes += perft(b, depth - 1, captures, checks);
-        b.unmakeMove();
-    }
-    return nodes;
-}
-
-u64 perft(Board& b, int depth, int &captures)
+u64 perft_nodes(Board &b, int depth, u64 &captures, u64 &checks)
 {
     std::vector<Move> moves = Search::generateMoveList(b);
     if (depth == 1)
     {
         for (auto i : moves)
         {
-            if (b.getPiece(i.to()) != epcEmpty)
+            if(b.getPiece(i.to) != epcEmpty) 
                 captures++;
         }
         return moves.size();
@@ -55,26 +34,16 @@ u64 perft(Board& b, int depth, int &captures)
     for (auto i : moves)
     {
         b.makeMove(i);
-        nodes += perft(b, depth - 1, captures);
+        nodes += perft_nodes(b, depth - 1, captures, checks);
         b.unmakeMove();
     }
     return nodes;
 }
 
-u64 perft(Board& b, int depth)
+std::tuple<u64, u64, u64> perft(Board &b, int depth)
 {
-    std::vector<Move> moves = Search::generateMoveList(b);
-    if (depth == 1)
-    {
-        return moves.size();
-    }
-
-    u64 nodes = 0;
-    for (auto i : moves)
-    {
-        b.makeMove(i);
-        nodes += perft(b, depth - 1);
-        b.unmakeMove();
-    }
-    return nodes;
+    u64 captures = 0;
+    u64 checks = 0;
+    u64 nodes = perft_nodes(b, depth, captures, checks);
+    return std::make_tuple(nodes, captures, checks);
 }
