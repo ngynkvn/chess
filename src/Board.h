@@ -6,6 +6,7 @@
 #include <ostream>
 #include <vector>
 #include <string>
+#include <array>
 
 /** 
  * Board class holds important information pertaining to the existing state of the game.
@@ -19,9 +20,8 @@ class Board
 public:
   Board();
   Board(const Board &);
-  ~Board();
-  ePieceCode **getBoard() const;
-  ePieceCode &getPiece(const Coord &) const;
+  std::array<ePieceCode, 64> getBoard() const;
+  ePieceCode getPiece(const Coord &) const;
   Board &makeMove(const Move &);
   void unmakeMove();
   bool inside(const Coord &c) const;
@@ -32,11 +32,10 @@ public:
   ePieceCode same() const;
   Move getPrevMove() const;
   void setPrevMove(Move);
-  Board &operator=(const Board &); //copy assignment constructor.
   friend std::ostream &operator<<(std::ostream &, const Board &);
 
 private:
-  ePieceCode **board = nullptr;
+  std::array<ePieceCode,64> board;
   bool whiteTurn = true;
   std::vector<Move> history;
   Move prevMove = Move(-1, -1, -1, -1);
@@ -44,17 +43,17 @@ private:
   std::vector<ePieceCode> captures;
 };
 
-inline ePieceCode &Board::getPiece(const Coord &c) const
+inline ePieceCode Board::getPiece(const Coord &c) const
 {
   auto [x, y] = c;
-  return board[y][x];
+  return board[(y << 3) + x];
 }
 inline bool Board::inside(const Coord &c) const
 {
   auto [x, y] = c;
   return x > -1 && x < 8 && y > -1 && y < 8;
 };
-inline ePieceCode **Board::getBoard() const
+inline std::array<ePieceCode, 64> Board::getBoard() const
 {
     return this->board;
 }

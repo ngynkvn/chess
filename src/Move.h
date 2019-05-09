@@ -21,7 +21,7 @@ class Move
 public:
   Move(int, int, int, int);
   Move(Coord, Coord);
-  explicit Move(std::string);
+  Move(std::string);
   Coord from;
   Coord to;
   bool operator==(const Move &m) const { return m.from == from && m.to == to; }

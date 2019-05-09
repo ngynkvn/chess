@@ -69,7 +69,6 @@ void addMovesTo(std::vector<Move> &v, std::vector<Move> moves)
 std::vector<Move> generateMoveList(Board &b)
 {
     std::vector<Move> v;
-    Cache::cachePositions(b);
     std::for_each(Movement::movements.begin(), Movement::movements.end(), [&](Movement::MoveSet m) {
         addMovesTo(v, m.generateMoves(b));
     });

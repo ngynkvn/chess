@@ -9,36 +9,14 @@
 namespace Cache
 {
 
-std::map<ePieceCode, std::vector<Coord>> cachePos;
-
-void cachePositions(Board &b)
-{
-    cachePos.clear();
-    ePieceCode **board = b.getBoard();
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-        {
-            if (board[i][j] != epcEmpty)
-            {
-                cachePos[board[i][j]].emplace_back(j, i);
-            }
-        }
-}
-
-// std::vector<Coord> findPieces(Board &b, int piece)
-// {
-//     return cachePos[static_cast<ePieceCode>(piece)];
-// }
 std::vector<Coord> findPieces(Board &b, int piece)
 {
     std::vector<Coord> v;
-    ePieceCode **board = b.getBoard();
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-        {
-            if (board[i][j] == piece)
+    auto board = b.getBoard();
+    for (int i = 0; i < 64; i++){
+            if (board[i] == piece)
             {
-                v.emplace_back(j, i);
+                v.emplace_back(i % 8, i / 8);
             }
         }
     return v;

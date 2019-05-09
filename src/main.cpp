@@ -71,9 +71,10 @@ int main()
     // gameLoop();
     Board b;
     // b.makeMove(Move("e2e4"));
+    cout << b << endl;
     for(auto x : Search::generateMoveList(b))
-        cout << x << endl;    
-	mini_max(b, 4);
+        cout << x << endl;
+	// mini_max(b, 3);
     // b.makeMove(Move("e2e4"));
     // b.makeMove(mini_max(b, 1));
     // b.makeMove(Move("d2d4"));
