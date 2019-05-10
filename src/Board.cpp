@@ -26,6 +26,18 @@ Board::Board()
     }
 }
 
+Coord Board::getKing(ePieceCode king) const
+{
+    std::vector<Coord> v;
+    for (int i = 0; i < 64; i++){
+        if (board[i] == king)
+        {
+            return Coord(i % 8, i / 8);
+        }
+    }
+    throw;
+}
+
 /*sets the piece at the from-coordinates to the index of the board 2Darray
 corresponding to the to-coordinates
 -then returns a Board object with these changes

@@ -14,6 +14,7 @@ public:
   Board();
   Board(const Board &);
   std::array<ePieceCode, 64> getBoard() const;
+  Coord getKing(ePieceCode) const;
   ePieceCode getPiece(const Coord &) const;
   Board &makeMove(const Move &);
   void unmakeMove();

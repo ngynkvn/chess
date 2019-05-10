@@ -1,6 +1,5 @@
 #if !defined(MOVEMENT_H)
 #define MOVEMENT_H
-#include "Cache.h"
 namespace Movement
 {
 struct MoveSet

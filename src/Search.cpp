@@ -61,15 +61,13 @@ bool checkHelper(const Board &b, Coord targetPiece, Movement::MoveSet m)
 
 bool inCheck(Board &b, const Move& consideringMove)
 {
-    bool turnIsWhite = b.isWhite();
-    int c = turnIsWhite ? White : Black;
-
+    auto epcKing = b.isWhite() ? epcWking : epcBking;
     b.makeMove(consideringMove);
-    std::vector<Coord> pieceCoords = Cache::findPieces(b, King + c);
-    Coord piece = pieceCoords.at(0);
+
+    Coord king = b.getKing(epcKing);
 
     bool result = std::any_of(Movement::movements.begin(), Movement::movements.end(), [&](Movement::MoveSet m) {
-        return checkHelper(b, piece, m);
+        return checkHelper(b, king, m);
     });
 
     b.unmakeMove();
