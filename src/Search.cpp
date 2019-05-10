@@ -84,15 +84,19 @@ void genMoves(Board& b, Coord piece, std::vector<Move>& moves, const std::vector
         if constexpr(M == Sliding) {
             while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
             {
-                moves.emplace_back(piece, possibleMove);
+                moves.emplace_back(piece, possibleMove, M);
                 possibleMove = possibleMove + j;
             }
         }
         if (!b.inside(possibleMove))
             continue;
         auto pieceTo = b.getPiece(possibleMove);
-        if (Search::getColor(pieceTo) == b.opposite() || pieceTo == epcEmpty)
-            moves.emplace_back(piece, possibleMove);
+        if (Search::getColor(pieceTo) == b.opposite()){
+            moves.emplace_back(piece, possibleMove, MoveType::Capture);
+        }
+        else if (pieceTo == epcEmpty) {
+            moves.emplace_back(piece,possibleMove, M);
+        }
     }
 }
 
@@ -104,10 +108,10 @@ void genPawnMoves(Board& b, Coord piece, std::vector<Move>& moves) {
     constexpr Coord push(0, DIRECTION_OF_ATTACK);
     constexpr std::array<Coord, 2> captures{Coord(1, DIRECTION_OF_ATTACK), Coord(-1, DIRECTION_OF_ATTACK)};
     Coord possibleMove = piece + push;
-    if (b.inside(possibleMove) 
-        && b.getPiece(possibleMove) == epcEmpty)
+    if (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
     {
-        moves.emplace_back(piece, possibleMove);
+        moves.emplace_back(piece, possibleMove, MoveType::Push);
+        
     }
 
     auto possibleMove2 = possibleMove + push;
@@ -115,7 +119,7 @@ void genPawnMoves(Board& b, Coord piece, std::vector<Move>& moves) {
         && b.getPiece(possibleMove) == epcEmpty 
         && b.getPiece(possibleMove2) == epcEmpty)
     {
-        moves.emplace_back(piece, possibleMove2);
+        moves.emplace_back(piece, possibleMove2, MoveType::DoublePush);
     }
 
     for (Coord cap : captures)
@@ -123,7 +127,7 @@ void genPawnMoves(Board& b, Coord piece, std::vector<Move>& moves) {
         Coord possibleMove = piece + cap;
         if (b.inside(possibleMove) && Search::getColor(b.getPiece(possibleMove)) == oppositeColor)
         {
-            moves.emplace_back(piece, possibleMove);
+            moves.emplace_back(piece, possibleMove, MoveType::Capture);
         }
     }
 }
@@ -145,23 +149,23 @@ std::vector<Move> generateMoveList(Board &b)
                     break;
                 case epcWqueen:
                 case epcBqueen:
-                    genMoves<Sliding>(b, c, preLegal, Movement::dirQueen);
+                    genMoves<MoveType::Sliding>(b, c, preLegal, Movement::dirQueen);
                     break;
                 case epcWbishop:
                 case epcBbishop:
-                    genMoves<Sliding>(b, c, preLegal, Movement::dirBishop);
+                    genMoves<MoveType::Sliding>(b, c, preLegal, Movement::dirBishop);
                     break;
                 case epcWrook:
                 case epcBrook:
-                    genMoves<Sliding>(b, c, preLegal, Movement::dirRook);
+                    genMoves<MoveType::Sliding>(b, c, preLegal, Movement::dirRook);
                     break;
                 case epcWking:
                 case epcBking:
-                    genMoves<Square>(b, c, preLegal, Movement::dirKing);
+                    genMoves<MoveType::Square>(b, c, preLegal, Movement::dirKing);
                     break;
                 case epcWknight:
                 case epcBknight:
-                    genMoves<Square>(b, c, preLegal, Movement::dirKnight);
+                    genMoves<MoveType::Square>(b, c, preLegal, Movement::dirKnight);
                     break;
                 default:
                     throw;

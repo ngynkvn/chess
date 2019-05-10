@@ -8,9 +8,9 @@
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
 Board::Board()
 {
+    this->board.fill(epcEmpty);
     history.emplace_back(Move(-1,-1,-1,-1));
     /*setting pawns*/
-    this->board.fill(epcEmpty);
     for (int i = 0; i < 8; i++)
     {
         this->board[8 + i] = epcWpawn;

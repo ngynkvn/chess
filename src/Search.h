@@ -18,14 +18,6 @@ std::vector<Coord> findPieces(Board&, int);
 bool inCheck(Board&, const Move&);
 bool checkValidMoves(std::vector<Move> v, const Board &b);
 ePieceCode getColor(ePieceCode);
-    
-enum MoveType {
-    Sliding,
-    Square,
-    Castle,
-    EP,
-};
-
 }
 
 #endif
