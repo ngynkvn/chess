@@ -4,23 +4,17 @@
 #include <assert.h>
 #include <algorithm>
 #include <functional>
-#include "MoveGenerator.h"
 #include "Movement.h"
 namespace Search
 {
+
 ePieceCode getColor(ePieceCode code)
 {
-    if (code == epcEmpty)
-    {
-        return epcEmpty;
-    }
-    return code > Black ? ePieceCode::Black : ePieceCode::White;
+    return code == epcEmpty 
+        ? epcEmpty 
+        : code > Black ? ePieceCode::Black 
+                       : ePieceCode::White;
 }
-
-std::vector<Coord> wPawnCaptures = {Coord(1, 1),
-                                    Coord(-1, 1)};
-std::vector<Coord> bPawnCaptures = {Coord(1, -1),
-                                    Coord(-1, -1)};
 
 Coord firstPieceOnRay(Coord point, Coord dirRay, const Board &b)
 {
@@ -31,17 +25,38 @@ Coord firstPieceOnRay(Coord point, Coord dirRay, const Board &b)
     return point;
 }
 
-bool checkHelper(const Board &b, Coord piece, std::vector<Coord> dirs, int epcCode, bool ray)
+bool checkHelper(const Board &b, Coord targetPiece, std::vector<Coord> dirs, int epcCode, bool ray)
 {
     auto code = static_cast<ePieceCode>(epcCode);
     return std::any_of(dirs.begin(), dirs.end(), [&](const Coord &dir) {
-        Coord possibleMove = ray ? firstPieceOnRay(piece, dir, b) : piece + dir;
+        Coord possibleMove = ray ? firstPieceOnRay(targetPiece, dir, b) : targetPiece + dir;
         return b.inside(possibleMove) && b.getPiece(possibleMove) == code;
     });
 }
-bool checkHelper(const Board &b, Coord piece, Movement::MoveSet m)
+template <ePieceCode EnemyColor>
+bool checkPawn(const Board &b, Coord targetPiece)
 {
-    return checkHelper(b, piece, m.directions, m.piece + (b.isWhite() ? White : Black), m.ray);
+    constexpr int DIRECTION_OF_ATTACK = EnemyColor == White ? -1 : 1;
+    constexpr ePieceCode enemyPawn = EnemyColor == White ? epcWpawn : epcWpawn;
+    constexpr std::array<Coord, 2> captures{Coord(1, DIRECTION_OF_ATTACK), Coord(-1, DIRECTION_OF_ATTACK)};
+    for (Coord cap : captures)
+    {
+        Coord possibleMove = targetPiece + cap;
+        if (b.inside(possibleMove) && b.getPiece(possibleMove) == enemyPawn)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+bool checkHelper(const Board &b, Coord targetPiece, Movement::MoveSet m)
+{
+    switch(m.piece) {
+        case Pawn:
+            return b.isWhite() ? checkPawn<Black>(b, targetPiece) : checkPawn<White>(b, targetPiece);
+        default:
+            return checkHelper(b, targetPiece, m.directions, m.piece + (b.isWhite() ? White : Black), m.ray);
+    }
 }
 
 bool inCheck(Board &b, const Move& consideringMove)
@@ -61,18 +76,105 @@ bool inCheck(Board &b, const Move& consideringMove)
     return result;
 }
 
-void addMovesTo(std::vector<Move> &v, std::vector<Move> moves)
-{
-    v.insert(v.end(), moves.begin(), moves.end());
+template<MoveType M>
+void genMoves(Board& b, Coord piece, std::vector<Move>& moves, const std::vector<Coord>& directions) {
+    for (auto j : directions)
+    {
+        Coord possibleMove = piece + j;
+        if constexpr(M == Sliding) {
+            while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
+            {
+                moves.emplace_back(piece, possibleMove);
+                possibleMove = possibleMove + j;
+            }
+        }
+        if (!b.inside(possibleMove))
+            continue;
+        auto pieceTo = b.getPiece(possibleMove);
+        if (Search::getColor(pieceTo) == b.opposite() || pieceTo == epcEmpty)
+            moves.emplace_back(piece, possibleMove);
+    }
+}
+
+template<ePieceCode Color>
+void genPawnMoves(Board& b, Coord piece, std::vector<Move>& moves) {
+    constexpr int DIRECTION_OF_ATTACK = Color == White ? 1 : -1;
+    constexpr int HOME_ROW = Color == White ? 1 : 6;
+    constexpr ePieceCode oppositeColor = Color == White ? Black : White;
+    constexpr Coord push(0, DIRECTION_OF_ATTACK);
+    constexpr std::array<Coord, 2> captures{Coord(1, DIRECTION_OF_ATTACK), Coord(-1, DIRECTION_OF_ATTACK)};
+    Coord possibleMove = piece + push;
+    if (b.inside(possibleMove) 
+        && b.getPiece(possibleMove) == epcEmpty)
+    {
+        moves.emplace_back(piece, possibleMove);
+    }
+
+    auto possibleMove2 = possibleMove + push;
+    if (piece.second == HOME_ROW 
+        && b.getPiece(possibleMove) == epcEmpty 
+        && b.getPiece(possibleMove2) == epcEmpty)
+    {
+        moves.emplace_back(piece, possibleMove2);
+    }
+
+    for (Coord cap : captures)
+    {
+        Coord possibleMove = piece + cap;
+        if (b.inside(possibleMove) && Search::getColor(b.getPiece(possibleMove)) == oppositeColor)
+        {
+            moves.emplace_back(piece, possibleMove);
+        }
+    }
 }
 
 std::vector<Move> generateMoveList(Board &b)
 {
-    std::vector<Move> v;
-    std::for_each(Movement::movements.begin(), Movement::movements.end(), [&](Movement::MoveSet m) {
-        addMovesTo(v, m.generateMoves(b));
-    });
-    return v;
+    auto board_array = b.getBoard();
+    std::vector<Move> preLegal;
+    for (int i = 0; i < 64; i++) {
+        auto p = board_array[i];
+        if (b.currColor() == getColor(p)) {
+            Coord c(i % 8, i / 8);
+            switch(p) {
+                case epcWpawn:
+                    genPawnMoves<White>(b, c, preLegal);
+                    break;
+                case epcBpawn:
+                    genPawnMoves<Black>(b, c, preLegal);
+                    break;
+                case epcWqueen:
+                case epcBqueen:
+                    genMoves<Sliding>(b, c, preLegal, Movement::dirQueen);
+                    break;
+                case epcWbishop:
+                case epcBbishop:
+                    genMoves<Sliding>(b, c, preLegal, Movement::dirBishop);
+                    break;
+                case epcWrook:
+                case epcBrook:
+                    genMoves<Sliding>(b, c, preLegal, Movement::dirRook);
+                    break;
+                case epcWking:
+                case epcBking:
+                    genMoves<Square>(b, c, preLegal, Movement::dirKing);
+                    break;
+                case epcWknight:
+                case epcBknight:
+                    genMoves<Square>(b, c, preLegal, Movement::dirKnight);
+                    break;
+                default:
+                    throw;
+            }
+        }
+    }
+    std::vector<Move> legal;
+    for (auto m : preLegal) {
+        if (!Search::inCheck(b, m)) {
+            legal.push_back(m);
+        }
+    }
+    return legal;
 }
 
 } // namespace Search
