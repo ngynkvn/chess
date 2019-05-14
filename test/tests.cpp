@@ -2,6 +2,7 @@
 #include "Move.h"
 #include "Piece.h"
 #include "Board.h"
+#include "Search.h"
 #include "pertf.h"
 #include <iostream>
 
@@ -42,6 +43,16 @@ TEST_CASE("Move generation is correct.", "[perft]")
         // CHECK(nodes == 4865609);
         // CHECK(captures == 82719);
     }
+}
+
+TEST_CASE("En passant", "[ep]") 
+{
+    Board b;
+    b.makeMove(Move("e2e4"));
+    b.makeMove(Move("a7a5"));
+    b.makeMove(Move("e4e5"));
+    b.makeMove(Move("d7d5"));
+    Move ep("e5d6");
 }
 
 TEST_CASE("Board data-type works correctly", "[board]")

@@ -70,7 +70,12 @@ int main()
     // Board b;
     // gameLoop();
     Board b;
-    // b.makeMove(Move("e2e4"));
+    b.makeMove(Move("e2e4"));
+    b.makeMove(Move("a7a5"));
+    b.makeMove(Move("e4e5"));
+    Move dp("d7d5");
+    dp.moveType = DoublePush;
+    b.makeMove(dp);
     cout << b << endl;
     for(auto x : Search::generateMoveList(b))
         cout << x << endl;

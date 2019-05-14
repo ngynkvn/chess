@@ -114,7 +114,8 @@ std::ostream &operator<<(std::ostream &os, const Board &board)
         for (int i = 7; i > -1; i--)
         {
             ePieceCode p = board.getPiece(Coord(i, j));
-            p == epcEmpty ? os << ". " : os << outChars[p];
+            p == epcEmpty ? os << "." : os << outChars[p];
+            os << " ";
         }
         os << std::endl;
     }
