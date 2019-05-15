@@ -133,7 +133,7 @@ void genPawnMoves(Board &b, Coord piece, std::vector<Move> &moves)
             auto enPassantPossible = b.inside(toSideOfPawn) && b.getPiece(toSideOfPawn) == enemyPawn;
             if (enPassantPossible)
             {
-                moves.emplace_back(piece, Coord(i, DIRECTION_OF_ATTACK), MoveType::EP);
+                moves.emplace_back(piece, piece + Coord(i, DIRECTION_OF_ATTACK), MoveType::EP);
             }
         }
     }
