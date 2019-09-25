@@ -7,23 +7,27 @@ TESTDIR = test
 OUTNAME = a.out
 
 OBJS = Move Piece Board Search Evaluation
+TEST = tests.cpp perft.cpp
+TEST_FILES = $(TEST:%=$(TESTDIR)/%)
 OBJ_FILES = $(OBJS:%=$(OUTDIR)/%.o)
 
-$(OUTDIR)/%.o: $(SRC)/%.cpp 
+.PHONY: clean test
+
+$(OUTDIR)/%.o: $(SRC)/%.cpp
+	@mkdir -p $(OUTDIR)
 	$(CC) $(FLAGS) -c $< -o $@
 
 main: $(OBJ_FILES)
-	@mkdir -p $(OUTDIR)
 	$(CC) $(FLAGS) $(SRC)/main.cpp $^ -o $(OUTDIR)/$(OUTNAME) 
 
 run: main
 	./$(OUTDIR)/$(OUTNAME)
 
-catch: 
+$(TESTDIR)/catch.o: 
 	$(CC) $(FLAGS) -c $(TESTDIR)/test-main.cpp -o $(TESTDIR)/catch.o
 
-test: $(OBJS)
-	$(CC) $(FLAGS) $(addprefix $(TESTDIR)/, catch.o tests.cpp perft.cpp) $(addprefix $(OUTDIR)/, $^) -o $(TESTDIR)/runtest -I src
+test: $(TESTDIR)/catch.o $(TEST_FILES) $(OBJ_FILES)
+	$(CC) $(FLAGS) $^ -o $(TESTDIR)/runtest -I src
 	@./$(TESTDIR)/runtest
 	
 time: main 
@@ -32,7 +36,7 @@ time: main
 clean:
 	@echo "\tCleaning..";
 	rm -rf $(OUTDIR)
-	rm -f $(addprefix $(TESTDIR)/,*.out *.exe, runtest)
+	rm -f $(addprefix $(TESTDIR)/,*.out *.exe, runtest, *.o)
 
 callgrind: main
 	@echo "\tRunning.."
@@ -45,4 +49,3 @@ gprof: main
 	gprof ./$(OUTDIR)/$(OUTNAME) > ./snippets/profiling/result$(shell date "+%m-%T").gprof
 	@head ./snippets/profiling/result$(shell date "+%m-%T").gprof
 
-.PHONY: clean test
