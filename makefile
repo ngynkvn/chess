@@ -6,14 +6,15 @@ OUTDIR = bin
 TESTDIR = test
 OUTNAME = a.out
 
-OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
+OBJS = Move Piece Board Search Evaluation
+OBJ_FILES = $(OBJS:%=$(OUTDIR)/%.o)
 
-%.o: $(SRC)/%.cpp
-	@mkdir -p bin
-	$(CC) $(FLAGS) -c $< -o $(OUTDIR)/$@ 
+$(OUTDIR)/%.o: $(SRC)/%.cpp 
+	$(CC) $(FLAGS) -c $< -o $@
 
-main: $(OBJS)
-	$(CC) $(FLAGS) $(SRC)/main.cpp $(addprefix $(OUTDIR)/,$^) -o $(OUTDIR)/$(OUTNAME) 
+main: $(OBJ_FILES)
+	@mkdir -p $(OUTDIR)
+	$(CC) $(FLAGS) $(SRC)/main.cpp $^ -o $(OUTDIR)/$(OUTNAME) 
 
 run: main
 	./$(OUTDIR)/$(OUTNAME)
