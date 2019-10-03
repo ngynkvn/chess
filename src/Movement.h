@@ -1,6 +1,5 @@
 #if !defined(MOVEMENT_H)
 #define MOVEMENT_H
-#include "Cache.h"
 namespace Movement
 {
 struct MoveSet
@@ -10,21 +9,6 @@ struct MoveSet
     bool ray;
     MoveSet(ePieceCode piece, std::vector<Coord> directions, bool ray) : piece(piece), directions(std::move(directions)), ray(ray) {}
     MoveSet(ePieceCode piece) : piece(piece) {}
-    std::vector<Move> generateMoves(Board &b)
-    {
-        std::vector<Move> moves;
-        MoveGenerator *moveGenerator = new BaseMoveGenerator(b, ray, directions, &moves);
-        if (piece == ePieceCode::Pawn) // Should this be a constexpr?
-        {
-            moveGenerator = new PawnMoveGenerator(b, &moves);
-        }
-        auto pieceCoords = Cache::findPieces(b, piece + (b.isWhite() ? 0 : 7));
-        for (auto pieceCoord : pieceCoords)
-        {
-            moveGenerator->genMove(pieceCoord);
-        }
-        return moves;
-    }
 };
 
 const std::vector<Coord> dirRook = {Coord(0, 1),

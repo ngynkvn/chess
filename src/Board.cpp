@@ -1,80 +1,41 @@
 #include <iostream>
 #include "Board.h"
 #include "Search.h"
+#include <array>
+
 
 /*constructor sets up the board for a new game*/
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
 Board::Board()
 {
-    this->board = new ePieceCode* [8];
+    this->board.fill(epcEmpty);
     history.emplace_back(Move(-1,-1,-1,-1));
-    /*setting empty spaces first*/
-    for (int i = 2; i <= 5; i++)
-    {
-        this->board[i] = new ePieceCode[8];
-        for (int j = 0; j < 8; j++)
-        {
-            this->board[i][j] = epcEmpty;
-        }
-    }
-
     /*setting pawns*/
-    this->board[1] = new ePieceCode[8];
-    this->board[6] = new ePieceCode[8];
     for (int i = 0; i < 8; i++)
     {
-        this->board[1][i] = epcWpawn;
-        this->board[6][i] = epcBpawn;
+        this->board[8 + i] = epcWpawn;
+        this->board[48 + i] = epcBpawn;
     }
-
     /*setting major pieces*/
-    this->board[0] = new ePieceCode[8];
-    this->board[7] = new ePieceCode[8];
     ePieceCode majorPiecesW[8] = {epcWrook, epcWknight, epcWbishop, epcWking, epcWqueen, epcWbishop, epcWknight, epcWrook};
     ePieceCode majorPiecesB[8] = {epcBrook, epcBknight, epcBbishop, epcBking, epcBqueen, epcBbishop, epcBknight, epcBrook};
     for (int i = 0; i < 8; i++)
     {
-        this->board[0][i] = majorPiecesW[i];
-        this->board[7][i] = majorPiecesB[i];
+        this->board[i] = majorPiecesW[i];
+        this->board[56 + i] = majorPiecesB[i];
     }
 }
 
-Board &Board::operator=(const Board &other)
+Coord Board::getKing(ePieceCode king) const
 {
-    if (this != &other)
-    {
-        for (int i = 0; i < 8; i++)
+    std::vector<Coord> v;
+    for (int i = 0; i < 64; i++){
+        if (board[i] == king)
         {
-            delete[] board[i];
+            return Coord(i % 8, i / 8);
         }
-        delete[] board;
-        board = new ePieceCode *[8];
-        ePieceCode **b = other.getBoard();
-        for (int i = 0; i < 8; i++)
-        {
-            board[i] = new ePieceCode[8];
-            for (int j = 0; j < 8; j++)
-            {
-                board[i][j] = b[i][j];
-            }
-        }
-        whiteTurn = other.whiteTurn;
-        prevMove = other.prevMove;
     }
-    return *this;
-}
-
-/**
- * Destructor to remove piece array.
- * This is done via a simple for loop to remove each pointer array.
- */
-Board::~Board()
-{
-    for (int i = 0; i < 8; i++)
-    {
-        delete[] board[i];
-    }
-    delete[] board;
+    throw;
 }
 
 /*sets the piece at the from-coordinates to the index of the board 2Darray
@@ -89,8 +50,8 @@ Board & Board::makeMove(const Move& m)
     auto [fromX, fromY] = m.from;
     auto [toX, toY] = m.to;
     captures.emplace_back(getPiece(m.to));
-    board[toY][toX] = getPiece(m.from);
-    board[fromY][fromX] = epcEmpty;
+    board[(toY << 3) + toX] = getPiece(m.from);
+    board[(fromY << 3) + fromX] = epcEmpty;
     return *this;
 }
 
@@ -106,8 +67,8 @@ void Board::unmakeMove()
     history.pop_back();
     auto [fromX, fromY] = prev.from;
     auto [toX, toY] = prev.to;
-    board[fromY][fromX] = (*this).getPiece(prev.to);
-    board[toY][toX] = captures.back();
+    board[(fromY << 3) + fromX] = (*this).getPiece(prev.to);
+    board[(toY << 3) + toX] = captures.back();
     captures.pop_back();
 }
 /*
@@ -153,7 +114,8 @@ std::ostream &operator<<(std::ostream &os, const Board &board)
         for (int i = 7; i > -1; i--)
         {
             ePieceCode p = board.getPiece(Coord(i, j));
-            p == epcEmpty ? os << ". " : os << outChars[p] << " ";
+            p == epcEmpty ? os << "." : os << outChars[p];
+            os << " ";
         }
         os << std::endl;
     }

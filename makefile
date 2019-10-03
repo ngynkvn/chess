@@ -1,12 +1,12 @@
 CC = g++-9
-FLAGS = -std=c++17 -Wall
+FLAGS = -std=c++17 -Wall -g
 
 SRC = src
 OUTDIR = bin
 TESTDIR = test
 OUTNAME = a.out
 
-OBJS = Move.o Piece.o Board.o Search.o Evaluation.o MoveGenerator.o
+OBJS = Move.o Piece.o Board.o Search.o Evaluation.o
 
 %.o: $(SRC)/%.cpp
 	@mkdir -p bin

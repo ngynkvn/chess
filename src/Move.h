@@ -3,6 +3,17 @@
 
 #include <ostream>
 
+
+enum MoveType {
+    Sliding,
+    Square,
+    Push,
+    DoublePush,
+    Capture,
+    Castle,
+    EP,
+};
+
 /** 
  * Coord is a simple x,y struct to allow for easy interfacing to the Board class. Can be constructed from either integers
  * or rank and file. Note that coord does not test the validity of a position as that is left up to the board to confirm.
@@ -21,12 +32,15 @@ class Move
 public:
   Move(int, int, int, int);
   Move(Coord, Coord);
-  explicit Move(std::string);
+  Move(Coord, Coord, MoveType);
+  Move(std::string);
   Coord from;
   Coord to;
+  MoveType moveType;
   bool operator==(const Move &m) const { return m.from == from && m.to == to; }
   bool operator!=(const Move &m) const { return !(operator==(m)); }
   friend std::ostream &operator<<(std::ostream &, const Move &);
 };
+
 
 #endif

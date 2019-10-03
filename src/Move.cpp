@@ -19,6 +19,9 @@ Move::Move(int fromX, int fromY, int toX, int toY) : from(fromX, fromY), to(toX,
 Move::Move(Coord from, Coord to) : from(from), to(to)
 {
 }
+Move::Move(Coord from, Coord to, MoveType moveType) : from(from), to(to), moveType(moveType)
+{
+}
 Move::Move(std::string input) : Move('h' - input.at(0), input.at(1) - '1', 'h' - input.at(2), input.at(3) - '1') 
 {
 }
