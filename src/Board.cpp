@@ -2,6 +2,8 @@
 #include "Board.h"
 #include "Search.h"
 #include <array>
+#include <algorithm>
+#include <iterator>
 
 
 /*constructor sets up the board for a new game*/
@@ -67,7 +69,7 @@ void Board::unmakeMove()
     history.pop_back();
     auto [fromX, fromY] = prev.from;
     auto [toX, toY] = prev.to;
-    board[(fromY << 3) + fromX] = (*this).getPiece(prev.to);
+    board[(fromY << 3) + fromX] = this->getPiece(prev.to);
     board[(toY << 3) + toX] = captures.back();
     captures.pop_back();
 }
@@ -103,20 +105,18 @@ ePieceCode Board::same() const { return whiteTurn ? White : Black; }
 
 std::ostream &operator<<(std::ostream &os, const Board &board)
 {
-//     char outChars[] = {' ', 'p', 'k','b','r','q','W',
-//                        ' ', 'P', 'K','B','R','Q','B'};
-    std::string outChars[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
-                                 " ", "♟", "♞", "♝", "♜", "♛", "♚"};
+    std::string outChars[] = {" ", "p", "k","b","r","q","W",
+                              " ", "P", "K","B","R","Q","B"};
+    //std::string outChars[] = {" ", "♙", "♘", "♗", "♖", "♕", "♔",
+    //                             " ", "♟", "♞", "♝", "♜", "♛", "♚"};
     std::string files[] = {"1 |", "2 |", "3 |", "4 |", "5 |", "6 |", "7 |", "8 |"};
+    std::array<std::string, 64> arr;
+    auto b = board.getBoard();
+    std::transform(b.begin(), b.end(), arr.begin(), [&](ePieceCode epc) {return epc == epcEmpty ? "." : outChars[epc];});
     for (int j = 7; j > -1; j--)
     {
         os << files[j];
-        for (int i = 7; i > -1; i--)
-        {
-            ePieceCode p = board.getPiece(Coord(i, j));
-            p == epcEmpty ? os << "." : os << outChars[p];
-            os << " ";
-        }
+        std::reverse_copy(arr.begin() + (j*8), arr.end() - (8*(7-j)), std::ostream_iterator<std::string>(os, " "));
         os << std::endl;
     }
     os << "   ---------------" << std::endl;

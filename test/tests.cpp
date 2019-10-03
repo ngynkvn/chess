@@ -14,34 +14,34 @@ TEST_CASE("Move generation is correct.", "[perft]")
         auto [nodes, captures, checks] = perft(start, 1);
         CHECK(nodes == 20);
         CHECK(captures == 0);
-        // CHECK(checks == 0);
+         CHECK(checks == 0);
     }
     SECTION("Depth 2")
     {
         auto [nodes, captures, checks] = perft(start, 2);
         CHECK(nodes == 400);
         CHECK(captures == 0);
-        // CHECK(checks == 0);
+         CHECK(checks == 0);
     }
     SECTION("Depth 3 should show 34 captures.")
     {
         auto [nodes, captures, checks] = perft(start, 3);
         CHECK(nodes == 8902);
         CHECK(captures == 34);
-        // CHECK(checks == 12);
+         CHECK(checks == 12);
     }
     SECTION("Depth 4 should show 1576 captures.")
     {
         auto [nodes, captures, checks] = perft(start, 4);
         CHECK(nodes == 197281);
         CHECK(captures == 1576);
-        // CHECK(checks == 469);
+         CHECK(checks == 469);
     }
     SECTION("Depth 5")
     {
-        // auto [nodes, captures, checks] = perft(start, 5);
-        // CHECK(nodes == 4865609);
-        // CHECK(captures == 82719);
+         //auto [nodes, captures, checks] = perft(start, 5);
+         //CHECK(nodes == 4865609);
+         //CHECK(captures == 82719);
     }
 }
 
