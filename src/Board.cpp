@@ -11,6 +11,7 @@
 _Board _Board::init() {
     /*setting pawns*/
     _Board board;
+    board.state.fill(pieceCode::empty);
     for (int i = 0; i < 8; i++)
     {
         board.state[8 + i] = pieceCode::Wpawn;
@@ -24,6 +25,7 @@ _Board _Board::init() {
         board.state[i] = majorPiecesW[i];
         board.state[56 + i] = majorPiecesB[i];
     }
+    return board;
 }
 Board::Board()
 {

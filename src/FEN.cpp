@@ -11,18 +11,23 @@
 _Board _Board::from_fen(std::string fen)
 {
     _Board board;
+    board.state.fill(pieceCode::empty);
+    
+    //TODO optimize
     pieceCode epc[255];
     epc['p'] = pieceCode::Bpawn;
     epc['q'] = pieceCode::Bqueen;
     epc['r'] = pieceCode::Brook;
     epc['k'] = pieceCode::Bking;
     epc['n'] = pieceCode::Bknight;
+    epc['b'] = pieceCode::Bbishop;
 
     epc['P'] = pieceCode::Wpawn;
     epc['Q'] = pieceCode::Wqueen;
     epc['R'] = pieceCode::Wrook;
     epc['K'] = pieceCode::Wking;
     epc['N'] = pieceCode::Wknight;
+    epc['B'] = pieceCode::Wbishop;
 
     std::istringstream iss(fen);
 
