@@ -11,6 +11,15 @@ struct MoveSet
     MoveSet(ePieceCode piece) : piece(piece) {}
 };
 
+struct _MoveSet
+{
+    pieceCode piece;
+    std::vector<coordinate> directions;
+    bool ray;
+    _MoveSet(pieceCode piece, std::vector<coordinate> directions, bool ray) : piece(piece), directions(std::move(directions)), ray(ray) {}
+    _MoveSet(pieceCode piece) : piece(piece) {}
+};
+
 const std::vector<coordinate> dirRook = {coordinate(0, 1),
                                     coordinate(0, -1),
                                     coordinate(1, 0),
@@ -43,6 +52,14 @@ MoveSet Queen = MoveSet(ePieceCode::Queen, dirQueen, true);
 MoveSet Knight = MoveSet(ePieceCode::Knight, dirKnight, false);
 MoveSet King = MoveSet(ePieceCode::King, dirKing, false);
 MoveSet Pawn = MoveSet(ePieceCode::Pawn);
+
+_MoveSet _Rook = _MoveSet(pieceCode::rook, dirRook, true);
+_MoveSet _Bishop = _MoveSet(pieceCode::bishop, dirBishop, true);
+_MoveSet _Queen = _MoveSet(pieceCode::queen, dirQueen, true);
+_MoveSet _Knight = _MoveSet(pieceCode::knight, dirKnight, false);
+_MoveSet _King = _MoveSet(pieceCode::king, dirKing, false);
+_MoveSet _Pawn = _MoveSet(pieceCode::pawn);
 const std::vector<MoveSet> movements = {Rook, Bishop, Queen, Knight, Pawn, King};
+const std::vector<_MoveSet> _movements = {_Rook, _Bishop, _Queen, _Knight, _Pawn, _King};
 } // namespace Movement
 #endif // MOVEMENT_H

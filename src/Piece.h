@@ -20,7 +20,7 @@ enum pieceCode
   bishop  =  0b00111111 & Wbishop,
   rook    =  0b00111111 & Wrook,
   queen   =  0b00111111 & Wqueen,
-  King    =  0b00111111 & Wking,
+  king    =  0b00111111 & Wking,
   black   =  0b10000000,
   Bpawn   =  0b10111111 & Wpawn,
   Bknight =  0b10111111 & Wknight,

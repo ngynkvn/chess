@@ -8,7 +8,7 @@
 #include <sstream>
 #include <array>
 
-_Board _Board::from_fen(std::string fen) const
+_Board _Board::from_fen(std::string fen)
 {
     _Board board;
     pieceCode epc[255];

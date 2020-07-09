@@ -20,7 +20,9 @@ struct _Board {
         return coordinate(index % BOARD_SIZE, index / BOARD_SIZE);
     }
 
-    _Board from_fen(std::string) const;
+    static _Board init();
+    static _Board from_fen(std::string);
+    std::string to_string();
     pieceCode piece_at(const coordinate&) const;
     bool move(const Move&) const;
 };
