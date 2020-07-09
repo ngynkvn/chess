@@ -12,7 +12,7 @@
 #define BOARD_SIZE 8
 
 struct _Board {
-    pieceCode state[64];
+    std::array<pieceCode, 64> state;
 
     coordinate first_coordinate_of(const pieceCode& p) const {
         auto iter = std::find_if(std::begin(state), std::end(state), std::bind(piece_eq, std::placeholders::_1, p));

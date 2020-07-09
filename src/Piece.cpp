@@ -10,6 +10,11 @@ bool Piece::empty() {
     return pieceCode == epcEmpty;
 }
 
+//TODO test
+bool piece_eq(pieceCode p1, pieceCode p2) {
+  return (p1 & p2) == p2;
+}
+
 //Returns true if the move was made by the right piece
 //Otherwise, it returns false
 bool Piece::operator==(const Piece& right) const

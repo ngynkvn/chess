@@ -1,4 +1,4 @@
-CC = g++-9
+CC = g++
 FLAGS = -std=c++17 -Wall -g
 
 SRC = src
@@ -6,8 +6,8 @@ OUTDIR = bin
 TESTDIR = test
 OUTNAME = a.out
 
-OBJS = Move Piece Board Search Evaluation
-TEST = tests.cpp fen.cpp perft.cpp
+OBJS = Move Piece Board Search Evaluation FEN
+TEST = tests.cpp board.cpp perft.cpp
 TEST_FILES = $(TEST:%=$(TESTDIR)/%)
 OBJ_FILES = $(OBJS:%=$(OUTDIR)/%.o)
 

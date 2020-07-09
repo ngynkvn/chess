@@ -8,6 +8,23 @@
 
 /*constructor sets up the board for a new game*/
 /*The board is white pieces rows 0-1 and black pieces 6-7*/
+_Board _Board::init() {
+    /*setting pawns*/
+    _Board board;
+    for (int i = 0; i < 8; i++)
+    {
+        board.state[8 + i] = pieceCode::Wpawn;
+        board.state[48 + i] = pieceCode::Bpawn;
+    }
+    /*setting major pieces*/
+    pieceCode majorPiecesW[8] = {pieceCode::Wrook, pieceCode::Wknight, pieceCode::Wbishop, pieceCode::Wking, pieceCode::Wqueen, pieceCode::Wbishop, pieceCode::Wknight, pieceCode::Wrook};
+    pieceCode majorPiecesB[8] = {pieceCode::Brook, pieceCode::Bknight, pieceCode::Bbishop, pieceCode::Bking, pieceCode::Bqueen, pieceCode::Bbishop, pieceCode::Bknight, pieceCode::Brook};
+    for (int i = 0; i < 8; i++)
+    {
+        board.state[i] = majorPiecesW[i];
+        board.state[56 + i] = majorPiecesB[i];
+    }
+}
 Board::Board()
 {
     this->board.fill(epcEmpty);

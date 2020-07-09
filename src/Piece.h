@@ -31,10 +31,7 @@ enum pieceCode
 };
 // 00 000000
 
-//TODO test
-bool piece_eq(pieceCode p1, pieceCode p2) {
-  return p1 & p2 == p2;
-}
+bool piece_eq(pieceCode p1, pieceCode p2);
 
 /*
  * ePieceCode is a simple enumerator to allow for identification of pieces within the program. We separate pieces 

@@ -36,12 +36,12 @@ _Board _Board::from_fen(std::string fen)
     iss >> full_move;
 
     size_t i = 0;
-    for (auto it = b_str.begin(); it != b_str.end(); it++)
+    for (auto it = b_str.rbegin(); it != b_str.rend(); it++)
     {
         auto c = *it;
         if (std::isalpha(c))
         {
-            board.state[i++] = epc[c];
+            board.state[i++] = epc[(int)c];
         }
         else if (std::isdigit(c))
         {
