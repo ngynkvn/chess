@@ -62,8 +62,8 @@ TEST_CASE("Board data-type works correctly", "[board]")
     {
         for (int i = 0; i < 8; i++)
         {
-            CHECK(start.getPiece(Coord(i, 1)) == epcWpawn);
-            CHECK(start.getPiece(Coord(i, 6)) == epcBpawn);
+            CHECK(start.getPiece(coordinate(i, 1)) == epcWpawn);
+            CHECK(start.getPiece(coordinate(i, 6)) == epcBpawn);
         }
     }
     SECTION("Major pieces are in the correct positions.")
@@ -71,13 +71,13 @@ TEST_CASE("Board data-type works correctly", "[board]")
         ePieceCode table[] = {epcWrook, epcWknight, epcWbishop, epcWking, epcWqueen, epcWbishop, epcWknight, epcWrook};
         for (int i = 0; i < 8; i++)
         {
-            CHECK(start.getPiece(Coord(i, 0)) == table[i]);
-            CHECK(start.getPiece(Coord(i, 7)) == table[i] + ePieceCode::Black);
+            CHECK(start.getPiece(coordinate(i, 0)) == table[i]);
+            CHECK(start.getPiece(coordinate(i, 7)) == table[i] + ePieceCode::Black);
         }
     }
     SECTION("Inputting moves does not modify previous board state.")
     {
-        Move wPawnPush(Coord(1, 1), Coord(1, 2));
+        Move wPawnPush(coordinate(1, 1), coordinate(1, 2));
 
         ePieceCode pieceFrom = start.getPiece(wPawnPush.from);
         ePieceCode pieceTo = start.getPiece(wPawnPush.to);
@@ -112,9 +112,9 @@ TEST_CASE("Move data-type works correctly", "[move]")
         REQUIRE(m.to.second == 4);
     }
 
-    SECTION("Move can be created from 2 coord parameters.")
+    SECTION("Move can be created from 2 coordinate parameters.")
     {
-        Move m(Coord(5, 6), Coord(6, 7));
+        Move m(coordinate(5, 6), coordinate(6, 7));
         REQUIRE(m.from.first == 5);
         REQUIRE(m.from.second == 6);
         REQUIRE(m.to.first == 6);

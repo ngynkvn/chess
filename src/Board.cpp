@@ -28,13 +28,13 @@ Board::Board()
     }
 }
 
-Coord Board::getKing(ePieceCode king) const
+coordinate Board::getKing(ePieceCode king) const
 {
-    std::vector<Coord> v;
+    std::vector<coordinate> v;
     for (int i = 0; i < 64; i++){
         if (board[i] == king)
         {
-            return Coord(i % 8, i / 8);
+            return coordinate(i % 8, i / 8);
         }
     }
     throw;

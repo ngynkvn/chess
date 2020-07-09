@@ -7,7 +7,7 @@ TESTDIR = test
 OUTNAME = a.out
 
 OBJS = Move Piece Board Search Evaluation
-TEST = tests.cpp perft.cpp
+TEST = tests.cpp fen.cpp perft.cpp
 TEST_FILES = $(TEST:%=$(TESTDIR)/%)
 OBJ_FILES = $(OBJS:%=$(OUTDIR)/%.o)
 

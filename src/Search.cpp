@@ -16,7 +16,7 @@ ePieceCode getColor(ePieceCode code)
                               : ePieceCode::White;
 }
 
-Coord firstPieceOnRay(Coord point, Coord dirRay, const Board &b)
+coordinate firstPieceOnRay(coordinate point, coordinate dirRay, const Board &b)
 {
     do
     {
@@ -25,23 +25,23 @@ Coord firstPieceOnRay(Coord point, Coord dirRay, const Board &b)
     return point;
 }
 
-bool checkHelper(const Board &b, Coord targetPiece, std::vector<Coord> dirs, int epcCode, bool ray)
+bool checkHelper(const Board &b, coordinate targetPiece, std::vector<coordinate> dirs, int epcCode, bool ray)
 {
     auto code = static_cast<ePieceCode>(epcCode);
-    return std::any_of(dirs.begin(), dirs.end(), [&](const Coord &dir) {
-        Coord possibleMove = ray ? firstPieceOnRay(targetPiece, dir, b) : targetPiece + dir;
+    return std::any_of(dirs.begin(), dirs.end(), [&](const coordinate &dir) {
+        coordinate possibleMove = ray ? firstPieceOnRay(targetPiece, dir, b) : targetPiece + dir;
         return b.inside(possibleMove) && b.getPiece(possibleMove) == code;
     });
 }
 template <ePieceCode EnemyColor>
-bool checkPawn(const Board &b, Coord targetPiece)
+bool checkPawn(const Board &b, coordinate targetPiece)
 {
     constexpr int DIRECTION_OF_ATTACK = EnemyColor == White ? -1 : 1;
     constexpr ePieceCode enemyPawn = EnemyColor == White ? epcWpawn : epcWpawn;
-    constexpr std::array<Coord, 2> captures{Coord(1, DIRECTION_OF_ATTACK), Coord(-1, DIRECTION_OF_ATTACK)};
-    for (Coord cap : captures)
+    constexpr std::array<coordinate, 2> captures{coordinate(1, DIRECTION_OF_ATTACK), coordinate(-1, DIRECTION_OF_ATTACK)};
+    for (coordinate cap : captures)
     {
-        Coord possibleMove = targetPiece + cap;
+        coordinate possibleMove = targetPiece + cap;
         if (b.inside(possibleMove) && b.getPiece(possibleMove) == enemyPawn)
         {
             return true;
@@ -49,7 +49,7 @@ bool checkPawn(const Board &b, Coord targetPiece)
     }
     return false;
 }
-bool checkHelper(const Board &b, Coord targetPiece, Movement::MoveSet m)
+bool checkHelper(const Board &b, coordinate targetPiece, Movement::MoveSet m)
 {
     switch (m.piece)
     {
@@ -65,7 +65,7 @@ bool inCheck(Board &b, const Move &consideringMove)
     auto epcKing = b.isWhite() ? epcWking : epcBking;
     b.makeMove(consideringMove);
 
-    Coord king = b.getKing(epcKing);
+    coordinate king = b.getKing(epcKing);
 
     bool result = std::any_of(Movement::movements.begin(), Movement::movements.end(), [&](Movement::MoveSet m) {
         return checkHelper(b, king, m);
@@ -76,11 +76,11 @@ bool inCheck(Board &b, const Move &consideringMove)
 }
 
 template <MoveType M>
-void genMoves(Board &b, Coord piece, std::vector<Move> &moves, const std::vector<Coord> &directions)
+void genMoves(Board &b, coordinate piece, std::vector<Move> &moves, const std::vector<coordinate> &directions)
 {
     for (auto j : directions)
     {
-        Coord possibleMove = piece + j;
+        coordinate possibleMove = piece + j;
         if constexpr (M == Sliding)
         {
             while (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
@@ -104,14 +104,14 @@ void genMoves(Board &b, Coord piece, std::vector<Move> &moves, const std::vector
 }
 
 template <ePieceCode Color>
-void genPawnMoves(Board &b, Coord piece, std::vector<Move> &moves)
+void genPawnMoves(Board &b, coordinate piece, std::vector<Move> &moves)
 {
     constexpr int DIRECTION_OF_ATTACK = Color == White ? 1 : -1;
     constexpr int HOME_ROW = Color == White ? 1 : 6;
     constexpr ePieceCode oppositeColor = Color == White ? Black : White;
-    constexpr Coord push(0, DIRECTION_OF_ATTACK);
-    constexpr std::array<Coord, 2> captures{Coord(1, DIRECTION_OF_ATTACK), Coord(-1, DIRECTION_OF_ATTACK)};
-    Coord possibleMove = piece + push;
+    constexpr coordinate push(0, DIRECTION_OF_ATTACK);
+    constexpr std::array<coordinate, 2> captures{coordinate(1, DIRECTION_OF_ATTACK), coordinate(-1, DIRECTION_OF_ATTACK)};
+    coordinate possibleMove = piece + push;
     if (b.inside(possibleMove) && b.getPiece(possibleMove) == epcEmpty)
     {
         moves.emplace_back(piece, possibleMove, MoveType::Push);
@@ -129,18 +129,18 @@ void genPawnMoves(Board &b, Coord piece, std::vector<Move> &moves)
         for (int i = -1; i <= 1; i += 2)
         {
             constexpr ePieceCode enemyPawn = Color == White ? epcBpawn : epcWpawn;
-            auto toSideOfPawn = piece + Coord(i, 0);
+            auto toSideOfPawn = piece + coordinate(i, 0);
             auto enPassantPossible = b.inside(toSideOfPawn) && b.getPiece(toSideOfPawn) == enemyPawn;
             if (enPassantPossible)
             {
-                moves.emplace_back(piece, piece + Coord(i, DIRECTION_OF_ATTACK), MoveType::EP);
+                moves.emplace_back(piece, piece + coordinate(i, DIRECTION_OF_ATTACK), MoveType::EP);
             }
         }
     }
 
-    for (Coord cap : captures)
+    for (coordinate cap : captures)
     {
-        Coord possibleMove = piece + cap;
+        coordinate possibleMove = piece + cap;
         if (b.inside(possibleMove) && Search::getColor(b.getPiece(possibleMove)) == oppositeColor)
         {
             moves.emplace_back(piece, possibleMove, MoveType::Capture);
@@ -157,7 +157,7 @@ std::vector<Move> generateMoveList(Board &b)
         auto p = board_array[i];
         if (b.currColor() == getColor(p))
         {
-            Coord c(i % 8, i / 8);
+            coordinate c(i % 8, i / 8);
             switch (p)
             {
             case epcWpawn:
